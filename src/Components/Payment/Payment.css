@@ -1,0 +1,232 @@
+.Payment {
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 0.5rem;
+    overflow: auto;
+    width: 100%;
+}
+
+.Payment h3 {
+    font-size: 1rem;
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+.BankSection,
+.DeliverySection {
+    margin-bottom: 1rem;
+}
+
+.AccountProfile,
+.DeliveryProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid grey;
+}
+
+.TopSec {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.TopSec h5 {
+    font-size: 0.8rem;
+    margin: 0;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+}
+
+.Carousel {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-x: auto;
+}
+
+.CarouselContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: .5rem;
+
+    & ul.control-dots {
+        width: 80%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        margin: .3rem 0;
+    }
+
+    & ul.control-dots li {
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background-color: #ccc;
+        margin: 0 .2rem;
+    }
+
+    & ul.control-dots li:hover {
+        background-color: #aaa;
+    }
+
+    & ul.control-dots li.selected {
+        border: 1px solid blue;
+    }
+
+    & ul.control-dots li:focus {
+        outline: none;
+    }
+}
+
+.Acc {
+    width: 80% !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+.Acc h5 {
+    font-size: .6rem;
+    font-weight: bold;
+    margin-bottom: .5rem;
+    align-self: flex-start;
+}
+
+.BankAcc,
+.LocationAcc,
+.MpesaAcc,
+.PaypalAcc,
+.CodAcc {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 5px;
+}
+
+.Select {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.Acc .AccImage {
+    width: 3rem;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 1rem;
+}
+
+.AccImage {
+    width: 100%;
+    height: 100%;
+}
+
+.AccImage i {
+    font-size: 4rem;
+    color: green;
+}
+
+.Acc .AccImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.AccountName,
+.Location,
+.Mpesa,
+.Paypal,
+.Cod {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.AccountName span,
+.Location span,
+.Mpesa span,
+.Paypal span,
+.Cod span {
+    font-size: 1rem;
+    font-weight: 600;
+    align-self: self-start;
+}
+
+.AccountName p,
+.Location p,
+.Mpesa p,
+.Paypal p,
+.Cod p {
+    font-size: 0.8rem;
+    color: #888;
+    margin: 0;
+    margin-bottom: 0.5rem;
+    align-self: self-start;
+}
+
+.BankButton,
+.DeliveryButton {
+    height: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    border-radius: 4px;
+    border: none;
+}
+
+
+.InfoBtn {
+    cursor: pointer;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0069d9;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
+    margin-left: 0.5rem;
+    transition: all 0.3s ease-in-out;
+    font-size: larger;
+}
+
+
+.InfoBtn i {
+    font-size: 1rem;
+}
+
+.InfoBtn:focus {
+    outline: none;
+}
+
+.InfoBtn:hover {
+    background-color: #0069d9;
+    color: #fff;
+}
+
+.InfoBtn:active {
+    background-color: #005cbf;
+    color: #fff;
+}

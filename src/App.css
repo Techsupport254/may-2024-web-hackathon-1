@@ -1,0 +1,45 @@
+:root {
+  --box-shadow: 0 4px 4px -4px rgba(0, 0, 0, .12);
+  --green: rgb(69, 180, 69);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100vw;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* scrollbar */
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+  color: #fff;
+}
+
+::-webkit-scrollbar-track {
+  background: #bfbcbc;
+
+}
+
+::-webkit-scrollbar-thumb {
+  background: #fff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

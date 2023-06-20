@@ -1,0 +1,158 @@
+.Navbar {
+    background-color: #dcdada;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: .5rem 0;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+    color: black;
+}
+
+.NavbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    z-index: 1;
+    width: 100%;
+}
+
+.NavbarLogo {
+    height: 6rem;
+    width: 6rem;
+    overflow: hidden;
+}
+
+.NavbarLogo img {
+    height: 70%;
+    width: 70%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+}
+
+.NavbarLogo a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.NavbarLogo a span {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.NavRight {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 90%;
+}
+
+.NavTop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+    box-shadow: var(--box-shadow);
+}
+
+.Searchbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 30%;
+    gap: .5rem;
+    margin: .5rem;
+}
+
+.Searchbar input {
+    height: 80%;
+    width: 80%;
+    border-radius: 5px;
+    border: 1px solid #000;
+    padding: 0 1rem;
+}
+
+.Searchbar button {
+    height: 80%;
+    width: 10%;
+    border-radius: 5px;
+    border: 1px solid #000;
+    background-color: var(--green);
+    color: #fff;
+    outline: none;
+}
+
+.NavbarLinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 60%;
+    gap: 1rem;
+}
+
+.NavItem {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    font-family: 1rem;
+    font-weight: 600;
+}
+
+
+.NavItem a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    gap: .5rem;
+    color: black;
+    transition: all .3s ease-in-out;
+}
+
+.NavItem a i {
+    font-size: 1.2rem;
+    color: var(--green);
+}
+
+.NavItem a:hover {
+    color: var(--green);
+}
+
+.NavBottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50%;
+    width: 100%;
+}
+
+.CartBadge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: red;
+    color: #fff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

@@ -1,0 +1,24 @@
+.Banner {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.BannersTop {
+    width: 100%;
+    height: 60% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.BannersBottom {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

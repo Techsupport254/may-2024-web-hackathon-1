@@ -1,0 +1,45 @@
+.AddConsult {
+    padding: 10px 1rem;
+    margin-top: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.AccountConsultsTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.Accepted {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    .AcceptedConsults {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #4caf50;
+        border-radius: 4px;
+        margin: 0 5px;
+        cursor: pointer;
+        gap: 5px;
+    }
+
+    .Incoming {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ff9800;
+        border-radius: 4px;
+        margin: 0 5px;
+        cursor: pointer;
+        gap: 5px;
+    }
+}

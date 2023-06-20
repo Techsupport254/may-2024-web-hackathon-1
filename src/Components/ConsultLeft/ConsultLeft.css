@@ -1,0 +1,166 @@
+.CLeft {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.CLeft h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+  padding: 0;
+}
+
+.CLeftContainer {
+  width: 90%;
+  height: 100%;
+  margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+
+.CLeftCard {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.CLeftCardActionArea {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+}
+
+.CLeftCardAction {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.CLeftCardMedia {
+  width: 3rem !important;
+  height: 3rem !important;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.CLeftCardContent {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.CLeftCardText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 1rem;
+}
+
+.CLeftCardText span {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.CLeftCardText p {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #666;
+}
+
+.CLeftCardBadge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.CLeftCardBadgeActive {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #40bf40;
+  border-radius: 50%;
+  transform: scale(0);
+  animation-duration: 1s;
+  animation-name: waves;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes waves {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.5);
+    opacity: 0.5;
+  }
+}
+
+.CLeftCardStatus {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100%;
+  width: 20%;
+}
+
+.CLeftCardBadgeText {
+  font-size: 0.6rem !important;
+  font-weight: 600;
+  color: #666;
+  margin: 0.5rem 0 0 0 !important;
+  padding: 0;
+}
+
+.CLeftCardStatus .MuiBadge-root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+}
+
+.CLeftCardStatus .MuiBadge-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}

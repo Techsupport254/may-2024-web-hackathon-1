@@ -1,0 +1,179 @@
+.TopCenter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    overflow: auto;
+}
+
+.TopCenter h3 {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.PrevNextButtons {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.TopCenterButton {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.TopCenterButton:hover {
+    background-color: #333;
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+.PaginationDots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 1rem;
+}
+
+.Dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #aaa;
+    cursor: pointer;
+}
+
+.Dot.active {
+    background-color: #333;
+}
+
+.TopCenterItems {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+    overflow: auto;
+    scroll-behavior: smooth;
+    padding: 0 1rem;
+
+}
+
+.TopCenterItem {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    margin: 1rem;
+    padding: 1rem;
+    cursor: pointer;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    transition: opacity 0.5s ease-in-out;
+}
+
+.TopCenterItem.active {
+    opacity: 1;
+}
+
+.TopCenter .TopCenterItem .ItemImage {
+    width: 400px;
+    height: 250px;
+    overflow: hidden;
+}
+
+.TopCenter .TopCenterItem .ItemImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.3s ease-in-out;
+    border-radius: 10px;
+}
+
+.RightDetails {
+    width: calc(100% - 300px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.ItemTitle {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.ItemAmount {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0.5rem;
+}
+
+.ItemAmount span {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0.5rem;
+
+}
+
+.ItemAmount span:nth-child(2) {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0.5rem;
+    font-style: oblique;
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.ItemDescription {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-top: 0.5rem;
+}
+
+.ItemDescription p {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #333;
+    margin-top: 0.5rem;
+    line-height: 1.5;
+}

@@ -1,0 +1,87 @@
+.ProfileAccount {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 100%;
+    height: 90vh;
+    margin-bottom: 1rem;
+    overflow-y: auto;
+    gap: 0.5rem;
+}
+
+.ProfileAccount h4 {
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.AccountInfo,
+.PaymentInfo,
+.ShippingInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 45%;
+    height: 75%;
+    overflow-y: auto;
+    margin: .5rem;
+    padding: 0.5rem;
+    box-shadow: 0 0 5px 1px #ccc;
+    border-radius: 4px;
+    gap: 0.5rem;
+}
+
+.AccountInfoContainer,
+.PaymentInfoContainer,
+.ShippingInfoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+}
+
+.AccountInfoItem,
+.PaymentInfoItem,
+.ShippingInfoItem {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: .5rem;
+}
+
+.AccountInfoItem label,
+.PaymentInfoItem label,
+.ShippingInfoItem label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: .8rem;
+}
+
+.AccountInfoItem input,
+.PaymentInfoItem input,
+.ShippingInfoItem input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.ProfileAccount button {
+    padding: 10px;
+    width: 100%;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.ProfileAccount button:hover {
+    background-color: #0056b3;
+}
