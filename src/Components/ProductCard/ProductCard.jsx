@@ -14,6 +14,8 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 			name: product.name,
 			price: product.price,
 			image: product.image,
+			brand : product.brand,
+			category : product.category,
 			quantity: 1,
 		};
 

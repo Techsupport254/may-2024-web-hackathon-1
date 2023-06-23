@@ -2,7 +2,7 @@ import React from "react";
 import "./ProfileLeft.css";
 import { profileLeftData } from "../../Data";
 
-const ProfileLeft = ({ activeMenu, onMenuClick, userData, isLoggedin }) => {
+const ProfileLeft = ({ activeMenu, onMenuClick, userData, isLoggedin, handleLogout }) => {
 	return (
 		<div className="ProfileLeft">
 			<div className="ProfileLeftContainer">

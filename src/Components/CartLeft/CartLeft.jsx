@@ -11,11 +11,14 @@ const CartLeft = ({
 	return (
 		<div className="CartLeft">
 			<h2 className="CartTitle">
-				Your Cart <span style={{ color: "green" }}>({cartItems.length})</span>{" "}
+				Your Cart{" "}
+				<span style={{ color: "green" }}>
+					({cartItems ? cartItems.length : 0})
+				</span>{" "}
 				Items
 			</h2>
 			<div className="CartItems">
-				{cartItems.length === 0 ? (
+				{cartItems && cartItems.length === 0 ? (
 					<div className="EmptyCart">
 						<Badge
 							className="CartIcon"
@@ -32,12 +35,18 @@ const CartLeft = ({
 						</Badge>
 						<h3>Your cart is empty</h3>
 						{/* Back to products page */}
-						<button className="BackToShopBtn">
+						<button
+							className="BackToShopBtn"
+							onClick={() => {
+								window.location.href = "/products";
+							}}
+						>
 							<i className="fas fa-arrow-left"></i>
 							Back to Shop
 						</button>
 					</div>
 				) : (
+					cartItems &&
 					cartItems.map((item) => (
 						<div className="CartItem" key={item.id}>
 							<img src={item.image} alt={item.name} className="CartItemImg" />

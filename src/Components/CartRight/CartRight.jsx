@@ -60,6 +60,7 @@ const Cart = () => {
 			// Save the chosen details to local storage from Info component
 			const paymentMethod = localStorage.getItem("paymentMethod");
 			const deliveryMethod = localStorage.getItem("deliveryMethod");
+
 			// You can perform validation or further processing here if needed
 			console.log("Payment Method:", paymentMethod);
 			console.log("Delivery Method:", deliveryMethod);
@@ -87,9 +88,23 @@ const Cart = () => {
 			case 0:
 				return <Info handleNext={handleNext} />;
 			case 1:
-				return <Payment handleNext={handleNext} handleBack={handleBack} />;
+				return (
+					<Payment
+						handleNext={handleNext}
+						handleBack={handleBack}
+						paymentMethod={localStorage.getItem("paymentMethod")}
+						deliveryMethod={localStorage.getItem("deliveryMethod")}
+					/>
+				);
 			case 2:
-				return <Pay handleNext={handleNext} handleBack={handleBack} />;
+				return (
+					<Pay
+						handleNext={handleNext}
+						handleBack={handleBack}
+						paymentMethod={localStorage.getItem("paymentMethod")}
+						deliveryMethod={localStorage.getItem("deliveryMethod")}
+					/>
+				);
 			default:
 				return null;
 		}
@@ -130,10 +145,13 @@ const Cart = () => {
 					) : (
 						<React.Fragment>
 							<Typography sx={{ mt: 2, mb: 0.5, py: 0.5 }}>
-								Step {activeStep + 1}: {steps[activeStep]}
+								{steps[activeStep]}
 							</Typography>
 							{renderStepContent()}
-							<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+							<Box
+								sx={{ display: "flex", flexDirection: "row", pt: 2 }}
+								hidden={activeStep === 3 ? true : false}
+							>
 								<Button
 									variant="outlined"
 									color="primary"

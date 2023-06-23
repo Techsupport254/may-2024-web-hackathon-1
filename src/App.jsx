@@ -134,12 +134,22 @@ const App = () => {
 					<>
 						<Route path="/consult" element={<Navigate to="/login" replace />} />
 						<Route path="/cart" element={<Navigate to="/login" replace />} />
-						<Route path="/profile" element={<Navigate to="/login" replace />} />
+						<Route
+							path="/profile"
+							element={
+								<Navigate
+									to="/login"
+									replace
+									userData={userData}
+									handleLogout={handleLogout}
+								/>
+							}
+						/>
 						<Route path="/orders" element={<Navigate to="/login" replace />} />
 						<Route path="/login" element={<Login onLogin={handleLogin} />} />
 					</>
 				)}
-				{!userData && <Route path="/register" element={<Register />} />}
+				<Route path="/register" element={<Register />} />
 				{!userData && <Route path="/forgot" element={<Forgot />} />}
 			</Routes>
 			{shouldRenderNavbarFooter && <Footer />}

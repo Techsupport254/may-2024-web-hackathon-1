@@ -67,10 +67,10 @@ const Step1 = ({ onNextStep }) => {
 				formData1.quantity = quantity.value;
 			}
 		} else if (["agribusiness", "agriprofessional"].includes(userType)) {
-			const { businessName, location, businessType, description } =
+			const { businessName, location, businessType, businessDescription } =
 				e.target.elements;
 
-			if (!businessName.value || !location.value || !description.value) {
+			if (!businessName.value || !location.value || !businessDescription.value) {
 				// Input values are empty
 				return;
 			}
@@ -79,7 +79,7 @@ const Step1 = ({ onNextStep }) => {
 			formData1.businessName = businessName.value;
 			formData1.businessType = businessType.value;
 			formData1.businessLocation = location.value;
-			formData1.description = description.value;
+			formData1.businessDescription = businessDescription.value;
 		}
 
 		setFormData(formData1);
@@ -103,9 +103,9 @@ const Step1 = ({ onNextStep }) => {
 				return !!quantity.value;
 			}
 		} else if (["agribusiness", "agriprofessional"].includes(userType)) {
-			const { businessName, location, description } =
+			const { businessName, location, businessDescription } =
 				document.forms[0].elements;
-			return !!businessName.value && !!location.value && !!description.value;
+			return !!businessName.value && !!location.value && !!businessDescription.value;
 		}
 
 		return false;
@@ -228,9 +228,9 @@ const Step1 = ({ onNextStep }) => {
 							width: "100%",
 						}}
 					>
-						<label htmlFor="description">Description</label>
+						<label htmlFor="businessDescription">Description</label>
 						<textarea
-							name="description"
+							name="businessDescription"
 							placeholder="Enter a brief description of your business"
 						/>
 					</div>

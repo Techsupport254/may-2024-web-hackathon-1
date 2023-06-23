@@ -215,7 +215,7 @@ const Step2 = ({ onNextStep }) => {
 						}}
 					>
 						<label htmlFor="professionalType">Professional Type</label>
-						<input type="text" value={user.professionalType} disabled />
+						<input type="text" value={user.businessType} disabled />
 					</div>
 				)}
 				{(user.userType === "agribusiness" ||
@@ -227,7 +227,7 @@ const Step2 = ({ onNextStep }) => {
 						}}
 					>
 						<label htmlFor="businessDescription">Business Description</label>
-						<input type="text" value={user.description} disabled />
+						<input type="text" value={user.businessDescription} disabled />
 					</div>
 				)}
 			</form>

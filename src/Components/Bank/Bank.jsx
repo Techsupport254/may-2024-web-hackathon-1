@@ -4,6 +4,8 @@ import Cards from "react-credit-cards";
 import "react-credit-cards/es/styles-compiled.css";
 
 const Bank = ({ onClose }) => {
+	const [success, setSuccess] = React.useState(false);
+	const [error, setError] = React.useState(false);
 	const [state, setState] = React.useState({
 		cvc: "",
 		expiry: "",
@@ -43,7 +45,7 @@ const Bank = ({ onClose }) => {
 
 	const saveCard = () => {
 		const existingCards = JSON.parse(localStorage.getItem("cards")) || [];
-		const updatedCards = [...existingCards, { ...state }];
+		const updatedCards = [...existingCards, { ...state, id: Date.now() }];
 
 		localStorage.setItem("cards", JSON.stringify(updatedCards));
 		alert("Card saved to local storage!");

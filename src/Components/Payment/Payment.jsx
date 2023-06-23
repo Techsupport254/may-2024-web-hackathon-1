@@ -6,6 +6,8 @@ import Location from "../Location/Location";
 import Bank from "../Bank/Bank";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
+import Mpesa from "../Mpesa/Mpesa";
+import Paypal from "../Paypal/Paypal";
 
 const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 	const [modal, setModal] = useState(false);
@@ -16,6 +18,14 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 	const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
 	const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(null);
 	const [savedCards, setSavedCards] = useState([]);
+	const [defaultNumber, setDefaultNumber] = useState(null);
+	const [savedNumbers, setSavedNumbers] = useState([]);
+	const [savedPaypal, setSavedPaypal] = useState([]);
+	const [defaultPaypal, setDefaultPaypal] = useState(null);
+	const [isAccountSelected, setIsAccountSelected] = useState(false);
+	const [isLocationSelected, setIsLocationSelected] = useState(false);
+	const [savedLocation, setSavedLocation] = useState([]);
+	const [selectedPayment, setSelectedPayment] = useState(null);
 
 	const toggle = (componentType) => {
 		setModal(!modal);
@@ -48,7 +58,25 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 		const savedLocation = localStorage.getItem("locationData");
 		if (savedLocation) {
 			const locationData = JSON.parse(savedLocation);
-			setDefaultLocation(locationData);
+			if (Array.isArray(locationData)) {
+				setDefaultLocation(locationData[0]);
+				setSavedLocation(locationData);
+			}
+		}
+
+		// fetch saved numbers from local storage
+		const savedNumbers = localStorage.getItem("AgrisolveNumbers");
+		if (savedNumbers) {
+			const numberData = JSON.parse(savedNumbers);
+			setDefaultNumber(numberData[0]);
+			setSavedNumbers(numberData);
+		}
+		// fetch saved paypal from local storage
+		const savedPaypal = localStorage.getItem("AgrisolvePaypal");
+		if (savedPaypal) {
+			const paypalData = JSON.parse(savedPaypal);
+			setDefaultPaypal(paypalData[0]);
+			setSavedPaypal(paypalData);
 		}
 	}, []);
 
@@ -83,8 +111,136 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 	};
 
 	const handleSaveAndNext = () => {
-		handleNext();
+		let selectedAccount;
+		let selectedLocation;
+		let selectedPayment = paymentMethod;
+
+		if (isAccountSelected && isLocationSelected) {
+			switch (selectedPaymentMethod) {
+				case "bank":
+					selectedAccount = savedCards.find(
+						(card) => card.id === defaultCard.id
+					);
+					break;
+				case "mpesa":
+					selectedAccount = savedNumbers.find(
+						(number) => number.id === defaultNumber.id
+					);
+					break;
+				case "paypal":
+					selectedAccount = savedPaypal.find(
+						(paypal) => paypal.id === defaultPaypal.id
+					);
+					break;
+				default:
+					break;
+			}
+
+			selectedLocation = savedLocation.find(
+				(loc) => loc.id === defaultLocation.id
+			);
+
+			localStorage.setItem("selectedAccount", JSON.stringify(selectedAccount));
+			localStorage.setItem(
+				"selectedLocation",
+				JSON.stringify(selectedLocation)
+			);
+
+			handleNext(selectedAccount, selectedLocation);
+		} else {
+			alert("Please select a payment method and delivery location");
+		}
 	};
+
+	const handleReload = () => {
+		// reload the data from local storage
+		const savedCards = localStorage.getItem("cards");
+		if (savedCards) {
+			const cardData = JSON.parse(savedCards);
+			setDefaultCard(cardData[0]);
+			fetchCardLogo(cardData[0].number);
+			setSavedCards(cardData); // Optional: Store all the saved cards in state
+		}
+
+		// Fetch the saved location from local storage
+		const savedLocation = localStorage.getItem("locationData");
+		if (savedLocation) {
+			const locationData = JSON.parse(savedLocation);
+			setDefaultLocation(locationData);
+			setSavedLocation(locationData);
+		}
+		// fetch saved numbers from local storage
+		const savedNumbers = localStorage.getItem("AgrisolveNumbers");
+		if (savedNumbers) {
+			const numberData = JSON.parse(savedNumbers);
+			setDefaultNumber(numberData[0]);
+			setSavedNumbers(numberData);
+		}
+		// fetch saved paypal from local storage
+		const savedPaypal = localStorage.getItem("AgrisolvePaypal");
+		if (savedPaypal) {
+			const paypalData = JSON.parse(savedPaypal);
+			setDefaultPaypal(paypalData[0]);
+			setSavedPaypal(paypalData);
+		}
+	};
+
+	const handleSelectAccount = (cardId) => {
+		setDefaultCard(savedCards.find((card) => card.id === cardId));
+		setIsAccountSelected(true);
+	};
+
+	const handleSelectLocation = (location) => {
+		setDefaultLocation(savedLocation.find((loc) => loc.id === location.id));
+		setIsLocationSelected(true);
+	};
+
+	useEffect(() => {
+		console.log(
+			isAccountSelected,
+			isLocationSelected,
+			paymentMethod,
+			deliveryMethod
+		);
+	}, [isAccountSelected, isLocationSelected, paymentMethod, deliveryMethod]);
+
+	if (
+		isAccountSelected &&
+		(paymentMethod === "bank" ||
+			paymentMethod === "mpesa" ||
+			paymentMethod === "paypal")
+	) {
+		let selectedAccount;
+
+		switch (paymentMethod) {
+			case "bank":
+				selectedAccount = savedCards.find((card) => card.id === defaultCard.id);
+				break;
+			case "mpesa":
+				selectedAccount = savedNumbers.find(
+					(number) => number.id === defaultNumber.id
+				);
+				break;
+			case "paypal":
+				selectedAccount = savedPaypal.find(
+					(paypal) => paypal.id === defaultPaypal.id
+				);
+				break;
+			default:
+				break;
+		}
+
+		console.log(selectedAccount);
+	}
+
+	// fetch the selected delivery location
+	if (isLocationSelected === true && deliveryMethod !== "pickup") {
+		const selectedLocation = savedLocation.find(
+			(loc) => loc.id === defaultLocation.id
+		);
+		console.log(selectedLocation);
+	}
+
 	return (
 		<div className="Payment">
 			<div className="BankSection">
@@ -93,9 +249,14 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 						<h3>{paymentMethod ? paymentMethod : ""} details</h3>
 						{selectedPaymentMethod !== "cod" && (
 							<div className="BankButton">
-								<button className="InfoBtn" onClick={() => toggle("bank")}
+								<button
+									className="InfoBtn"
+									onClick={() => toggle(selectedPaymentMethod)}
 								>
 									<i className="fas fa-plus"></i>
+								</button>
+								<button className="InfoBtn" onClick={handleReload}>
+									<i className="fas fa-sync-alt"></i>
 								</button>
 							</div>
 						)}
@@ -104,10 +265,11 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 						<div className="Carousel">
 							<Carousel
 								autoPlay={true}
-								showArrows={true}
+								showArrows={false}
 								showStatus={true}
 								showThumbs={false}
-								showIndicators={true}cls
+								showIndicators={true}
+								cls
 								onChange={() => {}}
 								className="CarouselContainer"
 							>
@@ -130,9 +292,11 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 										<div className="Select">
 											<input
 												type="radio"
-												id="defaultBank"
+												id={card.id}
 												name="defaultBank"
-												value="defaultBank"
+												value={card.id}
+												checked={card.id === defaultCard?.id}
+												onChange={() => handleSelectAccount(card.id)}
 											/>
 										</div>
 									</div>
@@ -141,76 +305,80 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 						</div>
 					)}
 					{paymentMethod === "mpesa" && (
-						<>
-							<div className="Acc">
-								<h5>Default Mpesa number</h5>
-								<div className="MpesaAcc">
-									<div className="AccImage">
-										<i className="fas fa-mobile-alt"></i>
+						<div className="Carousel">
+							<Carousel
+								autoPlay={true}
+								showArrows={false}
+								showStatus={true}
+								showThumbs={false}
+								showIndicators={true}
+								onChange={() => {}}
+								className="CarouselContainer"
+							>
+								{savedNumbers?.map((number) => (
+									<div className="Acc" key={number.number}>
+										<h5>Default Mpesa Number</h5>
+										<div className="MpesaAcc">
+											<div className="AccImage">
+												<i className="fas fa-mobile-alt"></i>
+											</div>
+											<div className="Mpesa">
+												<span>{number.name}</span>
+												<p>{number.phoneNumber}</p>
+											</div>
+										</div>
+										<div className="Select">
+											<input
+												type="radio"
+												id={number.id}
+												name="defaultMpesa"
+												value="defaultMpesa"
+												checked={number.id === defaultNumber?.id}
+												onChange={() => handleSelectAccount(number.id)}
+											/>
+										</div>
 									</div>
-									<div className="Mpesa">
-										<span>Victor Kirui</span>
-										<p>+254 796 851 114</p>
-									</div>
-								</div>
-								<div className="Select">
-									<input
-										type="radio"
-										id="defaultLocation"
-										name="defaultLocation"
-										value="defaultLocation"
-									/>
-								</div>
-							</div>
-						</>
+								))}
+							</Carousel>
+						</div>
 					)}
 					{paymentMethod === "paypal" && (
-						<>
-							<div className="Acc">
-								<h5>Default Paypal Account</h5>
-								<div className="PaypalAcc">
-									<div className="AccImage">
-										<i className="fab fa-paypal"></i>
+						<div className="Carousel">
+							<Carousel
+								autoPlay={true}
+								showArrows={false}
+								showStatus={true}
+								showThumbs={false}
+								showIndicators={true}
+								onChange={() => {}}
+								className="CarouselContainer"
+							>
+								{savedPaypal?.map((pal) => (
+									<div className="Acc" key={pal.id}>
+										<h5>Default Paypal Account</h5>
+										<div className="PaypalAcc">
+											<div className="AccImage">
+												<i className="fab fa-paypal"></i>
+											</div>
+											<div className="Mpesa">
+												<span>{pal.name}</span>
+												<p>{pal.email}</p>
+											</div>
+										</div>
+										<div className="Select">
+											<input
+												type="radio"
+												id={pal.id}
+												name="defaultPaypal"
+												value="defaultPaypal"
+												checked={pal.id === defaultPaypal?.id}
+												onChange={() => handleSelectAccount(pal.id)}
+											/>
+										</div>
 									</div>
-									<div className="Paypal">
-										<span>Victor Kirui</span>
-										<p>kiruivictor097@gmail.com</p>
-									</div>
-								</div>
-								<div className="Select">
-									<input
-										type="radio"
-										id="defaultLocation"
-										name="defaultLocation"
-										value="defaultLocation"
-									/>
-								</div>
-							</div>
-						</>
-					)}
-					{paymentMethod === "cod" && (
-						<>
-							<div className="Acc">
-								<h5>Cash on Delivery</h5>
-								<div className="CodAcc">
-									<div className="AccImage">
-										<i className="fas fa-money-bill-wave"></i>
-									</div>
-									<div className="Cod">
-										<span>Pay on Delivery</span>
-										<p>Pay when order is received successfully</p>
-									</div>
-								</div>
-								<div className="Select">
-									<input
-										type="radio"
-										id="defaultLocation"
-										name="defaultLocation"
-										value="defaultLocation"
-									/>
-								</div>
-							</div>
-						</>
+								))}
+							</Carousel>
+						</div>
 					)}
 				</div>
 			</div>
@@ -226,36 +394,53 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 								<button className="InfoBtn" onClick={() => toggle("location")}>
 									<i className="fas fa-plus"></i>
 								</button>
+								<button className="InfoBtn" onClick={handleReload}>
+									<i className="fas fa-sync-alt"></i>
+								</button>
 							</div>
 						)}
 					</div>
-					{defaultLocation && (
-						<div className="Acc">
-							{deliveryMethod === "Pick-up" ? (
-								<h5>Nearest Pick-Up Location</h5>
-							) : (
-								<h5>Default Location</h5>
-							)}
-							<div className="LocationAcc">
-								<div className="AccImage">
-									<i className="fas fa-map-marker-alt"></i>
+					<div className="Carousel">
+						<Carousel
+							autoPlay={true}
+							showArrows={false}
+							showStatus={true}
+							showThumbs={false}
+							showIndicators={true}
+							onChange={() => {}}
+							className="CarouselContainer"
+						>
+							{savedLocation?.map((location) => (
+								<div className="Acc" key={location.id}>
+									<h5>Default Location</h5>
+									<div className="LocationAcc">
+										<div className="AccImage">
+											<i className="fas fa-map-marker-alt"></i>
+										</div>
+										<div className="Location">
+											<span>
+												{location.city} {location.county}
+											</span>
+											<p>
+												{location.address}, {location.postalCode},{" "}
+												{location.nearestPostOffice}
+											</p>
+										</div>
+									</div>
+									<div className="Select">
+										<input
+											type="radio"
+											id={location.id}
+											name="defaultLocation"
+											value="defaultLocation"
+											checked={location.id === defaultLocation?.id}
+											onChange={() => handleSelectLocation(location)}
+										/>
+									</div>
 								</div>
-								<div className="Location">
-									<span>{defaultLocation.county}</span>
-									<p>{defaultLocation.city}</p>
-									<p>{defaultLocation.address}</p>
-								</div>
-							</div>
-							<div className="Select">
-								<input
-									type="radio"
-									id="defaultLocation"
-									name="defaultLocation"
-									value="defaultLocation"
-								/>
-							</div>
-						</div>
-					)}
+							))}
+						</Carousel>
+					</div>
 				</div>
 				<div
 					className="Buttons"
@@ -271,7 +456,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 					<Button
 						type="primary"
 						onClick={handleSaveAndNext}
-						disabled={!defaultCard || !defaultLocation}
+						disabled={!isAccountSelected || !defaultLocation}
 					>
 						Next
 					</Button>

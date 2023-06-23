@@ -2,8 +2,8 @@
 .TopLeft {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     width: 100%;
     height: 100%;
     padding: 10px;
@@ -108,42 +108,104 @@
     opacity: 0.8;
 }
 
-.TopLeft .LeftModal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+.LeftModalContainer {
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.TopLeft .LeftModalContent {
-    background-color: #fff;
-    padding: 1rem;
+.LeftModalContainer .ant-modal-content {
+    width: 100%;
+    height: 100%;
     border-radius: 0.3rem;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
 }
 
-.TopLeft .LeftModalContent h4 {
+.LeftModalContainer .ant-modal-close {
+    display: none;
+}
+
+.LeftModal {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.3rem;
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+}
+
+.LeftModal .LeftModalContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1rem;
+    box-sizing: border-box;
+    border-radius: 0.3rem;
+
+
+    & .ModalImage {
+        width: 10rem;
+        height: 10rem;
+        margin-bottom: 1rem;
+        border-radius: 50%;
+
+    }
+
+    & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 0.3rem;
+        border: 1px solid red;
+    }
+}
+
+.LeftModal .LeftModalContent h4 {
     font-size: 1.2rem;
     font-weight: 600;
     color: #333;
     margin-bottom: 0.5rem;
 }
 
-.TopLeft .LeftModalContent p {
+.LeftModal .LeftModalContent p {
     font-size: 1rem;
     color: #333;
     margin-bottom: 1rem;
 }
 
-.TopLeft .LeftModalContent button {
+.Business {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    outline: 1px solid #333;
+    border-radius: 0.3rem;
+    margin-bottom: .5rem;
+}
+
+.LeftModal .LeftModalContent button {
     padding: 0.5rem 1rem;
     background-color: #333;
     color: #fff;
     border: none;
     border-radius: 0.3rem;
     cursor: pointer;
+}
+
+.OnlineBadge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
 }

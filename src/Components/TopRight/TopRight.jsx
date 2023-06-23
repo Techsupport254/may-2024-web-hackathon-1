@@ -1,20 +1,27 @@
 import React from "react";
 import "./TopRight.css";
-import { AgriproffesionalsData } from "../../Data";
 
-const TopRight = () => {
+const TopRight = ({ userData, isLoggedin }) => {
+	console.log(userData);
 	return (
 		<div className="TopRight">
-			<h3>AgriProffesionals</h3>
-			{AgriproffesionalsData.map((item, index) => {
+			<h3>Agribusinesses</h3>
+			{userData.map((user, index) => {
 				return (
 					<div className="TopRightItem" key={index}>
 						<div className="Image">
-							<img src={item.image} alt={item.name} />
+							<img
+								src={
+									user.image
+										? user.image
+										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+								}
+								alt={user.name}
+							/>
 						</div>
 						<div className="Title">
-							<span>{item.name}</span>
-							<span>{item.type}</span>
+							<span>{user.name}</span>
+							<span>{user.businessType}</span>
 						</div>
 						<div className="Icon">
 							<i className="fas fa-caret-down"></i>

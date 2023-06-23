@@ -14,11 +14,6 @@ const Register = () => {
 		setActiveStep(step);
 	};
 
-	// clear local storage
-	useEffect(() => {
-		localStorage.clear();
-	}, []);
-
 	const handleNextStep = () => {
 		setActiveStep((prevStep) => prevStep + 1);
 	};

@@ -18,6 +18,21 @@ router.get("/user", async (req, res) => {
 	}
 });
 
+// Handler for GET request to /api/users
+// Fetches users data
+router.get("/users", async (req, res) => {
+	try {
+		// Fetch the user data from the database
+		const users = await User.find();
+		res.status(200).json(users);
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching user data",
+			error: err,
+		});
+	}
+});
+
 // Handler for Patch request to /api/user/:email
 // Updates user data by email
 router.patch("/user/:email", async (req, res) => {

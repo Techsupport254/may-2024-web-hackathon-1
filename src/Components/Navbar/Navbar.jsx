@@ -94,7 +94,6 @@ const Navbar = ({ userData, onLogout }) => {
 													>
 														{item.icon}
 														{user.username}
-														{console.log(user.username)}
 														<i className="fas fa-caret-down"></i>
 													</Link>
 												</Dropdown>

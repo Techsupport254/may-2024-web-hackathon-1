@@ -90,7 +90,7 @@
 }
 
 .Acc {
-    width: 80% !important;
+    width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -141,7 +141,7 @@
 }
 
 .AccImage i {
-    font-size: 4rem;
+    font-size: 3rem;
     color: green;
 }
 
@@ -149,6 +149,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+
 }
 
 .AccountName,

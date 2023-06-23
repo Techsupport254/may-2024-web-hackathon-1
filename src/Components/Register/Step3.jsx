@@ -24,6 +24,7 @@ const Step3 = () => {
 
 				// Update the user state with the fetched data
 				setUser(response.data);
+				console.log(response.data);
 				const verificationStatus = response.data.verificationStatus;
 				setVerificationStatus(verificationStatus);
 			} catch (error) {
@@ -119,7 +120,6 @@ const Step3 = () => {
 				className="RegisterLeftCont"
 			>
 				<i className="fas fa-spinner fa-spin"></i>
-				<p>Loading...</p>
 			</div>
 		);
 	}

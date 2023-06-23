@@ -53,6 +53,14 @@ const Cart = () => {
 
 	const handleRemoveItem = (itemId) => {
 		setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+
+		// Update local storage to reflect changes
+		const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
+		localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+
+		// Reload the cart from local storage
+		const reloadedCart = JSON.parse(localStorage.getItem("cart"));
+		setCartItems(reloadedCart);
 	};
 
 	const totalSteps = () => {
@@ -166,7 +174,9 @@ const Cart = () => {
 								</Typography>
 								{renderStepContent()}
 								<div className="CartTotal">
-									<strong>Total: KSh.{totalPrice.toFixed(2)}</strong>
+									{activeStep !== 2 && (
+										<strong>Total: KSh.{totalPrice.toFixed(2)}</strong>
+									)}
 								</div>
 							</React.Fragment>
 						)}
