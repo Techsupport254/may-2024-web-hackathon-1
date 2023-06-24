@@ -13,7 +13,7 @@ import CartLeft from "../../CartLeft/CartLeft";
 
 const steps = ["Payment and Delivery Methods", "Fill Information", "Payment"];
 
-const Cart = () => {
+const Cart = ({ userData }) => {
 	const [activeStep, setActiveStep] = useState(0);
 	const [completed, setCompleted] = useState({});
 	const [paymentMethod, setPaymentMethod] = useState(null);
@@ -116,7 +116,7 @@ const Cart = () => {
 					/>
 				);
 			case 2:
-				return <Pay totalPrice={totalPrice} />;
+				return <Pay totalPrice={totalPrice} userData={userData} />;
 			default:
 				return null;
 		}

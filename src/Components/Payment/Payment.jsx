@@ -26,6 +26,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 	const [isLocationSelected, setIsLocationSelected] = useState(false);
 	const [savedLocation, setSavedLocation] = useState([]);
 	const [selectedPayment, setSelectedPayment] = useState(null);
+	const [error, setError] = useState(null);
 
 	const toggle = (componentType) => {
 		setModal(!modal);
@@ -115,7 +116,11 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 		let selectedLocation;
 		let selectedPayment = paymentMethod;
 
-		if (isAccountSelected && isLocationSelected) {
+		if (
+			isAccountSelected &&
+			isLocationSelected &&
+			(paymentMethod !== "cod" || deliveryMethod !== "Pick-up")
+		) {
 			switch (selectedPaymentMethod) {
 				case "bank":
 					selectedAccount = savedCards.find(
@@ -148,7 +153,10 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 
 			handleNext(selectedAccount, selectedLocation);
 		} else {
-			alert("Please select a payment method and delivery location");
+			setError("Please select an account, location and payment method");
+			setTimeout(() => {
+				setError(null);
+			}, 2000);
 		}
 	};
 
@@ -186,7 +194,14 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 	};
 
 	const handleSelectAccount = (cardId) => {
-		setDefaultCard(savedCards.find((card) => card.id === cardId));
+		if (paymentMethod === "bank") {
+			setDefaultCard(savedCards.find((card) => card.id === cardId));
+		} else if (paymentMethod === "mpesa") {
+			setDefaultNumber(savedNumbers.find((number) => number.id === cardId));
+		} else if (paymentMethod === "paypal") {
+			setDefaultPaypal(savedPaypal.find((paypal) => paypal.id === cardId));
+		}
+
 		setIsAccountSelected(true);
 	};
 
@@ -230,7 +245,13 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 				break;
 		}
 
-		console.log(selectedAccount);
+		console.log(paymentMethod, selectedAccount);
+
+		// save the selected account to local storage and paymentMethod
+		localStorage.setItem("selectedAccount", JSON.stringify(selectedAccount));
+		localStorage.setItem("paymentMethod", JSON.stringify(paymentMethod));
+	} else {
+		// todo: remove the selected account from local storage
 	}
 
 	// fetch the selected delivery location
@@ -238,11 +259,25 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 		const selectedLocation = savedLocation.find(
 			(loc) => loc.id === defaultLocation.id
 		);
-		console.log(selectedLocation);
+
+		// save the selected location to local storage
+		localStorage.setItem("selectedLocation", JSON.stringify(selectedLocation));
+		localStorage.setItem("deliveryMethod", JSON.stringify(deliveryMethod));
 	}
 
 	return (
 		<div className="Payment">
+			{error && (
+				<p
+					className="Error"
+					style={{
+						color: "red",
+						fontSize: ".7rem",
+					}}
+				>
+					{error}
+				</p>
+			)}
 			<div className="BankSection">
 				<div className="AccountProfile">
 					<div className="TopSec">
@@ -295,7 +330,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 												id={card.id}
 												name="defaultBank"
 												value={card.id}
-												checked={card.id === defaultCard?.id}
+												checked={null}
 												onChange={() => handleSelectAccount(card.id)}
 											/>
 										</div>
@@ -316,7 +351,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 								className="CarouselContainer"
 							>
 								{savedNumbers?.map((number) => (
-									<div className="Acc" key={number.number}>
+									<div className="Acc" key={number.id}>
 										<h5>Default Mpesa Number</h5>
 										<div className="MpesaAcc">
 											<div className="AccImage">
@@ -453,13 +488,23 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 					<Button type="default" onClick={handleBack}>
 						Back
 					</Button>
-					<Button
-						type="primary"
-						onClick={handleSaveAndNext}
-						disabled={!isAccountSelected || !defaultLocation}
-					>
-						Next
-					</Button>
+					{deliveryMethod !== "Pick-up" && paymentMethod !== "cod" ? (
+						<Button
+							type="primary"
+							onClick={handleSaveAndNext}
+							disabled={!isAccountSelected || !isLocationSelected}
+						>
+							Next
+						</Button>
+					) : (
+						<Button
+							type="primary"
+							onClick={handleSaveAndNext}
+							disabled={!isLocationSelected}
+						>
+							Next
+						</Button>
+					)}
 				</div>
 			</div>
 

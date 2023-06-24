@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const Token = require("./Routers/Tokens.jsx");
 
 // set up server
 const app = express();
@@ -23,6 +24,9 @@ mongoose
 		// set up routes after the database connection is established
 		app.use("/auth", require("./Routers/userRouter.jsx"));
 		app.get("/", (req, res) => res.send("API running"));
+		app.use("/payment", require("./Routers/paymentRouter.jsx"));
+
+		app.use("/token", Token);
 
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 	})
