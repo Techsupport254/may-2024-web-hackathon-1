@@ -3,7 +3,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const Token = require("./Routers/Tokens.jsx");
+const axios = require("axios"); // Add this line to import axios
+const Token = require("./Routers/TokenRouter.jsx"); // Add this line to import Token model
 
 // set up server
 const app = express();
@@ -25,8 +26,7 @@ mongoose
 		app.use("/auth", require("./Routers/userRouter.jsx"));
 		app.get("/", (req, res) => res.send("API running"));
 		app.use("/payment", require("./Routers/paymentRouter.jsx"));
-
-		app.use("/token", Token);
+		app.use("/tokens", Token); // Add this line to use Token router
 
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 	})

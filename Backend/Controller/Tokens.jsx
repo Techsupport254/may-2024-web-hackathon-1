@@ -1,27 +1,33 @@
-const axios = require("axios");
-require("dotenv").config();
+const express = require("express");
+const request = require("request");
+const app = express();
+const router = express.Router();
 
-const createToken = async (req, res, next) => {
-	const secret = process.env.SECRET_KEY;
-	const consumer = process.env.CONSUMER_KEY;
-	const url = "https://sandbox.safaricom.co.ke/oauth/v1/generate";
-	const auth = new Buffer.from(`${consumer}:${secret}`).toString("base64");
+app.get("/tokens", (req, res) => {
+	// access token
+	let consumer = process.env.CONSUMER_KEY;
+	let secret = process.env.SECRET_KEY;
+	let url =
+		"https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+	let auth = new Buffer(
+		consumer + ":" + secret
+	).toString("base64");
 
-	await axios
-		.get(url, {
+	request(
+		{
+			url: url,
 			headers: {
-				Authorization: `Basic ${auth}`,
+				Authorization: "Basic " + auth,
 			},
-		})
-		.then((response) => {
-			res.status(200).json(response.data);
-		})
-		.catch((err) => {
-			res.status(400).json({
-				message: "Error fetching token",
-				error: err,
-			});
-		});
-};
+		},
+		(error, response, body) => {
+			if (!error && response.statusCode === 200) {
+				res.json(JSON.parse(body));
+			} else {
+				res.json(error);
+			}
+		}
+	);
+});
 
-module.exports = { createToken };
+module.exports = router;
