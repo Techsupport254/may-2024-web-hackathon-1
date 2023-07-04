@@ -1,0 +1,25 @@
+.ConsultsTable {
+    width: 73.5vw;
+    height: 88vh;
+
+}
+
+.EmptyTable {
+    height: 70%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: larger;
+    font-weight: 500;
+
+    & i {
+        font-size: 2rem;
+    }
+
+    & p {
+        font-size: larger;
+        font-weight: 500;
+    }
+}

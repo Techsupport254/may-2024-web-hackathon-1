@@ -2,7 +2,6 @@ const router = require("express").Router();
 const Payment = require("../Models/PaymentModel.jsx");
 const axios = require("axios");
 
-
 // Handler for POST request to /api/payment
 // Creates a new payment
 router.post("/stk", async (req, res) => {
@@ -52,6 +51,33 @@ router.get("/payment/:id", async (req, res) => {
 		res.status(400).json({
 			message: "Error fetching payment data",
 			error: err,
+		});
+	}
+});
+
+// stripe payment
+router.post("/stripe", async (req, res) => {
+	const publicKey = process.env.STRIPE_PUBLIC_KEY;
+	const secretKey = process.env.STRIPE_SECRET_KEY;
+	const { amount, id } = req.body;
+	try {
+		const payment = await stripe.paymentIntents.create({
+			amount,
+			currency: "USD",
+			description: "Payment for farming consultation",
+			payment_method: id,
+			confirm: true,
+		});
+		console.log("Payment", payment);
+		res.json({
+			message: "Payment successful",
+			success: true,
+		});
+	} catch (error) {
+		console.log(error);
+		res.json({
+			message: "Payment failed",
+			success: false,
 		});
 	}
 });

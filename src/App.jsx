@@ -21,6 +21,10 @@ import Forgot from "./Components/Forgot/Forgot";
 import axios from "axios";
 
 const App = () => {
+	const [paymentData, setPaymentData] = useState(null);
+	const [isPaymentDataLoaded, setIsPaymentDataLoaded] = useState(false);
+	const [shippingData, setShippingData] = useState(null);
+	const [isShippingDataLoaded, setIsShippingDataLoaded] = useState(false);
 	const [userData, setUserData] = useState(null);
 	const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
 	const [isLoggedin, setIsLoggedin] = useState(false);
@@ -57,6 +61,33 @@ const App = () => {
 		};
 
 		fetchUserData();
+	}, []);
+
+	useEffect(() => {
+		const fetchPaymentData = async () => {
+			const paymentData = JSON.parse(localStorage.getItem("selectedAccount"));
+			if (paymentData) {
+				setPaymentData(paymentData);
+			}
+
+			setIsPaymentDataLoaded(true);
+		};
+
+		fetchPaymentData();
+	}, []);
+
+	useEffect(() => {
+		const fetchShippingData = async () => {
+			const shippingData = JSON.parse(localStorage.getItem("selectedLocation"));
+			if (shippingData) {
+				setShippingData(shippingData);
+			}
+			console.log(shippingData);
+
+			setIsShippingDataLoaded(true);
+		};
+
+		fetchShippingData();
 	}, []);
 
 	const handleLogout = async () => {
@@ -98,7 +129,13 @@ const App = () => {
 					transform: "translate(-50%, -50%)",
 				}}
 			>
-				<i className="fas fa-spinner fa-spin"></i>
+				<i
+					className="fas fa-spinner fa-spin"
+					style={{
+						fontSize: "50px",
+						color: "green",
+					}}
+				></i>
 			</div>
 		);
 	}
@@ -124,7 +161,12 @@ const App = () => {
 						<Route
 							path="/profile"
 							element={
-								<Profile userData={userData} handleLogout={handleLogout} />
+								<Profile
+									userData={userData}
+									handleLogout={handleLogout}
+									shippingData={shippingData}
+									paymentData={paymentData}
+								/>
 							}
 						/>
 						<Route path="/orders" element={<Orders userData={userData} />} />
@@ -142,6 +184,8 @@ const App = () => {
 									replace
 									userData={userData}
 									handleLogout={handleLogout}
+									paymentData={paymentData}
+									shippingData={shippingData}
 								/>
 							}
 						/>

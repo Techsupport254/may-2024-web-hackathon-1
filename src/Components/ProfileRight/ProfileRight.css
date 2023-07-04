@@ -1,15 +1,17 @@
-.ProfileRight{
+.ProfileRight {
     width: 100%;
     height: 100%;
     background-color: #fff;
-    padding: 1rem;
+    padding: .5rem 1rem;
     border-radius: 10px;
     overflow: hidden;
 }
 
-.ProfileRightContainer{
+.ProfileRightContainer {
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
 }

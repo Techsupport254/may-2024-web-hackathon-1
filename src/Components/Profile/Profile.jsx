@@ -3,13 +3,12 @@ import "./Profile.css";
 import ProfileLeft from "../profileLeft/ProfileLeft";
 import ProfileRight from "../ProfileRight/ProfileRight";
 
-const Profile = ({ userData, isLoggedin }) => {
+const Profile = ({ userData, isLoggedin, shippingData, paymentData }) => {
 	const [activeMenu, setActiveMenu] = useState(""); // State to keep track of active menu item
 
 	const handleMenuClick = (item) => {
 		setActiveMenu(item); // Update the active menu item
 	};
-
 
 	return (
 		<div className="Profile">
@@ -26,6 +25,8 @@ const Profile = ({ userData, isLoggedin }) => {
 					userData={userData}
 					isLoggedin={isLoggedin}
 					activeMenu={activeMenu}
+					paymentData={paymentData}
+					shippingData={shippingData}
 				/>
 			</div>
 		</div>

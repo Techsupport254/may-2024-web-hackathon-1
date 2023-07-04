@@ -1,8 +1,9 @@
 const axios = require("axios");
 const router = require("express").Router();
+const Transaction = require("../Models/PaymentModel.jsx");
 
 // register url
-router.get("/register", accessToken, (req, res) => {
+router.get("/register", accessToken, (req, res, next) => {
 	let url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl";
 	let auth = "Bearer " + req.access_token;
 
@@ -12,8 +13,8 @@ router.get("/register", accessToken, (req, res) => {
 			{
 				ShortCode: process.env.SHORT_CODE,
 				ResponseType: "Completed",
-				ConfirmationURL: "http://102.215.76.91/confirmation",
-				ValidationURL: "http://102.215.76.91/validation",
+				ConfirmationURL: "http://102.215.76.91/tokens/confirmation",
+				ValidationURL: "http://102.215.76.91/tokens/validation",
 			},
 			{
 				headers: {
@@ -31,14 +32,14 @@ router.get("/register", accessToken, (req, res) => {
 });
 
 // validation
-router.post("/validation", (req, res) => {
+router.post("/tokens/validation", (req, res) => {
 	console.log("..............validation...............");
 	console.log(req.body);
 	res.status(200).json(req.body);
 });
 
 // confirmation
-router.post("/confirmation", (req, res) => {
+router.post("/tokens/confirmation", (req, res) => {
 	console.log("..............confirmation...............");
 	console.log(req.body);
 	res.status(200).json(req.body);
@@ -116,7 +117,6 @@ router.get(
 				}
 			)
 			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
 				req.balanceResponse = response.data;
 				next();
 			})
@@ -126,20 +126,31 @@ router.get(
 			});
 	},
 	(req, res) => {
-		// Use the response from the previous middleware to return the balance result
 		res.status(200).json(req.balanceResponse);
 	}
 );
 
 // stk push
-router.get(
+router.post(
 	"/stkpush",
 	accessToken,
 	(req, res, next) => {
-		let url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
-		let auth = "Bearer " + req.access_token;
+		const {
+			amount,
+			phone,
+			orderId,
+			reason,
+			userId,
+			paymentMethod,
+			deliveryMethod,
+			location,
+			products,
+		} = req.body;
+		const url =
+			"https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest";
+		const auth = "Bearer " + req.access_token;
 
-		let date = new Date();
+		const date = new Date();
 		const timestamp =
 			date.getFullYear().toString() +
 			(date.getMonth() + 1).toString().padStart(2, "0") +
@@ -148,8 +159,8 @@ router.get(
 			date.getMinutes().toString().padStart(2, "0") +
 			date.getSeconds().toString().padStart(2, "0");
 
-		const Password = Buffer.from(
-			"174379" + process.env.PASSKEY + timestamp
+		const password = Buffer.from(
+			process.env.BUSINESS_SHORT_CODE + process.env.PASSKEY + timestamp
 		).toString("base64");
 
 		axios
@@ -157,14 +168,14 @@ router.get(
 				url,
 				{
 					BusinessShortCode: process.env.BUSINESS_SHORT_CODE,
-					Password: Password,
+					Password: password,
 					Timestamp: timestamp,
 					TransactionType: "CustomerPayBillOnline",
-					Amount: "1",
-					PartyA: "254716404137",
+					Amount: amount,
+					PartyA: phone,
 					PartyB: process.env.BUSINESS_SHORT_CODE,
-					PhoneNumber: "254716404137",
-					CallBackURL: "http://102.215.76.91/stk_callback",
+					PhoneNumber: phone,
+					CallBackURL: "https://90e4-102-215-76-91.ngrok-free.app/stk_callback",
 					AccountReference: "Test",
 					TransactionDesc: "Test",
 				},
@@ -175,8 +186,30 @@ router.get(
 				}
 			)
 			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
 				req.stkResponse = response.data;
+
+				// save to db
+				const newTransaction = new Transaction({
+					amount,
+					phone,
+					reason,
+					orderId,
+					userId,
+					paymentMethod,
+					deliveryMethod,
+					location,
+					products,
+				});
+
+				newTransaction
+					.save()
+					.then((transaction) => {
+						console.log(transaction);
+					})
+					.catch((error) => {
+						console.log(error);
+					});
+
 				next();
 			})
 			.catch((error) => {
@@ -185,7 +218,6 @@ router.get(
 			});
 	},
 	(req, res) => {
-		// Use the response from the previous middleware to return the stk push result
 		res.status(200).json(req.stkResponse);
 	}
 );
@@ -195,172 +227,6 @@ router.post("/stk_callback", (req, res) => {
 	console.log(req.body);
 	res.status(200).json(req.body);
 });
-
-// stk push query
-router.get(
-	"/stkpushquery",
-	accessToken,
-	(req, res, next) => {
-		let url = "https://sandbox.safaricom.co.ke/mpesa/stkpushquery/v1/query";
-		let auth = "Bearer " + req.access_token;
-
-		axios
-			.post(
-				url,
-				{
-					BusinessShortCode: process.env.BUSINESS_SHORT_CODE,
-					Password: process.env.PASSWORD,
-					Timestamp: process.env.TIMESTAMP,
-					CheckoutRequestID: "ws_CO_27112017183829662",
-				},
-				{
-					headers: {
-						Authorization: auth,
-					},
-				}
-			)
-			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
-				req.stkQueryResponse = response.data;
-				next();
-			})
-			.catch((error) => {
-				console.log(error);
-				res.status(500).json({ error: "An error occurred." });
-			});
-	},
-	(req, res) => {
-		// Use the response from the previous middleware to return the stk push query result
-		res.status(200).json(req.stkQueryResponse);
-	}
-);
-
-// c2b register
-router.get(
-	"/c2bregister",
-	accessToken,
-	(req, res, next) => {
-		let url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl";
-		let auth = "Bearer " + req.access_token;
-
-		axios
-			.post(
-				url,
-				{
-					ShortCode: process.env.BUSINESS_SHORT_CODE,
-					ResponseType: "Completed",
-					ConfirmationURL: "",
-					ValidationURL: "",
-				},
-				{
-					headers: {
-						Authorization: auth,
-					},
-				}
-			)
-			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
-				req.c2bRegisterResponse = response.data;
-				next();
-			})
-			.catch((error) => {
-				console.log(error);
-				res.status(500).json({ error: "An error occurred." });
-			});
-	},
-	(req, res) => {
-		// Use the response from the previous middleware to return the c2b register result
-		res.status(200).json(req.c2bRegisterResponse);
-	}
-);
-
-// c2b simulate
-router.get(
-	"/c2bsimulate",
-	accessToken,
-	(req, res, next) => {
-		let url = "https://sandbox.safaricom.co.ke/mpesa/c2b/v1/simulate";
-		let auth = "Bearer " + req.access_token;
-
-		axios
-			.post(
-				url,
-				{
-					ShortCode: process.env.BUSINESS_SHORT_CODE,
-					CommandID: "CustomerPayBillOnline",
-					Amount: "1",
-					Msisdn: process.env.PARTYA,
-					BillRefNumber: "Test",
-				},
-				{
-					headers: {
-						Authorization: auth,
-					},
-				}
-			)
-
-			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
-				req.c2bSimulateResponse = response.data;
-				next();
-			})
-
-			.catch((error) => {
-				console.log(error);
-				res.status(500).json({ error: "An error occurred." });
-			});
-	},
-	(req, res) => {
-		// Use the response from the previous middleware to return the c2b simulate result
-		res.status(200).json(req.c2bSimulateResponse);
-	}
-);
-
-// b2c payment request
-router.get(
-	"/b2c",
-	accessToken,
-	(req, res, next) => {
-		let url = "https://sandbox.safaricom.co.ke/mpesa/b2c/v1/paymentrequest";
-		let auth = "Bearer " + req.access_token;
-
-		axios
-			.post(
-				url,
-				{
-					InitiatorName: process.env.INITIATOR_NAME,
-					SecurityCredential: process.env.SECURITY_CREDENTIAL,
-					CommandID: "BusinessPayment",
-					Amount: "100",
-					PartyA: process.env.PARTYA,
-					PartyB: process.env.PARTYB,
-					Remarks: "Testing",
-					QueueTimeOutURL: "",
-					ResultURL: "",
-					Occasion: "",
-				},
-				{
-					headers: {
-						Authorization: auth,
-					},
-				}
-			)
-			.then((response) => {
-				// Don't return response.data here, instead call the next middleware
-				req.b2cResponse = response.data;
-				next();
-			})
-
-			.catch((error) => {
-				console.log(error);
-				res.status(500).json({ error: "An error occurred." });
-			});
-	},
-	(req, res) => {
-		// Use the response from the previous middleware to return the b2c result
-		res.status(200).json(req.b2cResponse);
-	}
-);
 
 // Handler for GET request to /api/tokens
 // Fetches access token
@@ -381,7 +247,6 @@ async function accessToken(req, res, next) {
 
 		req.access_token = response.data.access_token;
 
-		// Call the next middleware
 		next();
 	} catch (error) {
 		console.log(error);

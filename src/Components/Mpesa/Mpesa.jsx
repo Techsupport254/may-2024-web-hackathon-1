@@ -6,6 +6,13 @@ const Mpesa = ({ onClose }) => {
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 
+	// validate phone number
+	const validatePhoneNumber = (number) => {
+		const phoneNumberRegex = /^(\+254|0)\d{9}$/;
+		return phoneNumberRegex.test(number);
+		console.log(phoneNumberRegex(number));
+	};
+
 	const saveNumber = () => {
 		// Save phone number and name to local storage
 		const existingNumbers =

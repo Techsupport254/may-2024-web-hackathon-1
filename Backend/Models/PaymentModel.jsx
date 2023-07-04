@@ -14,6 +14,30 @@ const PaymentSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	userId: {
+		type: String,
+		required: true,
+	},
+	orderId: {
+		type: String,
+		required: true,
+	},
+	paymentMethod: {
+		type: String,
+		required: true,
+	},
+	deliveryMethod: {
+		type: String,
+		required: true,
+	},
+	location: {
+		type: Object,
+		required: true,
+	},
+	products: {
+		type: Array,
+		required: true,
+	},
 });
 
-module.exports = Payment = mongoose.model("payment", PaymentSchema);
+module.exports = Payment = mongoose.model("Transaction", PaymentSchema);

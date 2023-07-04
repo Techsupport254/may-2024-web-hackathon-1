@@ -1,0 +1,105 @@
+.Messages {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.MessagesContainer {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    overflow-y: auto;
+}
+
+.MessageRow {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: .5rem;
+    padding: .3rem 0;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.MessageProfile {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+.MessageDetails {
+    width: 75%;
+    height: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    & span {
+        font-size: .9rem;
+        color: var(--color-text-light);
+        font-weight: 600;
+
+    }
+
+    & p {
+        font-size: .8rem;
+        color: var(--color-text-light);
+        font-weight: 400;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: .3rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.MessageRight {
+    width: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: .3rem;
+
+    & p {
+        font-size: .9rem;
+        color: var(--color-text-light);
+        font-weight: 500;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: .3rem;
+
+        & p {
+            font-size: .8rem;
+            color: var(--color-text-light);
+            font-weight: 400;
+        }
+    }
+}

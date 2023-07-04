@@ -7,10 +7,21 @@ import AccountConsults from "../AccountConsults/AccountConsults";
 import AccountCart from "../AccountCart/AccountCart";
 import AccountSettings from "../AccountSettings/AccountSettings";
 
-const ProfileRight = ({ activeMenu, userData, isLoggedin }) => {
+const ProfileRight = ({
+	activeMenu,
+	userData,
+	isLoggedin,
+	paymentData,
+	shippingData,
+}) => {
 	const components = {
 		"My Account": (
-			<ProfileAccount userData={userData} isLoggedin={isLoggedin} />
+			<ProfileAccount
+				userData={userData}
+				isLoggedin={isLoggedin}
+				paymentData={paymentData}
+				shippingData={shippingData}
+			/>
 		),
 		Notifications: (
 			<Notifications userData={userData} isLoggedin={isLoggedin} />

@@ -26,7 +26,9 @@ const TopLeft = ({ userData, isLoggedin }) => {
 	// check if the data is loaded or not
 	if (userData.length === 0) {
 		return (
-			<div>
+			<div
+			className="SpinnerLoader"
+			>
 				<i className="fas fa-spinner fa-spin"></i>
 			</div>
 		);

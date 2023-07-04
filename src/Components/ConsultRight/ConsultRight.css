@@ -8,6 +8,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     padding: 1%;
+    overflow: auto;
 }
 
 .CRight h3 {
@@ -16,6 +17,6 @@
     margin-bottom: 1rem;
 }
 
-.CRightContainer{
+.CRightContainer {
     width: 98%;
 }

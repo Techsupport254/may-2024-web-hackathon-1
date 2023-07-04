@@ -182,6 +182,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 		if (savedNumbers) {
 			const numberData = JSON.parse(savedNumbers);
 			setDefaultNumber(numberData[0]);
+			setIsAccountSelected(numberData[0]);
 			setSavedNumbers(numberData);
 		}
 		// fetch saved paypal from local storage
@@ -189,6 +190,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 		if (savedPaypal) {
 			const paypalData = JSON.parse(savedPaypal);
 			setDefaultPaypal(paypalData[0]);
+			setIsAccountSelected(paypalData[0]);
 			setSavedPaypal(paypalData);
 		}
 	};
@@ -330,7 +332,6 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 												id={card.id}
 												name="defaultBank"
 												value={card.id}
-												checked={null}
 												onChange={() => handleSelectAccount(card.id)}
 											/>
 										</div>
@@ -368,7 +369,6 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 												id={number.id}
 												name="defaultMpesa"
 												value="defaultMpesa"
-												checked={number.id === defaultNumber?.id}
 												onChange={() => handleSelectAccount(number.id)}
 											/>
 										</div>
@@ -406,7 +406,6 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 												id={pal.id}
 												name="defaultPaypal"
 												value="defaultPaypal"
-												checked={pal.id === defaultPaypal?.id}
 												onChange={() => handleSelectAccount(pal.id)}
 											/>
 										</div>
@@ -457,7 +456,7 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 												{location.city} {location.county}
 											</span>
 											<p>
-												{location.address}, {location.postalCode},{" "}
+												{location.postalCode}, {location.address},{" "}
 												{location.nearestPostOffice}
 											</p>
 										</div>
@@ -468,7 +467,6 @@ const Payment = ({ handleNext, handleBack, paymentMethod, deliveryMethod }) => {
 											id={location.id}
 											name="defaultLocation"
 											value="defaultLocation"
-											checked={location.id === defaultLocation?.id}
 											onChange={() => handleSelectLocation(location)}
 										/>
 									</div>

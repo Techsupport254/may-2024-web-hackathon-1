@@ -45,7 +45,12 @@ const BannerTop = () => {
 	// check if the data is loaded or not
 	if (userData.length === 0) {
 		return (
-			<div>
+			<div
+				style={{
+					fontSize: "2rem",
+					color: "green",
+				}}
+			>
 				<i className="fas fa-spinner fa-spin"></i>
 			</div>
 		);

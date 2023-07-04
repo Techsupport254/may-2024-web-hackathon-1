@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import "./ProfileAccount.css";
+import { Badge } from "@mui/material";
 
-const ProfileAccount = ({ userData, isLoggedin }) => {
+const ProfileAccount = ({
+	userData,
+	isLoggedin,
+	shippingData,
+	paymentData,
+}) => {
 	// log user data
-	console.log(userData);
+	console.log(userData, isLoggedin, shippingData, paymentData);
 
 	const [edit, setEdit] = useState(true);
 
@@ -15,206 +21,135 @@ const ProfileAccount = ({ userData, isLoggedin }) => {
 		password: "**********",
 	});
 
-	const [paymentInfo, setPaymentInfo] = useState({
-		cardNumber: userData?.payment?.cardNumber || "",
-		cardName: userData?.payment?.cardName || "",
-		expiryDate: userData?.payment?.expiryDate || "",
-		cvv: userData?.payment?.cvv || "",
-	});
-
-	const [shippingInfo, setShippingInfo] = useState({
-		name: userData?.shipping?.name || "",
-		email: userData?.shipping?.email || "",
-		phone: userData?.shipping?.phone || "",
-		address: userData?.shipping?.address || "",
-	});
-
 	const handleToggleEdit = () => {
 		setEdit(!edit);
 	};
 
+	const handleUpdateProfilePic = () => {
+		// change profile pic logic
+	};
+
+	console.log(shippingData, paymentData);
 	const renderAccountInfo = () => {
 		return (
 			<div className="AccountInfo">
 				<h4>Account Information</h4>
 				<div className="AccountInfoContainer">
-					<div className="AccountInfoItem">
-						<label htmlFor="name">Name</label>
-						<input
-							type="text"
-							name="name"
-							id="name"
-							value={accountInfo.name}
-							disabled={edit}
-						/>
+					<div className="AccountInfoLeft">
+						<Badge
+							badgeContent={
+								edit ? (
+									<i className="fas fa-edit"></i>
+								) : (
+									<i className="fas fa-check"></i>
+								)
+							}
+							color="primary"
+							overlap="circular"
+							anchorOrigin={{
+								vertical: "top",
+								horizontal: "topRight",
+							}}
+							className="ProfileBadge"
+							onClick={handleToggleEdit}
+						></Badge>
+						<div className="ProfilePic">
+							<img
+								src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+								alt="profile"
+							/>
+							<Badge
+								badgeContent={<i className="fas fa-camera"></i>}
+								color="primary"
+								overlap="circular"
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "right",
+								}}
+								className="ProfilePicBadge"
+							></Badge>
+						</div>
+
+						<p>
+							{userData?.name}
+							<span>({userData.username})</span>
+							<br />
+							<span>
+								Joined on <i className="fas fa-calendar-alt"></i>{" "}
+								{userData.created_at
+									? new Date(userData.created_at).toDateString()
+									: "N/A"}
+							</span>
+						</p>
+						<h5>
+							<i className="fas fa-user-tag"></i>&nbsp;
+							{userData?.userType}
+						</h5>
+						<div className="ProfileContent">
+							<span>
+								<i className="fas fa-store"></i>&nbsp;
+								{userData?.businessName} &nbsp;&nbsp;|&nbsp;&nbsp;{" "}
+								{userData?.businessType}
+							</span>
+							<h5>
+								<i className="fas fa-map-marker-alt"></i>&nbsp;
+								{userData?.businessLocation}
+							</h5>
+
+							<p>
+								<i className="fas fa-info-circle"></i>&nbsp;
+								{userData?.businessDescription}
+							</p>
+						</div>
 					</div>
-					<div className="AccountInfoItem">
-						<label htmlFor="email">Email</label>
-						<input
-							type="email"
-							name="email"
-							id="email"
-							value={accountInfo.email}
-							disabled={edit}
-						/>
-					</div>
-					<div className="AccountInfoItem">
-						<label htmlFor="phone">Phone</label>
-						<input
-							type="text"
-							name="phone"
-							id="phone"
-							value={accountInfo.phone}
-							disabled={edit}
-						/>
-					</div>
-					<div className="AccountInfoItem">
-						<label htmlFor="address">Address</label>
-						<input
-							type="text"
-							name="address"
-							id="address"
-							value={accountInfo.address}
-							disabled={edit}
-						/>
-					</div>
-					<div className="AccountInfoItem">
-						<label htmlFor="password">Password</label>
-						<input
-							type="password"
-							name="password"
-							id="password"
-							value={accountInfo.password}
-							disabled={edit}
-						/>
-					</div>
-					<div className="AccountInfoItem">
-						<button className="btn btn-primary" onClick={handleToggleEdit}>
-							{edit ? "Edit" : "Save"}
-						</button>
+					<div className="AccountInfoRight">
+						<div className="AccountInfoItem">
+							<label htmlFor="email">Email</label>
+							<input
+								type="email"
+								name="email"
+								id="email"
+								value={accountInfo.email}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="phone">Phone</label>
+							<input
+								type="text"
+								name="phone"
+								id="phone"
+								value={accountInfo.phone}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="address">Address</label>
+							<input
+								type="text"
+								name="address"
+								id="address"
+								value={accountInfo.address}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="password">Password</label>
+							<input
+								type="password"
+								name="password"
+								id="password"
+								value={accountInfo.password}
+								disabled={edit}
+							/>
+						</div>
 					</div>
 				</div>
 			</div>
 		);
 	};
 
-	const renderPaymentInfo = () => {
-		return (
-			<div className="PaymentInfo">
-				<h4>Payment Information</h4>
-				<div className="PaymentInfoContainer">
-					<div className="PaymentInfoItem">
-						<label htmlFor="cardNumber">Card Number</label>
-						<input
-							type="text"
-							name="cardNumber"
-							id="cardNumber"
-							value={paymentInfo.cardNumber}
-							disabled={edit}
-						/>
-					</div>
-					<div className="PaymentInfoItem">
-						<label htmlFor="cardName">Card Name</label>
-						<input
-							type="text"
-							name="cardName"
-							id="cardName"
-							value={paymentInfo.cardName}
-							disabled={edit}
-						/>
-					</div>
-					<div className="PaymentInfoItem">
-						<label htmlFor="expiryDate">Expiry Date</label>
-						<input
-							type="text"
-							name="expiryDate"
-							id="expiryDate"
-							value={paymentInfo.expiryDate}
-							disabled={edit}
-						/>
-					</div>
-					<div className="PaymentInfoItem">
-						<label htmlFor="cvv">CVV</label>
-						<input
-							type="text"
-							name="cvv"
-							id="cvv"
-							value={paymentInfo.cvv}
-							disabled={edit}
-						/>
-					</div>
-					<div className="PaymentInfoItem">
-						<button className="btn btn-primary" onClick={handleToggleEdit}>
-							{edit ? "Edit" : "Save"}
-						</button>
-					</div>
-				</div>
-			</div>
-		);
-	};
-
-	const renderShippingInfo = () => {
-		return (
-			<div className="ShippingInfo">
-				<h4>Shipping Information</h4>
-				<div className="ShippingInfoContainer">
-					<div className="ShippingInfoItem">
-						<label htmlFor="name">Name</label>
-						<input
-							type="text"
-							name="name"
-							id="name"
-							value={shippingInfo.name}
-							disabled={edit}
-						/>
-					</div>
-					<div className="ShippingInfoItem">
-						<label htmlFor="email">Email</label>
-						<input
-							type="email"
-							name="email"
-							id="email"
-							value={shippingInfo.email}
-							disabled={edit}
-						/>
-					</div>
-					<div className="ShippingInfoItem">
-						<label htmlFor="phone">Phone</label>
-						<input
-							type="text"
-							name="phone"
-							id="phone"
-							value={shippingInfo.phone}
-							disabled={edit}
-						/>
-					</div>
-					<div className="ShippingInfoItem">
-						<label htmlFor="address">Address</label>
-						<input
-							type="text"
-							name="address"
-							id="address"
-							value={shippingInfo.address}
-							disabled={edit}
-						/>
-					</div>
-					<div className="ShippingInfoItem">
-						<button className="btn btn-primary" onClick={handleToggleEdit}>
-							{edit ? "Edit" : "Save"}
-						</button>
-					</div>
-				</div>
-			</div>
-		);
-	};
-
-	return (
-		<div className="ProfileAccount">
-			{renderAccountInfo()}
-			{renderPaymentInfo()}
-			{renderShippingInfo()}
-		</div>
-	);
+	return <div className="ProfileAccount">{renderAccountInfo()}</div>;
 };
 
 export default ProfileAccount;

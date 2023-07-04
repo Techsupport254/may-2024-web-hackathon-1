@@ -32,6 +32,40 @@ const Bank = ({ onClose }) => {
 				break;
 			case "expiry":
 				updatedValue = value.replace(/[^0-9/]/g, "").slice(0, 5);
+
+				if (updatedValue.length === 3 && !updatedValue.includes("/")) {
+					updatedValue = `${updatedValue.slice(0, 2)}/${updatedValue.slice(2)}`;
+				}
+
+				// If the user is deleting the slash, remove the last character
+				if (value.length === 4 && value[3] === "/") {
+					updatedValue = value.slice(0, 3);
+				}
+
+				// If the user is deleting the last number, remove the last character
+				if (value.length === 2 && state.expiry.length === 3) {
+					updatedValue = value.slice(0, 1);
+				}
+
+				// the first 2 numbers should be less than 13
+				if (updatedValue.length === 2 && Number(updatedValue) > 12) {
+					updatedValue = value.slice(0, 1);
+				}
+
+				// the last 2 numbers should the current year or greater
+				if (updatedValue.length === 5) {
+					const currentYear = new Date().getFullYear().toString().slice(2);
+					const currentMonth = new Date().getMonth() + 1;
+
+					if (
+						Number(updatedValue.slice(3)) < Number(currentYear) ||
+						(Number(updatedValue.slice(3)) === Number(currentYear) &&
+							Number(updatedValue.slice(0, 2)) < currentMonth)
+					) {
+						updatedValue = value.slice(0, 3);
+					}
+				}
+
 				break;
 			case "cvc":
 				updatedValue = value.replace(/[^0-9]/g, "").slice(0, 3);

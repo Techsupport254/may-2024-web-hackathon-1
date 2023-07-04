@@ -3,15 +3,15 @@ import "./Consult.css";
 import ConsultRight from "../../ConsultRight/ConsultRight";
 import ConsultLeft from "../../ConsultLeft/ConsultLeft";
 
-const Consult = () => {
+const Consult = ({ userData }) => {
 	return (
 		<div className="Consult">
 			<div className="ConsultContainer">
 				<div className="ConsultLeft">
-					<ConsultLeft />
+					<ConsultLeft userData={userData} />
 				</div>
 				<div className="ConsultRight">
-					<ConsultRight />
+					<ConsultRight userData={userData} />
 				</div>
 			</div>
 		</div>

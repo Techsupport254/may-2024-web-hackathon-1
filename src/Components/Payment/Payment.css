@@ -161,6 +161,10 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
 }
 
 .AccountName span,

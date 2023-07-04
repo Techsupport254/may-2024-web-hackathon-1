@@ -10,6 +10,7 @@ import Info from "../../Info/Info";
 import Pay from "../../Pay/Pay";
 import Payment from "../../Payment/Payment";
 import CartLeft from "../../CartLeft/CartLeft";
+import { Skeleton } from "antd";
 
 const steps = ["Payment and Delivery Methods", "Fill Information", "Payment"];
 
@@ -75,8 +76,6 @@ const Cart = ({ userData }) => {
 		if (paymentMethod && deliveryMethod) {
 			setPaymentMethod(paymentMethod);
 			setDeliveryMethod(deliveryMethod);
-
-			console.log("Payment Method: ", paymentMethod);
 		}
 
 		setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -122,6 +121,10 @@ const Cart = ({ userData }) => {
 		}
 	};
 
+	// check if cart is empty
+	const isCartEmpty = cartItems.length === 0;
+	console.log("isCartEmpty", isCartEmpty);
+
 	return (
 		<div className="Cart">
 			<div className="LeftCart">
@@ -133,56 +136,63 @@ const Cart = ({ userData }) => {
 					handleRemoveItem={handleRemoveItem}
 				/>
 			</div>
-			<div className="RightCart">
-				<Box
-					sx={{ width: "100%", backgroundColor: "#f9f9f9", padding: "20px" }}
-				>
-					<Stepper
-						linear
-						activeStep={activeStep}
-						sx={{ backgroundColor: "transparent" }}
+			{isCartEmpty ? (
+				<div className="RightCart">
+					{/* skeleton for rightside */}
+					<Skeleton active paragraph={{ rows: 10 }} />
+				</div>
+			) : (
+				<div className="RightCart">
+					<Box
+						sx={{ width: "100%", backgroundColor: "#f9f9f9", padding: "20px" }}
 					>
-						{steps.map((label, index) => (
-							<Step key={label}>
-								<StepButton
-									color="success"
-									onClick={() => setActiveStep(index)}
-									completed={completed[index]}
-								></StepButton>
-							</Step>
-						))}
-					</Stepper>
+						<Stepper
+							linear
+							activeStep={activeStep}
+							sx={{ backgroundColor: "transparent" }}
+						>
+							{steps.map((label, index) => (
+								<Step key={label}>
+									<StepButton
+										color="success"
+										onClick={() => setActiveStep(index)}
+										completed={completed[index]}
+									></StepButton>
+								</Step>
+							))}
+						</Stepper>
 
-					<div>
-						{activeStep === steps.length ? (
-							<React.Fragment>
-								<Typography sx={{ mt: 2, mb: 1 }}>
-									Order placed successfully!
-								</Typography>
-								<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-									<Box sx={{ flex: "1 1 auto" }} />
-									<Button variant="contained" onClick={handleReset}>
-										<i className="fas fa-download"></i>
-										Receipt
-									</Button>
-								</Box>
-							</React.Fragment>
-						) : (
-							<React.Fragment>
-								<Typography sx={{ mt: 2, mb: 0.5, py: 0.5 }}>
-									Step {activeStep + 1}: {steps[activeStep]}
-								</Typography>
-								{renderStepContent()}
-								<div className="CartTotal">
-									{activeStep !== 2 && (
-										<strong>Total: KSh.{totalPrice.toFixed(2)}</strong>
-									)}
-								</div>
-							</React.Fragment>
-						)}
-					</div>
-				</Box>
-			</div>
+						<div>
+							{activeStep === steps.length ? (
+								<React.Fragment>
+									<Typography sx={{ mt: 2, mb: 1 }}>
+										Order placed successfully!
+									</Typography>
+									<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+										<Box sx={{ flex: "1 1 auto" }} />
+										<Button variant="contained" onClick={handleReset}>
+											<i className="fas fa-download"></i>
+											Receipt
+										</Button>
+									</Box>
+								</React.Fragment>
+							) : (
+								<React.Fragment>
+									<Typography sx={{ mt: 2, mb: 0.5, py: 0.5 }}>
+										Step {activeStep + 1}: {steps[activeStep]}
+									</Typography>
+									{renderStepContent()}
+									<div className="CartTotal">
+										{activeStep !== 2 && (
+											<strong>Total: KSh.{totalPrice.toFixed(2)}</strong>
+										)}
+									</div>
+								</React.Fragment>
+							)}
+						</div>
+					</Box>
+				</div>
+			)}
 		</div>
 	);
 };

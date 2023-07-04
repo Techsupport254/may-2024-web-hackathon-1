@@ -11,7 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+	cors({
+		origin: ["http://localhost:5173", "http://localhost:3000"],
+		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+		credentials: true,
+	})
+);
 app.use(cookieParser());
 
 // connect to MongoDB using promises
@@ -26,7 +32,9 @@ mongoose
 		app.use("/auth", require("./Routers/userRouter.jsx"));
 		app.get("/", (req, res) => res.send("API running"));
 		app.use("/payment", require("./Routers/paymentRouter.jsx"));
-		app.use("/tokens", Token); // Add this line to use Token router
+		app.use("/tokens", Token);
+		app.use("/consults", require("./Routers/consultRouter.jsx"));
+		app.use("/chats", require("./Routers/chatRouter.jsx"));
 
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 	})

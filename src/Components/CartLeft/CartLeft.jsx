@@ -38,11 +38,10 @@ const CartLeft = ({
 						<button
 							className="BackToShopBtn"
 							onClick={() => {
-								window.location.href = "/products";
+								window.location.href = "/";
 							}}
 						>
-							<i className="fas fa-arrow-left"></i>
-							Back to Shop
+							<i className="fas fa-arrow-left"></i>&nbsp; Back to Shop
 						</button>
 					</div>
 				) : (

@@ -35,35 +35,88 @@ const Pay = ({ totalPrice, handleNext, userData }) => {
 		const uid = Date.now();
 
 		const orderId = `${username}-${uid}`;
-		console.log("Order ID: ", orderId);
 
 		// Prepare the payment data to send to the server
 		const paymentData = {
-			phone: selectedAccount.phoneNumber,
-			amount: totalAmount.toFixed(2),
-			reason: `Payment for order ${orderId}`,
+			phone: "254" + selectedAccount.phoneNumber.toString().substring(1),
+			amount: parseFloat(totalAmount.toFixed(2)),
+			orderId: orderId,
+			userId: userData._id,
+			paymentMethod: paymentMethod,
+			deliveryMethod: deliveryMethod,
+			products: cartData,
+			location: selectedLocation,
+			reason: "Payment for products",
 		};
 
 		// Send a POST request to the server to create a new payment
 		axios
-			.post("http://localhost:4000/payment/stk", paymentData)
+			.post("http://localhost:4000/tokens/stkPush", paymentData)
 			.then((response) => {
-				setPaying(false);
+				console.log("Payment response:", response.data);
 
-				Modal.success({
-					title: "Payment Successful",
-					content: "Your payment was successful",
-					onOk: () => {
-						setIsPaid(true);
-					},
-				});
+				// wait for payment confirmation from the server
+				const interval = setInterval(() => {
+					axios
+						.get("http://localhost:4000/tokens/stk_callback")
+						.then((response) => {
+							console.log("Payment confirmation:", response.data);
+							if (response.data.status === "success") {
+								clearInterval(interval);
+								setPaying(false);
+								setIsPaid(true);
+								Modal.success({
+									title: "Payment Successful",
+									content: "Your payment was successful.",
+								});
+								handleNext();
+							}
+
+							if (response.data.status === "failed") {
+								clearInterval(interval);
+								setPaying(false);
+								Modal.error({
+									title: "Payment Error",
+									content: "Your payment was not successful.",
+								});
+							}
+
+							if (response.data.status === "timeout") {
+								clearInterval(interval);
+								setPaying(false);
+								Modal.error({
+									title: "Payment Error",
+									content: "Your payment was not successful.",
+								});
+							}
+
+							if (response.data.status === "cancelled") {
+								clearInterval(interval);
+								setPaying(false);
+								Modal.error({
+									title: "Payment Error",
+									content: "Your payment was not successful.",
+								});
+							}
+						})
+						.catch((error) => {
+							console.error("Error confirming payment:", error);
+							clearInterval(interval);
+							setPaying(false);
+							Modal.error({
+								title: "Payment Error",
+								content: "Your payment was not successful.",
+							});
+						});
+				}, 5000);
 			})
 			.catch((error) => {
 				console.error("Error making payment:", error);
 				setPaying(false);
 				Modal.error({
 					title: "Payment Error",
-					content: "There was an error processing your payment",
+					content:
+						"There was an error processing your payment." + " " + error.message,
 				});
 			});
 	};
@@ -83,18 +136,10 @@ const Pay = ({ totalPrice, handleNext, userData }) => {
 			const selectedLocation = selectedLocationJson
 				? JSON.parse(selectedLocationJson)
 				: null;
-
-			console.log("Selected Account: ", selectedAccount);
-			console.log("Selected Location: ", selectedLocation);
-
 			setPaymentMethod(paymentMethod);
 			setDeliveryMethod(deliveryMethod);
 			setSelectedAccount(selectedAccount);
 			setSelectedLocation(selectedLocation);
-
-			console.log("Payment Method: ", paymentMethod);
-			console.log("Delivery Method: ", deliveryMethod);
-			console.log(paymentMethod, deliveryMethod);
 		} catch (error) {
 			console.error("Error parsing JSON:", error);
 		}
