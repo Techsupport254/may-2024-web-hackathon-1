@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Badge } from "@mui/material";
 
-const ConsultTable = ({ consults, handleConsultClick }) => {
+const ConsultTable = ({ userData, consults, handleConsultClick }) => {
 	const getStatusBadgeColor = (status) => {
 		switch (status) {
 			case "pending":
@@ -42,9 +42,14 @@ const ConsultTable = ({ consults, handleConsultClick }) => {
 		(a, b) => new Date(b.date) - new Date(a.date)
 	);
 
+	// filter the sortedConsults array based on refId
+	const filteredConsults = sortedConsults.filter(
+		(consult) => consult.refId === userData._id
+	);
+
 	return (
 		<div className="ConsultsTable">
-			{consults.length === 0 ? (
+			{filteredConsults.length === 0 ? (
 				<div className="EmptyTable">
 					<i className="fas fa-info-circle"></i>&nbsp;{" "}
 					<p> No data to be displayed here</p>
@@ -78,7 +83,7 @@ const ConsultTable = ({ consults, handleConsultClick }) => {
 						</TableRow>
 					</TableHead>
 					<TableBody>
-						{sortedConsults.map((consult, index) => (
+						{filteredConsults.map((consult, index) => (
 							<TableRow
 								key={index}
 								onClick={() => handleConsultClick(consult)}

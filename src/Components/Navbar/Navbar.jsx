@@ -6,7 +6,7 @@ import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
 
-const Navbar = ({ userData, onLogout }) => {
+const Navbar = ({ userData, handleLogout }) => {
 	const [user, setUser] = useState(null);
 
 	// fetch cart data from local storage
@@ -62,21 +62,44 @@ const Navbar = ({ userData, onLogout }) => {
 														<Menu>
 															{item.menu.map((subItem, index) => (
 																<Menu.Item key={index}>
-																	<Link
-																		to={subItem.path}
-																		style={{
-																			display: "flex",
-																			gap: "10px",
-																		}}
-																	>
+																	{subItem.title === "Logout" ? (
 																		<div
-																			className="subItemIcon"
-																			style={{ color: "green" }}
+																			style={{
+																				display: "flex",
+																				gap: "10px",
+																				borderTop: "1px solid #777",
+																			}}
+																			onClick={handleLogout}
 																		>
-																			{subItem.icon}
+																			<div
+																				className="subItemIcon"
+																				style={{ color: "green" }}
+																			>
+																				{subItem.icon}
+																			</div>
+																			<div className="subItemTitle">
+																				{subItem.title}
+																			</div>
 																		</div>
-																		{subItem.title}
-																	</Link>
+																	) : (
+																		<Link
+																			to={subItem.path}
+																			style={{
+																				display: "flex",
+																				gap: "10px",
+																			}}
+																		>
+																			<div
+																				className="subItemIcon"
+																				style={{ color: "green" }}
+																			>
+																				{subItem.icon}
+																			</div>
+																			<div className="subItemTitle">
+																				{subItem.title}
+																			</div>
+																		</Link>
+																	)}
 																</Menu.Item>
 															))}
 														</Menu>
@@ -92,7 +115,25 @@ const Navbar = ({ userData, onLogout }) => {
 															handleMenuToggle(e);
 														}}
 													>
-														{item.icon}
+														{user.profilePic ? (
+															<img
+																src={user.profilePic}
+																alt="profile"
+																style={{
+																	width: "30px",
+																	height: "30px",
+																	borderRadius: "50%",
+																}}
+															/>
+														) : (
+															<i
+																className="fas fa-user-circle"
+																style={{
+																	fontSize: "30px",
+																}}
+															></i>
+														)}
+
 														{user.username}
 														<i className="fas fa-caret-down"></i>
 													</Link>

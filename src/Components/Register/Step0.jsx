@@ -124,7 +124,6 @@ const Step0 = ({ onNextStep }) => {
 		if (response.status === "SUCCESS") {
 			handleSuccess();
 		}
-
 	};
 
 	useEffect(() => {
@@ -261,10 +260,9 @@ const Step0 = ({ onNextStep }) => {
 							id="googleButton"
 							type="button"
 							style={{
-								width: "45%",
+								width: "47.5%",
 								backgroundColor: "#fff",
 								color: "#2f3542",
-								border: "2px solid #2f3542",
 								borderRadius: 5,
 							}}
 						>
@@ -306,7 +304,7 @@ const Step0 = ({ onNextStep }) => {
 				{error && (
 					<Modal
 						title="Error"
-						visible={error}
+						open={error}
 						onCancel={handleError}
 						onOk={handleError}
 					>

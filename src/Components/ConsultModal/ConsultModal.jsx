@@ -11,8 +11,8 @@ const initialState = {
 	consultType: "",
 	urgency: "",
 	consultDescription: "",
-	professional: "",
 	consultImage: "",
+	refId: "",
 };
 
 const ConsultModal = ({ modalClose, userData }) => {
@@ -20,6 +20,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 		...initialState,
 		username: userData?.username || "",
 		name: userData?.name || "",
+		refId: userData?._id || "",
 	});
 
 	const [successMessage, setSuccessMessage] = useState("");
@@ -102,6 +103,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 							value={consultInfo.farmingType}
 							onChange={handleChange}
 						>
+							<option>Select type of farming</option>
 							<option value="Dairy">Livestock</option>
 							<option value="Poultry">Poultry</option>
 							<option value="Crops">Crops</option>
@@ -116,6 +118,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 							value={consultInfo.consultType}
 							onChange={handleChange}
 						>
+							<option>Select type of consult</option>
 							<option value="Online">Online</option>
 							<option value="Offline">Physical</option>
 						</select>
@@ -128,6 +131,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 							value={consultInfo.urgency}
 							onChange={handleChange}
 						>
+							<option>Select urgency level</option>
 							<option value="Low">Low</option>
 							<option value="Medium">Medium</option>
 							<option value="High">High</option>
@@ -147,18 +151,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 							onChange={handleChange}
 						></textarea>
 					</div>
-					<div className="ConsultRow">
-						<span>Professional:</span>
-						<select
-							name="professional"
-							id="professional"
-							value={consultInfo.professional}
-							onChange={handleChange}
-						>
-							<option value="any">Any</option>
-							<option value="specific">Specific</option>
-						</select>
-					</div>
+
 					<div className="ConsultRow">
 						<span>Upload Image(s):</span>
 						<input
@@ -190,8 +183,28 @@ const ConsultModal = ({ modalClose, userData }) => {
 					)}
 				</button>
 			</div>
-			{successMessage && <div>{successMessage}</div>}
-			{errorMessage && <div>{errorMessage}</div>}
+			{successMessage && (
+				<div
+					style={{
+						color: "green",
+						padding: "1rem",
+						marginTop: "1rem",
+					}}
+				>
+					{successMessage}
+				</div>
+			)}
+			{errorMessage && (
+				<div
+					style={{
+						color: "red",
+						padding: "1rem",
+						marginTop: "1rem",
+					}}
+				>
+					{errorMessage}
+				</div>
+			)}
 		</div>
 	);
 };

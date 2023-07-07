@@ -90,6 +90,9 @@ const Orders = () => {
 						</div>
 					))}
 				</div>
+				{filteredOrders.length === 0 && (
+					<div className="NoOrders">No orders found</div>
+				)}
 				<div className="OrderList">
 					{filteredOrders.map((order) => (
 						<div className="Order" key={order.id}>

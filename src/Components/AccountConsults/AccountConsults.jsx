@@ -19,6 +19,9 @@ const AccountConsults = ({ userData }) => {
 	const [chats, setChats] = useState([]);
 	const [selectedChat, setSelectedChat] = useState(null);
 	const [unreadCount, setUnreadCount] = useState(0);
+	const [filteredById, setFilteredById] = useState([]);
+	const [unfilteredChats, setUnfilteredChats] = useState([]);
+	const [selectedChatId, setSelectedChatId] = useState(null);
 
 	useEffect(() => {
 		const fetchConsults = async () => {
@@ -26,9 +29,8 @@ const AccountConsults = ({ userData }) => {
 				const response = await axios.get(
 					"http://localhost:4000/consults/consults"
 				);
-				setConsults(response.data);
-
-				// selectedConsult whose id matches the
+				const data = response.data;
+				setConsults(data);
 			} catch (error) {
 				console.log("Error fetching consults:", error);
 			}
@@ -45,15 +47,24 @@ const AccountConsults = ({ userData }) => {
 		try {
 			const response = await axios.get("http://localhost:4000/chats/chats");
 			const data = response.data;
-			setChats(data);
+			setUnfilteredChats(data);
 
-			const unreadMessages = data.reduce((accumulator, chat) => {
+			// Filter chats by refId or recipientId
+			const filterChats = data.filter(
+				(chat) =>
+					chat.refId === userData._id || chat.recipientId === userData._id
+			);
+			setChats(filterChats);
+
+			// Filter chats by unread messages
+			const unreadMessages = filterChats.reduce((accumulator, chat) => {
 				const messages = chat.conversations.flatMap(
 					(conversation) => conversation.messages
 				);
 				const sentMessages = messages.filter((message) => {
 					return (
-						message.status === "sent" && message.sender !== userData.username
+						message.status === "sent" &&
+						message.senderName !== userData.username
 					);
 				});
 				accumulator.push(...sentMessages);
@@ -61,7 +72,9 @@ const AccountConsults = ({ userData }) => {
 			}, []);
 
 			setUnreadCount(unreadMessages.length);
-			console.log("Unread messages:", unreadMessages.length);
+
+			// refresh chats every 5 seconds
+			setTimeout(fetchChats, 1000);
 		} catch (error) {
 			console.error("Error fetching chats:", error);
 		}
@@ -71,8 +84,6 @@ const AccountConsults = ({ userData }) => {
 	useEffect(() => {
 		fetchChats();
 	}, []);
-
-	console.log("Chats", chats);
 
 	const handleConsultClick = (consult) => {
 		setSelectedConsult(consult);
@@ -88,37 +99,55 @@ const AccountConsults = ({ userData }) => {
 		setClickedContentType(category);
 		setIsModalOpen(true);
 	};
-	let filteredConsults = consults;
+
+	const filterCounsultsById = consults.filter(
+		(consult) => consult.refId === userData._id
+	);
+
+	let filteredConsults = filterCounsultsById;
 	if (clickedContentType === "accepted") {
-		filteredConsults = consults.filter(
+		filteredConsults = filterCounsultsById.filter(
 			(consult) => consult.status === "accepted"
 		);
 	} else if (clickedContentType === "pending") {
-		filteredConsults = consults.filter(
+		filteredConsults = filterCounsultsById.filter(
 			(consult) => consult.status === "pending"
 		);
 	} else if (clickedContentType === "rejected") {
-		filteredConsults = consults.filter(
+		filteredConsults = filterCounsultsById.filter(
 			(consult) => consult.status === "rejected"
 		);
 	} else if (clickedContentType === "consult") {
-		filteredConsults = consults.filter(
+		filteredConsults = filterCounsultsById.filter(
 			(consult) => consult.status === "pending"
 		);
 	}
 
 	// count filteredConsults except for the ones with status "seen"
-	const unseenConsultsCount = consults.reduce((accumulator, consult) => {
-		if (consult.newConsult === true && consult.status === "accepted") {
-			accumulator++;
-		}
-		return accumulator;
-	}, 0);
+	const unseenConsultsCount = filterCounsultsById.reduce(
+		(accumulator, consult) => {
+			if (consult.newConsult === true && consult.status === "accepted") {
+				accumulator++;
+			}
+			return accumulator;
+		},
+		0
+	);
+
+	// unseen solved consults
+	const unseenSolvedConsultsCount = filterCounsultsById.reduce(
+		(accumulator, consult) => {
+			if (consult.newConsult === true && consult.status === "solved") {
+				accumulator++;
+			}
+			return accumulator;
+		},
+		0
+	);
 
 	const updateChat = async (selectedChat) => {
 		try {
 			const conversationId = selectedChat.conversations[0].id;
-			console.log(conversationId);
 			await axios.patch(`http://localhost:4000/chats/chats/${conversationId}`, {
 				id: conversationId,
 				status: "read",
@@ -151,90 +180,63 @@ const AccountConsults = ({ userData }) => {
 		updateChat(chat);
 	};
 
-	const getSelectedChatId = () => {
+	useEffect(() => {
 		if (selectedChat) {
 			const chatId = selectedChat.conversations[0].id;
-			return chatId;
+			setSelectedChatId(chatId);
+		} else {
+			setSelectedChatId(null);
 		}
-		return null;
+	}, [selectedChat]);
+
+	const getSelectedConsult = () => {
+		let selectedConsult = null;
+		if (selectedChatId) {
+			selectedConsult = consults.find(
+				(consult) => consult._id === selectedChatId
+			);
+		}
+		return selectedConsult;
 	};
-
-	console.log("chatid", getSelectedChatId());
-
-	const getSelectedConsult = useMemo(() => {
-		if (selectedChat) {
-			const chatId = getSelectedChatId();
-			const selectedConsult = consults.find((consult) => {
-				return consult._id === chatId;
-			});
-			return selectedConsult || null;
-		}
-		return null;
-	}, [selectedChat, consults]);
-
-	console.log("selectedConsult", getSelectedConsult);
-
 	return (
 		<div className="AccountConsults">
 			<div className="AccountConsultsContainer">
-				{consults.length === 0 ? (
-					<div className="AccountConsultsTop">
-						<button className="AddConsult" onClick={handleAddConsultClick}>
-							<i className="fas fa-plus-circle"></i> Add New Consult
-						</button>
-						<div className="Accepted">
-							<div
-								className="AcceptedConsults"
-								style={{
-									cursor: "not-allowed",
-								}}
-							>
-								<Badge badgeContent={unseenConsultsCount} color="primary">
-									<i className="fas fa-check-circle"></i>
-								</Badge>
-								Accepted
-							</div>
-							<div
-								className="Incoming"
-								style={{
-									cursor: "not-allowed",
-								}}
-							>
-								<Badge badgeContent={unreadCount} color="info">
-									<i className="fas fa-message"></i>
-								</Badge>
-								Messages
-							</div>
+				<div className="AccountConsultsTop">
+					<button className="AddConsult" onClick={handleAddConsultClick}>
+						<i className="fas fa-plus-circle"></i> New Consultation
+					</button>
+					<div className="Accepted">
+						<div
+							className="SolvedConsults"
+							onClick={() => handleConsultCategoryClick("solved")}
+						>
+							<Badge badgeContent={unseenSolvedConsultsCount} color="secondary">
+								<i class="fas fa-circle-check"></i>
+							</Badge>
+							Solved
+						</div>
+						<div
+							className="AcceptedConsults"
+							onClick={() => handleConsultCategoryClick("accepted")}
+						>
+							<Badge badgeContent={unseenConsultsCount} color="primary">
+								<i class="fa-regular fa-circle-check"></i>
+							</Badge>
+							Accepted
+						</div>
+						<div
+							className="Incoming"
+							onClick={() => handleConsultCategoryClick("incoming")}
+						>
+							<Badge badgeContent={unreadCount} color="info">
+								<i className="fas fa-message"></i>
+							</Badge>
+							Messages
 						</div>
 					</div>
-				) : (
-					<div className="AccountConsultsTop">
-						<button className="AddConsult" onClick={handleAddConsultClick}>
-							<i className="fas fa-plus-circle"></i> Add New Consult
-						</button>
-						<div className="Accepted">
-							<div
-								className="AcceptedConsults"
-								onClick={() => handleConsultCategoryClick("accepted")}
-							>
-								<Badge badgeContent={unseenConsultsCount} color="primary">
-									<i className="fas fa-check-circle"></i>
-								</Badge>
-								Accepted
-							</div>
-							<div
-								className="Incoming"
-								onClick={() => handleConsultCategoryClick("incoming")}
-							>
-								<Badge badgeContent={unreadCount} color="info">
-									<i className="fas fa-message"></i>
-								</Badge>
-								Messages
-							</div>
-						</div>
-					</div>
-				)}
+				</div>
 				<ConsultTable
+					userData={userData}
 					consults={consults}
 					handleConsultClick={handleConsultClick}
 				/>
@@ -310,7 +312,13 @@ const AccountConsults = ({ userData }) => {
 					width={800}
 					centered
 				>
-					<ConsultChat userData={userData} consult={getSelectedConsult} />
+					<ConsultChat
+						userData={userData}
+						consult={getSelectedConsult()}
+						selectedChat={selectedChat}
+						consults={consults}
+						selectedChatId={selectedChatId}
+					/>
 				</Modal>
 			)}
 		</div>

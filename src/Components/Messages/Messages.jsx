@@ -6,7 +6,6 @@ import axios from "axios";
 const Messages = ({ userData, consults, chats, handleChatClick }) => {
 	const [selectedChat, setSelectedChat] = useState(null);
 	const [unreadCount, setUnreadCount] = useState(0);
-
 	const updateChat = async (chat) => {
 		try {
 			const conversationId = chat.conversations[0].id;
@@ -19,7 +18,9 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 					})),
 				})),
 			};
-
+			useEffect(() => {
+				console.log("chats: ", chats);
+			}, [chats]);
 			await axios.patch(
 				`http://localhost:4000/chats/chats/${conversationId}`,
 				payload
@@ -57,6 +58,11 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 	return (
 		<div className="Messages">
 			<div className="MessagesContainer">
+				{chats.length === 0 && (
+					<div className="NoMessages">
+						<h3>No Messages yet</h3>
+					</div>
+				)}
 				{chats.map((chat, index) => {
 					const lastMessage = chat.conversations[0].messages.slice(-1)[0];
 					const unreadCount =
@@ -64,7 +70,7 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 							? chat.conversations[0].messages.filter(
 									(message) =>
 										message.status === "sent" &&
-										message.sender !== userData.username
+										message.senderName !== userData.username
 							  ).length
 							: 0;
 
@@ -86,9 +92,9 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 							</div>
 							<div className="MessageDetails">
 								<span>
-									{lastMessage.sender === userData.username
+									{lastMessage.senderName === userData.username
 										? "You"
-										: lastMessage.sender}
+										: lastMessage.senderName}
 								</span>
 								<p>{lastMessage.message}</p>
 							</div>

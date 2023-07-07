@@ -69,11 +69,12 @@ const Login = () => {
 				// Save the user data in local storage (email, username, token, verificationStatus)
 				const data = await response.json();
 				localStorage.setItem("user", JSON.stringify(data));
+				console.log(data);
 
 				// Update login status in the database
 				const user = JSON.parse(localStorage.getItem("user"));
-				console.log(user.email);
-				await fetch(`http://localhost:4000/auth/user/${user.email}`, {
+				console.log(email);
+				await fetch(`http://localhost:4000/auth/user/${email}`, {
 					method: "PATCH",
 					headers: {
 						"Content-Type": "application/json",
@@ -81,11 +82,19 @@ const Login = () => {
 					body: JSON.stringify({ loginStatus: "loggedIn" }),
 				});
 
+				// Set the remember me cookie
+				if (isRemember) {
+					document.cookie = `rememberMe=true; expires=${getCookieExpiration()}; path=/`;
+				} else {
+					document.cookie =
+						"rememberMe=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+				}
+
 				// Set loading to false after 3 seconds
 				setTimeout(() => {
 					setLoading(false);
-					// Redirect to the home page
-					history.push("/");
+					// Redirect to the home page after 3 seconds
+					window.location.href = "/";
 				}, 3000);
 			} else {
 				// Error logging in
@@ -101,6 +110,13 @@ const Login = () => {
 
 	const togglePasswordVisibility = () => {
 		setIsEyeOpen(!isEyeOpen);
+	};
+
+	const getCookieExpiration = () => {
+		const days = isRemember ? 7 : 0;
+		const date = new Date();
+		date.setDate(date.getDate() + days);
+		return date.toUTCString();
 	};
 
 	return (
@@ -156,15 +172,11 @@ const Login = () => {
 								/>
 								<label htmlFor="remember">Remember me</label>
 							</div>
-
-							{/* show error message if there is any */}
 							{error && (
 								<p className="error" style={{ color: "red", margin: "1rem" }}>
 									{error}
 								</p>
 							)}
-
-							{/* show success message if there is any */}
 							{success && (
 								<p
 									className="success"

@@ -9,7 +9,16 @@ const messageSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+	senderName: {
+		type: String,
+		required: true,
+	},
+
 	recipient: {
+		type: String,
+		required: true,
+	},
+	recipientName: {
 		type: String,
 		required: true,
 	},
@@ -33,10 +42,19 @@ const conversationSchema = new mongoose.Schema({
 		type: String,
 		required: true,
 	},
+
 	messages: [messageSchema],
 });
 
 const chatSchema = new mongoose.Schema({
+	refId: {
+		type: String,
+		required: true,
+	},
+	recipient: {
+		type: String,
+		required: true,
+	},
 	conversations: [conversationSchema],
 });
 

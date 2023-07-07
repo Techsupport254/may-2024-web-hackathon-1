@@ -37,7 +37,8 @@ router.get("/chats/:id", async (req, res) => {
 // Adds a new chat
 router.post("/add", async (req, res) => {
 	try {
-		const { id, sender, recipient, message } = req.body;
+		const { id, sender, recipient, message, refId, senderName, recipientName } =
+			req.body;
 
 		// Check if the conversation already exists
 		const existingChat = await Chat.findOne({ "conversations.id": id });
@@ -51,7 +52,9 @@ router.post("/add", async (req, res) => {
 			conversation.messages.push({
 				id: conversation.messages.length + 1,
 				sender: sender,
+				senderName: senderName,
 				recipient: recipient,
+				recipientName: recipientName,
 				message: message,
 				timestamp: new Date().toISOString(),
 			});
@@ -59,8 +62,9 @@ router.post("/add", async (req, res) => {
 			const updatedChat = await existingChat.save();
 			res.status(200).json(updatedChat);
 		} else {
-			// Conversation does not exist, create a new chat with the conversation and message
 			const newChat = new Chat({
+				refId: refId,
+				recipient: recipient,
 				conversations: [
 					{
 						id: id,
@@ -68,7 +72,9 @@ router.post("/add", async (req, res) => {
 							{
 								id: 1,
 								sender: sender,
+								senderName: senderName,
 								recipient: recipient,
+								recipientName: recipientName,
 								message: message,
 								timestamp: new Date().toISOString(),
 							},

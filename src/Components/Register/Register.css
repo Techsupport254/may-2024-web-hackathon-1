@@ -315,6 +315,7 @@ textarea {
     border-radius: 5px;
     cursor: pointer;
     transition: all .3s ease-in-out;
+    border: none;
 }
 
 .GoogleBtn:hover {

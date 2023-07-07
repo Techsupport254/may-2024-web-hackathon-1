@@ -21,7 +21,7 @@
     align-items: center;
     gap: 1rem;
 
-    .AcceptedConsults {
+    .SolvedConsults {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -32,11 +32,22 @@
         gap: 5px;
     }
 
-    .Incoming {
+    .AcceptedConsults {
         display: flex;
         justify-content: center;
         align-items: center;
         color: #ff9800;
+        border-radius: 4px;
+        margin: 0 5px;
+        cursor: pointer;
+        gap: 5px;
+    }
+
+    .Incoming {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #2f3542;
         border-radius: 4px;
         margin: 0 5px;
         cursor: pointer;

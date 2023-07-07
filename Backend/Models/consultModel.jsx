@@ -39,6 +39,19 @@ const ConsultSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
+	acceptedAt: {
+		type: Date,
+		default: Date.now,
+	},
+	acceptedBy: {
+		type: String,
+	},
+	acceptedById: {
+		type: String,
+	},
+	amountQuoted: {
+		type: Number,
+	},
 	settledAt: {
 		type: Date,
 	},
@@ -51,6 +64,9 @@ const ConsultSchema = new mongoose.Schema({
 	newConsult: {
 		type: Boolean,
 		default: true,
+	},
+	refId: {
+		type: String,
 	},
 });
 

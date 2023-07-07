@@ -26,8 +26,6 @@ const AcceptedTable = ({ consults, userData }) => {
 			await axios.put(`http://localhost:4000/consults/consults/${selectedId}`, {
 				newConsult: false,
 			});
-			console.log("consults: ", selectedId);
-			console.log("Consult updated successfully");
 		} catch (error) {
 			console.error("Error updating consult:", error);
 		}
@@ -55,142 +53,167 @@ const AcceptedTable = ({ consults, userData }) => {
 	const sortedConsults = [...consults].sort(
 		(a, b) => new Date(b.date) - new Date(a.date)
 	);
-	console.log("selectedConsult: ", selectedConsult);
 	return (
-		<div>
-			<Table
-				sx={{
-					margin: "10px",
-					padding: "0px",
-					boxShadow: "0 0 3px 0px #ccc",
-				}}
-			>
-				<TableHead
-					sx={{
-						backgroundColor: "#f5f5f5",
-						"& .MuiTableCell-root": {
-							fontWeight: "bold",
-							color: "#000",
-							textAlign: "start",
-						},
-					}}
-				>
-					<TableRow>
-						<TableCell>Consult</TableCell>
-						<TableCell>Type</TableCell>
-						<TableCell>Status</TableCell>
-						<TableCell>Date Submitted</TableCell>
-						<TableCell>Date Settled</TableCell>
-						<TableCell>Professional</TableCell>
-						<TableCell>Amount Charged</TableCell>
-					</TableRow>
-				</TableHead>
-				<TableBody>
-					{sortedConsults.map((consult, index) => (
-						<TableRow
-							key={index}
-							onClick={() => handleConsultClick(consult)}
-							className="TableRow"
+		<>
+			{consults.length === 0 ? (
+				<div className="EmptyTable">
+					<i className="fas fa-info-circle"></i>&nbsp;{" "}
+					<p> No data to be displayed here</p>
+				</div>
+			) : (
+				<div>
+					<Table
+						sx={{
+							margin: "10px",
+							padding: "0px",
+							boxShadow: "0 0 3px 0px #ccc",
+						}}
+					>
+						<TableHead
 							sx={{
-								"&:hover": { backgroundColor: "#f5f5f5", cursor: "pointer" },
-								"& .MuiTableCell-root": {},
+								backgroundColor: "#f5f5f5",
+								"& .MuiTableCell-root": {
+									fontWeight: "bold",
+									color: "#000",
+									textAlign: "start",
+								},
 							}}
 						>
-							<TableCell
-								sx={{
-									maxWidth: "150px",
-									overflow: "hidden",
-									textOverflow: "ellipsis",
-									whiteSpace: "nowrap",
-
-									"&:hover": {
-										overflow: "visible",
-										textOverflow: "inherit",
-										whiteSpace: "inherit",
-									},
-								}}
-							>
-								{consult.subject}
-							</TableCell>
-							<TableCell>{consult.farmingType}</TableCell>
-							<TableCell
-								sx={{
-									"& .MuiBadge-root": {
-										textTransform: "capitalize",
-										fontSize: "0.7rem",
-										textAlign: "center",
-										fontWeight: "bold",
-										minWidth: "40%",
-									},
-								}}
-							>
-								<Badge
-									color={getStatusBadgeColor(consult.status)}
-									badgeContent={consult.status}
-								/>
-							</TableCell>
-							<TableCell>
-								<span
-									style={{
-										fontWeight: "bold",
-										fontSize: "0.7rem",
-										display: "block",
+							<TableRow>
+								<TableCell>Consult</TableCell>
+								<TableCell>Type</TableCell>
+								<TableCell>Status</TableCell>
+								<TableCell>Date Submitted</TableCell>
+								<TableCell>Date Accepted</TableCell>
+								<TableCell>Professional</TableCell>
+								<TableCell>Amount Quoted</TableCell>
+							</TableRow>
+						</TableHead>
+						<TableBody>
+							{sortedConsults.map((consult, index) => (
+								<TableRow
+									key={index}
+									onClick={() => handleConsultClick(consult)}
+									className="TableRow"
+									sx={{
+										"&:hover": {
+											backgroundColor: "#f5f5f5",
+											cursor: "pointer",
+										},
+										"& .MuiTableCell-root": {},
 									}}
 								>
-									{getTimeLabel(new Date(consult.date))}
-								</span>
-								<p
-									style={{
-										fontSize: "0.7rem",
-										color: "#777",
-										margin: "0px",
-									}}
-								>
-									{new Date(consult.date).toLocaleTimeString()}
-								</p>
-							</TableCell>
-							<TableCell>
-								<span
-									style={{
-										fontWeight: "bold",
-										fontSize: "0.7rem",
-										display: "block",
-									}}
-								>
-									{consult.settledAt
-										? new Date(consult.settledAt).toDateString()
-										: ""}{" "}
-								</span>
-								<p
-									style={{
-										fontSize: "0.7rem",
-										color: "#777",
-										margin: "0px",
-									}}
-								>
-									{consult.settledAt
-										? new Date(consult.settledAt).toLocaleTimeString()
-										: ""}
-								</p>
-							</TableCell>
-							<TableCell>{consult.professionalName}</TableCell>
-							<TableCell>{consult.amountCharged}</TableCell>
-						</TableRow>
-					))}
-				</TableBody>
-			</Table>
-			{selectedConsult && (
-				<Modal
-					open={selectedConsult}
-					onCancel={() => setSelectedConsult(null)}
-					footer={null}
-					width={800}
-					centered
-				>
-					<ConsultChat consult={selectedConsult} userData={userData} />
-				</Modal>
+									<TableCell
+										sx={{
+											maxWidth: "150px",
+											overflow: "hidden",
+											textOverflow: "ellipsis",
+											whiteSpace: "nowrap",
+										}}
+									>
+										{consult.newConsult === true && (
+											<Badge
+												color="primary"
+												badgeContent="New"
+												visible={true}
+												sx={{
+													"& .MuiBadge-badge": {
+														fontSize: "0.7rem",
+														fontWeight: "bold",
+														minWidth: "30px",
+														height: "20px",
+														top: "20px",
+														left: "0px",
+														padding: "0px",
+														marginRight: "5px",
+													},
+												}}
+											/>
+										)}
+										&nbsp;
+										{consult.subject}
+									</TableCell>
+									<TableCell>{consult.farmingType}</TableCell>
+									<TableCell
+										sx={{
+											"& .MuiBadge-root": {
+												textTransform: "capitalize",
+												fontSize: "0.7rem",
+												textAlign: "center",
+												fontWeight: "bold",
+												minWidth: "40%",
+											},
+										}}
+									>
+										<Badge
+											color={getStatusBadgeColor(consult.status)}
+											badgeContent={consult.status}
+										/>
+									</TableCell>
+									<TableCell>
+										<span
+											style={{
+												fontWeight: "bold",
+												fontSize: "0.7rem",
+												display: "block",
+											}}
+										>
+											{getTimeLabel(new Date(consult.date))}
+										</span>
+										<p
+											style={{
+												fontSize: "0.7rem",
+												color: "#777",
+												margin: "0px",
+											}}
+										>
+											{new Date(consult.date).toLocaleTimeString()}
+										</p>
+									</TableCell>
+									<TableCell>
+										<span
+											style={{
+												fontWeight: "bold",
+												fontSize: "0.7rem",
+												display: "block",
+											}}
+										>
+											{consult.acceptedAt
+												? getTimeLabel(new Date(consult.acceptedAt))
+												: ""}{" "}
+										</span>
+										<span
+											style={{
+												fontSize: "0.7rem",
+												color: "#777",
+												margin: "0px",
+											}}
+										>
+											{consult.acceptedAt
+												? new Date(consult.acceptedAt).toLocaleTimeString()
+												: ""}{" "}
+										</span>
+									</TableCell>
+									<TableCell>{consult.acceptedBy}</TableCell>
+									<TableCell>{consult.amountQuoted}</TableCell>
+								</TableRow>
+							))}
+						</TableBody>
+					</Table>
+					{selectedConsult && (
+						<Modal
+							open={selectedConsult}
+							onCancel={() => setSelectedConsult(null)}
+							footer={null}
+							width={800}
+							centered
+						>
+							<ConsultChat consult={selectedConsult} userData={userData} />
+						</Modal>
+					)}
+				</div>
 			)}
-		</div>
+		</>
 	);
 };
 

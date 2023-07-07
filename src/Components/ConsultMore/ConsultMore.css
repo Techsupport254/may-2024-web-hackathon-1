@@ -1,0 +1,103 @@
+.ConsultMore {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    box-sizing: border-box;
+}
+
+.MoreLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    background-color: #F2F2F2;
+    padding: .5rem;
+    box-sizing: border-box;
+    border-radius: 5px;
+
+    & .MoreImage {
+        width: 100%;
+        height: 100%;
+        background-color: #F2F2F2;
+        padding: .5rem;
+        box-sizing: border-box;
+        border-radius: 5px;
+
+        & img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+    }
+}
+
+.MoreRight {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 50%;
+    height: 100%;
+    padding: .5rem;
+    box-sizing: border-box;
+    border-radius: 5px;
+
+    & .MoreDescription {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        border-radius: 5px;
+        padding: .5rem 0;
+
+        & .MoreTitle {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: auto;
+
+        }
+
+        & i {
+            font-size: 1.3rem;
+            color: green;
+        }
+
+        & span {
+            font-size: 1rem;
+            color: #000;
+            font-weight: 500;
+        }
+
+        & p {
+            font-size: .9rem;
+            color: #000;
+            font-weight: 400;
+        }
+    }
+
+    & .MoreDetailsLeft {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+        height: 100%;
+        padding: .5rem;
+        box-sizing: border-box;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        margin: .5rem 0;
+    }
+}

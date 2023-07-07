@@ -136,15 +136,25 @@
   justify-content: flex-start;
   align-items: center;
   height: 100%;
-  width: 20%;
+  width: 30%;
+  padding: 0;
+  margin: 0;
 }
 
 .CLeftCardBadgeText {
+  width: 100%;
+  max-height: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-self: center;
+  text-align: center;
   font-size: 0.6rem !important;
   font-weight: 600;
   color: #666;
   margin: 0.5rem 0 0 0 !important;
   padding: 0;
+  overflow: hidden;
 }
 
 .CLeftCardStatus .MuiBadge-root {
@@ -156,4 +166,128 @@
   align-items: center;
   padding: 0;
   margin: 0;
+}
+
+.CLeftModal {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+
+  & .CLeftModalImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+
+    & img {
+      width: 70%;
+      height: 70%;
+      object-fit: cover;
+    }
+  }
+}
+
+.CLeftModalDetailsItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+
+  & span {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #666;
+    margin: 0;
+    padding: 0;
+    text-transform: capitalize;
+  }
+
+  & .ModalHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    & span {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #000;
+      margin: 0;
+      padding: 0;
+    }
+  }
+}
+
+.CLeftModalDetailsBadge {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ModalBody {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 1px solid #777;
+  border-radius: 5px;
+  padding: 0.5rem;
+
+  & i {
+    color: #2f3542;
+  }
+
+  & .BusinessName {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  & .BusinessType {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+.CLeftModalButton {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: .5rem;
+  width: 30%;
+  border: none;
+  border-radius: 5px;
+  background-color: #2f3542;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: #fff;
+    color: #2f3542;
+    border: 1px solid #2f3542;
+  }
 }

@@ -34,7 +34,6 @@ const CartLeft = ({
 							></i>
 						</Badge>
 						<h3>Your cart is empty</h3>
-						{/* Back to products page */}
 						<button
 							className="BackToShopBtn"
 							onClick={() => {

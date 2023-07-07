@@ -27,9 +27,10 @@ const App = () => {
 	const [isShippingDataLoaded, setIsShippingDataLoaded] = useState(false);
 	const [userData, setUserData] = useState(null);
 	const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
-	const [isLoggedin, setIsLoggedin] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const location = useLocation();
 	const navigate = useNavigate();
+	const inactivityLogoutTimeout = 10 * 60 * 1000; // 10 minutes
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -50,7 +51,7 @@ const App = () => {
 					setUserData(response.data);
 
 					if (response.data.loginStatus === "loggedIn") {
-						setIsLoggedin(true);
+						setIsLoggedIn(true);
 					}
 				} catch (err) {
 					console.log(err);
@@ -82,7 +83,6 @@ const App = () => {
 			if (shippingData) {
 				setShippingData(shippingData);
 			}
-			console.log(shippingData);
 
 			setIsShippingDataLoaded(true);
 		};
@@ -90,15 +90,40 @@ const App = () => {
 		fetchShippingData();
 	}, []);
 
-	const handleLogout = async () => {
-		setIsLoggedin(false);
-		setUserData(null);
+	useEffect(() => {
+		let inactivityTimer;
 
+		const handleUserActivity = () => {
+			clearTimeout(inactivityTimer);
+			inactivityTimer = setTimeout(() => {
+				handleLogout();
+			}, inactivityLogoutTimeout);
+		};
+
+		if (userData && userData.loginStatus === "loggedIn") {
+			document.addEventListener("mousemove", handleUserActivity);
+			document.addEventListener("keydown", handleUserActivity);
+			setIsLoggedIn(true);
+		}
+
+		return () => {
+			clearTimeout(inactivityTimer);
+			document.removeEventListener("mousemove", handleUserActivity);
+			document.removeEventListener("keydown", handleUserActivity);
+		};
+	}, [userData]);
+
+	const handleLogout = async () => {
 		try {
 			if (userData) {
 				await axios.patch(
 					`http://localhost:4000/auth/user/${userData.email}`,
-					{ isRemember: false, loginStatus: "loggedOut" },
+					{
+						isRemember: false,
+						loginStatus: "loggedOut",
+						token: "",
+						lastLogin: new Date(),
+					},
 					{
 						headers: {
 							"x-auth-token": userData.token,
@@ -106,16 +131,24 @@ const App = () => {
 					}
 				);
 
+				setUserData(null);
+				setIsLoggedIn(false);
+
 				localStorage.removeItem("agrisolveData");
+
+				const navigate = useNavigate();
+
+				navigate("/");
 			}
 		} catch (err) {
 			console.log(err);
 		}
 
-		navigate("/login");
+		window.location.reload();
 	};
 
 	const handleLogin = async () => {
+		setIsLoggedIn(true);
 		navigate("/");
 	};
 
@@ -140,21 +173,26 @@ const App = () => {
 		);
 	}
 
-	const shouldRenderNavbarFooter = !(
-		location.pathname === "/login" ||
-		location.pathname === "/register" ||
-		location.pathname === "/forgot"
-	);
+	const shouldRenderNavbarFooter =
+		!(
+			location.pathname === "/login" ||
+			location.pathname === "/register" ||
+			location.pathname === "/forgot"
+		) && isUserDataLoaded; // Fixed: Added `isUserDataLoaded` check to avoid flashing Navbar/Footer
 
 	return (
 		<div className="App">
 			{shouldRenderNavbarFooter && (
-				<Navbar onLogout={handleLogout} userData={userData} />
+				<Navbar
+					isLoggedIn={isLoggedIn}
+					userData={userData}
+					handleLogout={handleLogout}
+				/>
 			)}
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/categories" element={<Categories />} />
-				{userData ? (
+				{isLoggedIn ? (
 					<>
 						<Route path="/consult" element={<Consult userData={userData} />} />
 						<Route path="/cart" element={<Cart userData={userData} />} />
@@ -194,7 +232,7 @@ const App = () => {
 					</>
 				)}
 				<Route path="/register" element={<Register />} />
-				{!userData && <Route path="/forgot" element={<Forgot />} />}
+				{!isLoggedIn && <Route path="/forgot" element={<Forgot />} />}
 			</Routes>
 			{shouldRenderNavbarFooter && <Footer />}
 		</div>
