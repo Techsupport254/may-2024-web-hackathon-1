@@ -2,11 +2,11 @@
 	"name": "backend",
 	"version": "1.0.0",
 	"description": "Agrisolve Backend",
-	"main": "Server",
+	"main": "index",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node Server",
-		"dev": "nodemon --ext js Server"
+		"start": "node index.js",
+		"dev": "nodemon --ext js index"
 	},
 	"keywords": [],
 	"author": "Victor Quaint",
