@@ -19,7 +19,7 @@ const ConsultChat = ({ consult, userData }) => {
 
 	const fetchChatMessages = () => {
 		axios
-			.get("http://localhost:4000/chats/chats")
+			.get("https://agrisolve-techsupport254.vercel.app/chats/chats")
 			.then((response) => {
 				const data = response.data;
 				setMessages(data);
@@ -82,7 +82,7 @@ const ConsultChat = ({ consult, userData }) => {
 		};
 
 		axios
-			.post("http://localhost:4000/chats/add", newMessage)
+			.post("https://agrisolve-techsupport254.vercel.app/chats/add", newMessage)
 			.then((response) => {
 				console.log(response.data);
 				fetchChatMessages();

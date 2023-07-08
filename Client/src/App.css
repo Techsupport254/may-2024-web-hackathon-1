@@ -43,3 +43,8 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+textarea {
+  font-family: sans-serif;
+  font-size: 1rem;
+}

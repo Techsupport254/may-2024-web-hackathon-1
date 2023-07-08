@@ -50,7 +50,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 		try {
 			setSubmittingConsult(true);
 
-			await axios.post("http://localhost:4000/consults/consults", consultInfo);
+			await axios.post("https://agrisolve-techsupport254.vercel.app/consults/consults", consultInfo);
 
 			setConsultInfo(initialState);
 			setTimeout(() => {

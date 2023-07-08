@@ -54,13 +54,16 @@ const Login = () => {
 
 		// Make an HTTP request to login the user
 		try {
-			const response = await fetch("http://localhost:4000/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ email, password }),
-			});
+			const response = await fetch(
+				"https://agrisolve-techsupport254.vercel.app/auth/login",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, password }),
+				}
+			);
 
 			if (response.ok) {
 				// User logged in successfully
@@ -74,13 +77,16 @@ const Login = () => {
 				// Update login status in the database
 				const user = JSON.parse(localStorage.getItem("user"));
 				console.log(email);
-				await fetch(`http://localhost:4000/auth/user/${email}`, {
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ loginStatus: "loggedIn" }),
-				});
+				await fetch(
+					`https://agrisolve-techsupport254.vercel.app/auth/user/${email}`,
+					{
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ loginStatus: "loggedIn" }),
+					}
+				);
 
 				// Set the remember me cookie
 				if (isRemember) {
@@ -199,9 +205,12 @@ const Login = () => {
 										"Login"
 									)}
 								</button>
-								<button className="LoginBtn2">
-									<i className="fab fa-google"></i>
-									Login with Google
+								<button
+									className="LoginBtn2"
+									onClick={() => alert("Admin panel is underway")}
+								>
+									<i className="fas fa-user"></i>
+									Login to admin
 								</button>
 							</div>
 							<div className="LoginForgot">
@@ -209,6 +218,10 @@ const Login = () => {
 									<Link to="/forgot">Forgot Password?</Link>
 								</p>
 							</div>
+							<button className="LoginBtn2Google">
+								<i className="fab fa-google"></i>
+								Login with Google
+							</button>
 						</form>
 						<p>
 							Don't have an account?{" "}

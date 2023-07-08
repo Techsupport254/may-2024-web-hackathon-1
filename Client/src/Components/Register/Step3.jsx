@@ -19,7 +19,7 @@ const Step3 = () => {
 			try {
 				// Make an HTTP request to fetch user data from the database
 				const response = await axios.get(
-					`http://localhost:4000/auth/user/${email}`
+					`https://agrisolve-techsupport254.vercel.app/auth/user/${email}`
 				);
 
 				// Update the user state with the fetched data
@@ -42,18 +42,25 @@ const Step3 = () => {
 	const handleVerification = () => {
 		// Perform verification logic here
 		if (verificationCode === user.verificationCode) {
-			setIsCodeVerified(true);
 			// Update the verification status in the database
 			axios
-				.patch(`http://localhost:4000/auth/user/${user.email}`, {
-					verificationStatus: "verified",
-				})
+				.patch(
+					`https://agrisolve-techsupport254.vercel.app/auth/user/${user.email}`,
+					{
+						verificationStatus: "verified",
+					}
+				)
 				.then((response) => {
 					console.log(response.data);
 				})
 				.catch((error) => {
 					console.log(error);
 				});
+
+			setIsCodeVerified(true);
+			setTimeout(() => {
+				history.push("/login");
+			}, 3000);
 		} else {
 			setIsCodeVerified(false);
 
@@ -78,9 +85,12 @@ const Step3 = () => {
 
 		// Update the verification code in the database
 		axios
-			.patch(`http://localhost:4000/auth/user/${user.email}`, {
-				verificationCode: newVerificationCode,
-			})
+			.patch(
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${user.email}`,
+				{
+					verificationCode: newVerificationCode,
+				}
+			)
 			.then((response) => {
 				console.log(response.data);
 			})
@@ -132,43 +142,30 @@ const Step3 = () => {
 				</span>
 				<h3>Registration Successful</h3>
 				<p>
-					You have successfully registered. Please check your email <br /> (
-					{user.email}) to confirm your account.
+					You have successfully registered. Please check your email <br />
+					<strong>{user.email} </strong> to confirm your account.
 				</p>
 				<span>OR</span>
+				<p>
+					copy the code here <strong>{user.verificationCode}</strong>
+				</p>
 				<p>Enter the verification code here to login.</p>
 				<div className="RegisterInput">
 					<label htmlFor="VerificationCode">Verification Code</label>
-					<input
-						type="text"
-						id="VerificationCode"
-						placeholder="Enter the verification Code"
-						value={verificationCode}
-						onChange={(e) => setVerificationCode(e.target.value)}
-					/>
+					<div className="VerifyUser">
+						<input
+							type="text"
+							id="VerificationCode"
+							placeholder="Enter the verification Code"
+							value={verificationCode}
+							onChange={(e) => setVerificationCode(e.target.value)}
+						/>
+						<span onClick={handleVerification}>
+							<i className="fas fa-check-circle"></i>
+							<p>{isCodeVerified ? "Verified" : "Verify"}</p>
+						</span>
+					</div>
 				</div>
-				<button
-					className="Verify"
-					style={{
-						backgroundColor: "transparent",
-						cursor: "pointer",
-						border: "none",
-					}}
-					onClick={handleVerification}
-				>
-					<i
-						className="fas fa-check-circle"
-						style={{
-							color: "green",
-							fontSize: "1.5rem",
-						}}
-					></i>
-					<p>
-						<strong>
-							{isCodeVerified ? "Code Verified" : verificationStatus}
-						</strong>
-					</p>
-				</button>
 				<div
 					className="BottomBtn"
 					style={{
@@ -199,6 +196,7 @@ const Step3 = () => {
 								border: "none",
 								color: "green",
 							}}
+							onClick={() => alert("Admin panel is underway!")}
 						>
 							Login to admin Panel
 						</button>

@@ -6,11 +6,10 @@ import { Badge, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { Modal } from "antd";
 
-const TopLeft = ({ userData, isLoggedin }) => {
+const TopLeft = ({ userData }) => {
 	const [active, setActive] = useState(null);
 	const [visible, setVisible] = useState(false);
 	const [verified, setVerified] = useState(false);
-	const [isOnline, setIsOnline] = useState(false);
 
 	const closeModal = () => {
 		setActive(null);
@@ -26,23 +25,47 @@ const TopLeft = ({ userData, isLoggedin }) => {
 	// check if the data is loaded or not
 	if (userData.length === 0) {
 		return (
-			<div
-			className="SpinnerLoader"
-			>
+			<div className="SpinnerLoader">
 				<i className="fas fa-spinner fa-spin"></i>
 			</div>
 		);
 	}
 
-	useEffect(() => {
-		// set the active user data if the user is logged in
-		if (isLoggedin) {
-			const activeUser = userData.find((user) => user._id === isLoggedin);
-			setIsOnline(activeUser ? activeUser.isOnline : true);
-		}
-	}, [isLoggedin, userData]);
-
 	const activeUserData = userData.find((item) => item._id === active);
+
+	const getTimeLabel = (time) => {
+		const currentTime = new Date();
+		const date = new Date(time);
+
+		const timeDiff = currentTime - date;
+		const secondsDiff = Math.floor(timeDiff / 1000);
+		const minutesDiff = Math.floor(secondsDiff / 60);
+		const hoursDiff = Math.floor(minutesDiff / 60);
+		const daysDiff = Math.floor(hoursDiff / 24);
+
+		if (daysDiff === 0) {
+			if (hoursDiff === 0) {
+				if (minutesDiff === 0) {
+					return `${secondsDiff} seconds ago`;
+				}
+				return `${minutesDiff} mins ago`;
+			}
+			return `${hoursDiff} hours ago`;
+		} else if (daysDiff === 1) {
+			return "Yesterday";
+		} else {
+			const options = {
+				year: "numeric",
+				month: "short",
+				day: "numeric",
+				hour: "numeric",
+				minute: "numeric",
+				second: "numeric",
+				hour12: false,
+			};
+			return date.toLocaleString("en-US", options);
+		}
+	};
 
 	return (
 		<div className="TopLeft">
@@ -70,49 +93,33 @@ const TopLeft = ({ userData, isLoggedin }) => {
 						<span>{item.name}</span>
 						<span>{item.location}</span>
 					</motion.div>
-					<div
-						className="CLeftCardStatus"
-						style={{
-							display: "flex",
-							alignItems: "center",
-							justifyContent: "center",
-							height: "1.8rem",
-							width: "3rem",
-						}}
-					>
+					<motion.div layout className="CLeftCardStatus1">
 						<Badge
 							style={{
-								borderRadius: "50%",
 								height: "1rem",
 								width: "1rem",
-								marginRight: "0.5rem",
+								padding: "0",
+								margin: "0",
 							}}
 							className={`CLeftCardBadge ${
-								isOnline ? "CLeftCardBadgeActive" : ""
+								item.loginStatus === "loggedIn" ? "CLeftCardBadgeActive" : ""
 							}`}
 							variant="dot"
-							color={isOnline ? "success" : "error"}
+							color={item.loginStatus === "loggedIn" ? "success" : "error"}
 							anchorOrigin={{
 								vertical: "top",
 								horizontal: "center",
 							}}
 						/>
-						{!isOnline && (
-							<Typography
-								variant="body2"
-								component="p"
-								className="CLeftCardBadgeText"
-							>
-								{item.lastActive}
-							</Typography>
-						)}
-					</div>
-					<motion.div className="Icon">
-						{active === item._id ? (
-							<i className="fas fa-caret-up"></i>
-						) : (
-							<i className="fas fa-caret-down"></i>
-						)}
+						<Typography
+							variant="body2"
+							component="p"
+							className="CLeftCardBadgeText1"
+						>
+							{item.loginStatus === "loggedIn"
+								? "Online"
+								: getTimeLabel(item.lastLogin)}
+						</Typography>
 					</motion.div>
 				</motion.div>
 			))}

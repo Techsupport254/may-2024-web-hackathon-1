@@ -33,6 +33,7 @@ const App = () => {
 	const inactivityLogoutTimeout = 10 * 60 * 1000; // 10 minutes
 
 	useEffect(() => {
+		axios.defaults.withCredentials = true;
 		const fetchUserData = async () => {
 			const user = JSON.parse(localStorage.getItem("agrisolveData"));
 			if (user) {
@@ -40,7 +41,7 @@ const App = () => {
 
 				try {
 					const response = await axios.get(
-						`http://localhost:4000/auth/user/${user.email}`,
+						`https://agrisolve-techsupport254.vercel.app/auth/user/${user.email}`,
 						{
 							headers: {
 								"x-auth-token": user.token,
@@ -117,7 +118,7 @@ const App = () => {
 		try {
 			if (userData) {
 				await axios.patch(
-					`http://localhost:4000/auth/user/${userData.email}`,
+					`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
 					{
 						isRemember: false,
 						loginStatus: "loggedOut",

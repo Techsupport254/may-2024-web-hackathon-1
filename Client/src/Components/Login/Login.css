@@ -205,3 +205,29 @@
 .eye-visibility i {
     cursor: pointer;
 }
+
+.LoginBtn2Google {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+    border: 2px solid #151212;
+    color: #010000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+
+    & i {
+        font-size: 1.5rem;
+    }
+
+    &:hover {
+        transform: scale(1.05);
+    }
+}

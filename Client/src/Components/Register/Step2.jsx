@@ -62,7 +62,7 @@ const Step2 = ({ onNextStep }) => {
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 
 			// Make an HTTP request to your backend API to register the user
-			await axios.post("http://localhost:4000/auth", registerData);
+			await axios.post("https://agrisolve-techsupport254.vercel.app/auth", registerData);
 
 			localStorage.removeItem("formData1");
 

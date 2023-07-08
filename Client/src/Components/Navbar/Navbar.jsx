@@ -56,7 +56,7 @@ const Navbar = ({ userData, handleLogout }) => {
 								} else if (item.title === "Account") {
 									return (
 										<div className="NavItem" key={index}>
-											{user ? (
+											{user && user.loginStatus === "loggedIn" ? (
 												<Dropdown
 													overlay={
 														<Menu>

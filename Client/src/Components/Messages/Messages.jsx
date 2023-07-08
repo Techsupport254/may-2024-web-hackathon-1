@@ -22,7 +22,7 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 				console.log("chats: ", chats);
 			}, [chats]);
 			await axios.patch(
-				`http://localhost:4000/chats/chats/${conversationId}`,
+				`https://agrisolve-techsupport254.vercel.app/chats/chats/${conversationId}`,
 				payload
 			);
 

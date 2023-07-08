@@ -51,14 +51,14 @@ const Pay = ({ totalPrice, handleNext, userData }) => {
 
 		// Send a POST request to the server to create a new payment
 		axios
-			.post("http://localhost:4000/tokens/stkPush", paymentData)
+			.post("https://agrisolve-techsupport254.vercel.app/tokens/stkPush", paymentData)
 			.then((response) => {
 				console.log("Payment response:", response.data);
 
 				// wait for payment confirmation from the server
 				const interval = setInterval(() => {
 					axios
-						.get("http://localhost:4000/tokens/stk_callback")
+						.get("https://agrisolve-techsupport254.vercel.app/tokens/stk_callback")
 						.then((response) => {
 							console.log("Payment confirmation:", response.data);
 							if (response.data.status === "success") {

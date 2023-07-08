@@ -1,8 +1,7 @@
 import React from "react";
 import "./TopRight.css";
 
-const TopRight = ({ userData, isLoggedin }) => {
-	console.log(userData);
+const TopRight = ({ userData }) => {
 	return (
 		<div className="TopRight">
 			<h3>Agribusinesses</h3>
