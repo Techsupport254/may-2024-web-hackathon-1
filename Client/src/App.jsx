@@ -140,11 +140,11 @@ const App = () => {
 
 				navigate("/");
 			}
+
+			window.location.reload();
 		} catch (err) {
 			console.log(err);
 		}
-
-		window.location.reload();
 	};
 
 	const handleLogin = async () => {
