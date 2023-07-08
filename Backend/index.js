@@ -3,19 +3,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const Token = require("./Routers/TokenRouter"); 
+const Token = require("./Routers/TokenRouter");
 const path = require("path");
 
 // set up server
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-if (process.env.NODE_ENV === "production") {
-	app.use(express.static("client/build"));
-	app.get("*", (req, res) => {
-		res.sendFile(path.resolve(__dirname, "../client/build/index.html"));
-	});
-}
 
 app.use(express.json());
 app.use(
