@@ -7,7 +7,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node Server.jsx",
 		"dev": "nodemon --ext js,jsx Server.jsx",
-		"build": "vite build"
+		"build": "echo 'No build steps required for backend.'"
 	},
 	"keywords": [],
 	"author": "Victor Quaint",
@@ -24,8 +24,5 @@
 		"jsonwebtoken": "^9.0.0",
 		"mongoose": "^7.2.2",
 		"yarn": "^1.22.19"
-	},
-	"devDependencies": {
-		"vite": "^4.4.2"
 	}
 }
