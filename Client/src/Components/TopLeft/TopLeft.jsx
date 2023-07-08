@@ -46,7 +46,7 @@ const TopLeft = ({ userData }) => {
 		if (daysDiff === 0) {
 			if (hoursDiff === 0) {
 				if (minutesDiff === 0) {
-					return `${secondsDiff} seconds ago`;
+					return `${secondsDiff} secs ago`;
 				}
 				return `${minutesDiff} mins ago`;
 			}
