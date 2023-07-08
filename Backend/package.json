@@ -6,8 +6,7 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"start": "node Server.jsx",
-		"dev": "nodemon --ext js,jsx Server.jsx",
-		"build": "echo 'No build steps required for backend.'"
+		"dev": "nodemon --ext js,jsx Server.jsx"
 	},
 	"keywords": [],
 	"author": "Victor Quaint",
