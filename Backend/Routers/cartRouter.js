@@ -1,9 +1,31 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../Models/ProductModel.jsx");
-const auth = require("../Middleware/auth.jsx");
+const Product = require("../Models/ProductModel");
+const auth = require("../Middleware/auth");
 
-// Handler for GET requests to /products
+// Handler POST requests to /cart
+router.post("/", auth, async (req, res) => {
+	try {
+		const { userId, productId, productQty } = req.body;
+
+		// Validation
+		if (!userId || !productId) {
+			return res.status(400).json({ message: "Please enter all fields" });
+		}
+
+		const newProduct = new Product({
+			userId,
+			productId,
+			productQty,
+		});
+		const savedProduct = await newProduct.save();
+		res.json(savedProduct);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// Handler for GET requests to /cart
 router.get("/", async (req, res) => {
 	try {
 		const products = await Product.find();
@@ -13,31 +35,7 @@ router.get("/", async (req, res) => {
 	}
 });
 
-// Handler for POST requests to /products
-router.post("/", auth, async (req, res) => {
-	try {
-		const { name, description, price, image, category } = req.body;
-
-		// Validation
-		if (!name || !description || !price || !image || !category) {
-			return res.status(400).json({ message: "Please enter all fields" });
-		}
-
-		const newProduct = new Product({
-			name,
-			description,
-			price,
-			image,
-			category,
-		});
-		const savedProduct = await newProduct.save();
-		res.json(savedProduct);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
-});
-
-// Handler for DELETE requests to /products/:id
+// Handler for DELETE requests to /cart/:id
 router.delete("/:id", auth, async (req, res) => {
 	try {
 		const deletedProduct = await Product.findByIdAndDelete(req.params.id);
@@ -47,24 +45,20 @@ router.delete("/:id", auth, async (req, res) => {
 	}
 });
 
-// Handler for PATCH requests to /products/:id
+// Handler for PATCH requests to /cart/:id
 router.patch("/:id", auth, async (req, res) => {
 	try {
-		const { name, description, price, image, category } = req.body;
+		const { productQty } = req.body;
 
 		// Validation
-		if (!name || !description || !price || !image || !category) {
+		if (!productQty) {
 			return res.status(400).json({ message: "Please enter all fields" });
 		}
 
 		const updatedProduct = await Product.findByIdAndUpdate(
 			req.params.id,
 			{
-				name,
-				description,
-				price,
-				image,
-				category,
+				productQty,
 			},
 			{ new: true }
 		);

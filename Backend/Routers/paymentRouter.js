@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Payment = require("../Models/PaymentModel.jsx");
+const Payment = require("../Models/PaymentModel");
 const axios = require("axios");
 
 // Handler for POST request to /api/payment

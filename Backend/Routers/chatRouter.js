@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Chat = require("../Models/chatModel.jsx");
-const User = require("../Models/UserModel.jsx");
+const Chat = require("../Models/chatModel");
+const User = require("../Models/UserModel");
 
 // Handler for GET request to /api/chats
 // Fetches chats data

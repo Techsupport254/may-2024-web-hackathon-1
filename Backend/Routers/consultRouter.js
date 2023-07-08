@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const Consult = require("../Models/consultModel.jsx");
-const User = require("../Models/UserModel.jsx");
+const Consult = require("../Models/consultModel");
+const User = require("../Models/UserModel");
 
 // Handler for GET request to /api/consults
 // Fetches consults data

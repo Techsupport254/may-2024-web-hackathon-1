@@ -2,11 +2,11 @@
 	"name": "backend",
 	"version": "1.0.0",
 	"description": "Agrisolve Backend",
-	"main": "Server.jsx",
+	"main": "Server",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "node Server.jsx",
-		"dev": "nodemon --ext js,jsx Server.jsx"
+		"start": "node Server",
+		"dev": "nodemon --ext js Server"
 	},
 	"keywords": [],
 	"author": "Victor Quaint",

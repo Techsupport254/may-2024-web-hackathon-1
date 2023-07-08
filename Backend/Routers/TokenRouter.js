@@ -1,6 +1,6 @@
 const axios = require("axios");
 const router = require("express").Router();
-const Transaction = require("../Models/PaymentModel.jsx");
+const Transaction = require("../Models/PaymentModel");
 
 // register url
 router.get("/register", accessToken, (req, res, next) => {
