@@ -52,6 +52,9 @@ const UserSchema = new mongoose.Schema({
 	quantity: {
 		type: Number,
 	},
+	profilePicture: {
+		type: String,
+	},
 	paymentStatus: {
 		type: String,
 		default: "unpaid",
@@ -75,7 +78,7 @@ const UserSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now,
 	},
-	sessionToken: {
+	token: {
 		type: String,
 	},
 });

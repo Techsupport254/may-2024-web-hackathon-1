@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Login.css";
 import { Link } from "react-router-dom";
-import { useHistory } from "react-router-use-history";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isRemember, setIsRemember] = useState(false);
+	const [token, setToken] = useState("");
 	const [isEyeOpen, setIsEyeOpen] = useState(false);
-	const history = useHistory();
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -27,18 +26,20 @@ const Login = () => {
 
 	useEffect(() => {
 		const agrisolveData = JSON.parse(localStorage.getItem("agrisolveData"));
+		console.log(agrisolveData);
 		if (agrisolveData) {
 			setEmail(agrisolveData.email);
 			setIsRemember(agrisolveData.isRemember);
+			setToken(agrisolveData.token);
 		}
 	}, []);
 
 	useEffect(() => {
 		localStorage.setItem(
 			"agrisolveData",
-			JSON.stringify({ email, isRemember })
+			JSON.stringify({ email, isRemember, token })
 		);
-	}, [email, isRemember]);
+	}, [email, isRemember, token]);
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
@@ -52,41 +53,34 @@ const Login = () => {
 		// Set loading to true
 		setLoading(true);
 
-		// Make an HTTP request to login the user
 		try {
-			const response = await fetch(
-				"https://agrisolve-techsupport254.vercel.app/auth/login",
-				{
-					method: "POST",
+			const response = await fetch("http://localhost:4000/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, password }),
+			});
+
+			if (response.ok) {
+				const data = await response.json();
+				console.log(data);
+
+				// User logged in successfully
+				setSuccess(data.message);
+
+				// Save the user data in local storage (email, username, token, verificationStatus)
+				localStorage.setItem("user", JSON.stringify(data));
+				setToken(data.token);
+
+				// Update login status in the database
+				await fetch(`http://localhost:4000/auth/user/${email}`, {
+					method: "PATCH",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({ email, password }),
-				}
-			);
-
-			if (response.ok) {
-				// User logged in successfully
-				setSuccess("Logged in successfully");
-
-				// Save the user data in local storage (email, username, token, verificationStatus)
-				const data = await response.json();
-				localStorage.setItem("user", JSON.stringify(data));
-				console.log(data);
-
-				// Update login status in the database
-				const user = JSON.parse(localStorage.getItem("user"));
-				console.log(email);
-				await fetch(
-					`https://agrisolve-techsupport254.vercel.app/auth/user/${email}`,
-					{
-						method: "PATCH",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify({ loginStatus: "loggedIn" }),
-					}
-				);
+					body: JSON.stringify({ loginStatus: "loggedIn" }),
+				});
 
 				// Set the remember me cookie
 				if (isRemember) {

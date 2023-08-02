@@ -53,7 +53,7 @@ const TopLeft = ({ userData }) => {
 			return `${hoursDiff} hours ago`;
 		} else if (daysDiff === 1) {
 			return "Yesterday";
-		} else {
+		} else if (daysDiff < 3) {
 			const options = {
 				year: "numeric",
 				month: "short",
@@ -64,6 +64,8 @@ const TopLeft = ({ userData }) => {
 				hour12: false,
 			};
 			return date.toLocaleString("en-US", options);
+		} else {
+			return date.toLocaleDateString();
 		}
 	};
 
@@ -83,8 +85,11 @@ const TopLeft = ({ userData }) => {
 					<motion.div layout className="Image">
 						<img
 							src={
-								item.image ||
-								"https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+								item.profilePicture
+									? `https://agrisolve-techsupport254.vercel.app/uploads/${
+											item.profilePicture
+									  }?${Date.now()}`
+									: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 							}
 							alt={item.name}
 						/>
@@ -136,8 +141,11 @@ const TopLeft = ({ userData }) => {
 							<div className="ModalImage">
 								<img
 									src={
-										activeUserData.image ||
-										"https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+										activeUserData.profilePicture
+											? `https://agrisolve-techsupport254.vercel.app/uploads/${
+													activeUserData.profilePicture
+											  }?${Date.now()}`
+											: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 									}
 									alt={activeUserData.name}
 								/>

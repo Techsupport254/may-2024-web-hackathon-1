@@ -22,7 +22,9 @@ const ConsultLeft = ({ userData }) => {
 	// fetch users from backend
 	const fetchUsers = async () => {
 		try {
-			const response = await axios.get("https://agrisolve-techsupport254.vercel.app/auth/users");
+			const response = await axios.get(
+				"https://agrisolve-techsupport254.vercel.app/auth/users"
+			);
 			const filteredUsers = response.data.filter(
 				(user) => user.userType === "agriprofessional"
 			);
@@ -122,8 +124,10 @@ const ConsultLeft = ({ userData }) => {
 									component="img"
 									alt={item.name}
 									image={
-										item.image
-											? item.image
+										item.profilePicture
+											? `https://agrisolve-techsupport254.vercel.app/uploads/${
+													item.profilePicture
+											  }?${Date.now()}`
 											: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 									}
 								/>

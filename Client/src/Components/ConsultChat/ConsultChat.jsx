@@ -106,8 +106,14 @@ const ConsultChat = ({ consult, userData }) => {
 					<div className="ChatHeaderLeft">
 						<div className="ProfilePicture">
 							<img
-								src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-								alt="profile"
+								src={
+									consult?.profilePicture
+										? `https://agrisolve-techsupport254.vercel.app/uploads/${
+												consult?.profilePicture
+										  }?${Date.now()}`
+										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+								}
+								alt={consult?.name}
 							/>
 						</div>
 						<div className="ProfileDetails">
@@ -134,7 +140,7 @@ const ConsultChat = ({ consult, userData }) => {
 									<span className="Pending">Pending</span>
 								) : (
 									<span className="Settled">
-										Accepted on : {new Date(settledAt).toDateString()}
+										Accepted on : {new Date(consult?.accepedAt).toDateString()}
 									</span>
 								)}
 							</p>

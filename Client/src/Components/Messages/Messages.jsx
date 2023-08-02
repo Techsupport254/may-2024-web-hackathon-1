@@ -81,8 +81,17 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 							onClick={() => handleChatClick(chat)}
 						>
 							<div className="MessageProfile">
-								{chat.profilePic ? (
-									<img src={chat.profilePic} alt="Profile" />
+								{chat.profilePicture ? (
+									<img
+										src={
+											chat.profilePicture
+												? `https://agrisolve-techsupport254.vercel.app/uploads/${
+														chat.profilePicture
+												  }?${Date.now()}`
+												: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+										}
+										alt={chat.name}
+									/>
 								) : (
 									<img
 										src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
@@ -92,11 +101,17 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 							</div>
 							<div className="MessageDetails">
 								<span>
+									{lastMessage.recipientName === userData.username
+										? "You"
+										: lastMessage.recipientName}
+								</span>
+								<p>
 									{lastMessage.senderName === userData.username
 										? "You"
 										: lastMessage.senderName}
-								</span>
-								<p>{lastMessage.message}</p>
+									: &nbsp;
+									{lastMessage.message}
+								</p>
 							</div>
 							<div className="MessageRight">
 								<p>{getTimeLabel(new Date(lastMessage.timestamp))}</p>

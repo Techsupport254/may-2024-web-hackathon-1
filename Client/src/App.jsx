@@ -28,6 +28,7 @@ const App = () => {
 	const [userData, setUserData] = useState(null);
 	const [isUserDataLoaded, setIsUserDataLoaded] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [token, setToken] = useState("");
 	const location = useLocation();
 	const navigate = useNavigate();
 	const inactivityLogoutTimeout = 10 * 60 * 1000; // 10 minutes
@@ -36,8 +37,10 @@ const App = () => {
 		axios.defaults.withCredentials = true;
 		const fetchUserData = async () => {
 			const user = JSON.parse(localStorage.getItem("agrisolveData"));
+			console.log(user);
 			if (user) {
 				setUserData(user);
+				setToken(user.token);
 
 				try {
 					const response = await axios.get(
@@ -137,18 +140,19 @@ const App = () => {
 
 				localStorage.removeItem("agrisolveData");
 
-				const navigate = useNavigate();
-
-				navigate("/");
+				// Redirect to home page after logout
+				window.location.replace("/");
 			}
-
-			window.location.reload();
 		} catch (err) {
 			console.log(err);
 		}
 	};
 
-	const handleLogin = async () => {
+	const handleLogin = async (data) => {
+		// Save the user data in local storage (email, username, token, verificationStatus)
+		localStorage.setItem("agrisolveData", JSON.stringify(data));
+		setUserData(data);
+		setToken(data.token);
 		setIsLoggedIn(true);
 		navigate("/");
 	};
@@ -179,7 +183,7 @@ const App = () => {
 			location.pathname === "/login" ||
 			location.pathname === "/register" ||
 			location.pathname === "/forgot"
-		) && isUserDataLoaded; // Fixed: Added `isUserDataLoaded` check to avoid flashing Navbar/Footer
+		) && isUserDataLoaded;
 
 	return (
 		<div className="App">

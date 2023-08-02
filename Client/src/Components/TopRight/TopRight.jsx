@@ -11,8 +11,10 @@ const TopRight = ({ userData }) => {
 						<div className="Image">
 							<img
 								src={
-									user.image
-										? user.image
+									user.profilePicture
+										? `https://agrisolve-techsupport254.vercel.app/uploads/${
+												user.profilePicture
+										  }?${Date.now()}`
 										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 								}
 								alt={user.name}

@@ -2,6 +2,8 @@ const router = require("express").Router();
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 // Handler for GET request to /api/user
 // Fetches user data
@@ -199,7 +201,7 @@ router.post("/login", async (req, res) => {
 			sameSite: "none",
 		});
 
-		res.status(200).json({ message: "Logged in successfully" });
+		res.status(200).json({ message: "Logged in successfully", token: token });
 	} catch (err) {
 		res.status(400).json({
 			message: "Error logging in",

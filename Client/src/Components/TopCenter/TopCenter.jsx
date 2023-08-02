@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./TopCenter.css";
 import { BannerCenterData } from "../../Data";
+import { motion } from "framer-motion";
+import Offer from "./Offer";
 
 const TopCenter = () => {
 	const [currentPage, setCurrentPage] = useState(0);
@@ -32,23 +34,22 @@ const TopCenter = () => {
 		<div className="TopCenter">
 			<h3>Offers</h3>
 			<div className="TopCenterItems">
-				<div className="TopCenterItem active">
-					<div className="ItemImage">
-						<img src={currentItem.image} alt={currentItem.title} />
-					</div>
-					<div className="RightDetails">
-						<div className="ItemTitle">
-							<span>{currentItem.title}</span>
-						</div>
-						<div className="ItemAmount">
-							<span>KSh.{currentItem.amount}</span>
-							<span>KSh.{currentItem.prevAmount}</span>
-						</div>
-						<div className="ItemDescription">
-							<p>{currentItem.description}</p>
-						</div>
-					</div>
-				</div>
+				<motion.div
+					className="TopCenterItem active"
+					initial={{ opacity: 0, x: 100 }}
+					animate={{
+						opacity: 1,
+						x: 0,
+						transition: { duration: 0.5, ease: "easeInOut" }, // Add smooth scrolling effect
+					}}
+					exit={{
+						opacity: 0,
+						x: -100,
+						transition: { duration: 0.5, ease: "easeInOut" }, // Add smooth scrolling effect
+					}}
+				>
+					<Offer currentItem={currentItem} />
+				</motion.div>
 			</div>
 			<div className="PrevNextButtons">
 				<div className="TopCenterButton" onClick={handlePrevPage}>

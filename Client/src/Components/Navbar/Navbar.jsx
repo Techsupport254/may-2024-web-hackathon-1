@@ -115,15 +115,22 @@ const Navbar = ({ userData, handleLogout }) => {
 															handleMenuToggle(e);
 														}}
 													>
-														{user.profilePic ? (
+														{user.profilePicture ? (
 															<img
-																src={user.profilePic}
-																alt="profile"
+																src={
+																	user.profilePicture
+																		? `https://agrisolve-techsupport254.vercel.app/uploads/${
+																				user.profilePicture
+																		  }?${Date.now()}`
+																		: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+																}
 																style={{
 																	width: "30px",
 																	height: "30px",
 																	borderRadius: "50%",
+																	objectFit: "cover",
 																}}
+																alt={user.name}
 															/>
 														) : (
 															<i

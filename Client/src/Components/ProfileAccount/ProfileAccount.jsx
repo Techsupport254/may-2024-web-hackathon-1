@@ -1,17 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./ProfileAccount.css";
 import { Badge } from "@mui/material";
+import axios from "axios";
 
-const ProfileAccount = ({
-	userData,
-	isLoggedin,
-	shippingData,
-	paymentData,
-}) => {
-	// log user data
-	console.log(userData, isLoggedin, shippingData, paymentData);
-
+const ProfileAccount = ({ userData }) => {
 	const [edit, setEdit] = useState(true);
+	const [uploading, setUploading] = useState(false);
 
 	const [accountInfo, setAccountInfo] = useState({
 		name: userData?.name || "",
@@ -21,19 +15,83 @@ const ProfileAccount = ({
 		password: "**********",
 	});
 
+	const [profilePicture, setProfilePicture] = useState(
+		userData?.profilePicture
+	);
+
 	const handleToggleEdit = () => {
 		setEdit(!edit);
 	};
 
-	const handleUpdateProfilePic = () => {
-		// change profile pic logic
+	const fileInputRef = useRef(null);
+
+	const fetchUpdatedUserData = async () => {
+		// Fetch the updated user data from the server and set it to the state
+		try {
+			const res = await axios.get(
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`
+			);
+			setAccountInfo({
+				name: res.data.name,
+				email: res.data.email,
+				phone: res.data.phone,
+				address: res.data.location,
+				password: "**********", // You might want to update this with the actual password if available
+			});
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
-	console.log(shippingData, paymentData);
+	const handleUpdateProfilePic = () => {
+		fileInputRef.current.click();
+	};
+
+	const handleFileChange = async (event) => {
+		const file = event.target.files[0];
+
+		setUploading(true);
+
+		// Create a new FormData object
+		const formData = new FormData();
+		formData.append("image", file);
+
+		try {
+			// Update the profile pic
+			const res = await axios.post(
+				"https://agrisolve-techsupport254.vercel.app/api/images",
+				formData
+			);
+			console.log(res);
+
+			// Update the user data
+			const patchRes = await axios.patch(
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+				{
+					profilePicture: res.data.image.filename,
+				}
+			);
+			console.log(patchRes);
+
+			// Fetch the updated user data after the image is uploaded
+			await fetchUpdatedUserData();
+
+			// Update the profile picture state with the new URL
+			setProfilePicture(res.data.image.filename);
+
+			setTimeout(() => {
+				setUploading(false);
+			}, 3000);
+		} catch (err) {
+			console.log(err);
+		}
+
+		console.log(file);
+	};
+
 	const renderAccountInfo = () => {
 		return (
 			<div className="AccountInfo">
-				<h4>Account Information</h4>
 				<div className="AccountInfoContainer">
 					<div className="AccountInfoLeft">
 						<Badge
@@ -54,10 +112,25 @@ const ProfileAccount = ({
 							onClick={handleToggleEdit}
 						></Badge>
 						<div className="ProfilePic">
-							<img
-								src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-								alt="profile"
-							/>
+							<div
+								className={`Pic ${uploading ? "Uploading" : ""}`}
+								style={{
+									transition: "all 0.5s ease",
+								}}
+							>
+								<img
+									src={
+										profilePicture
+											? `https://agrisolve-techsupport254.vercel.app/uploads/${profilePicture}?${Date.now()}`
+											: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+									}
+									alt="Profile"
+									style={{
+										filter: uploading ? "blur(1px)" : "none",
+										transition: "all 0.5s ease",
+									}}
+								/>
+							</div>
 							<Badge
 								badgeContent={<i className="fas fa-camera"></i>}
 								color="primary"
@@ -67,7 +140,15 @@ const ProfileAccount = ({
 									horizontal: "right",
 								}}
 								className="ProfilePicBadge"
+								onClick={handleUpdateProfilePic}
 							></Badge>
+							<input
+								type="file"
+								accept="image/*"
+								ref={fileInputRef}
+								style={{ display: "none" }}
+								onChange={handleFileChange}
+							/>
 						</div>
 
 						<p>

@@ -85,19 +85,17 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: .3rem;
 
     & p {
-        font-size: .9rem;
+        font-size: .6rem;
         color: var(--color-text-light);
         font-weight: 500;
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        gap: .3rem;
 
         & p {
-            font-size: .8rem;
+            font-size: .6rem;
             color: var(--color-text-light);
             font-weight: 400;
         }
