@@ -14,20 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 // Set up Multer middleware
-const storage = multer.diskStorage({
-	destination: function (req, file, cb) {
-		cb(null, "uploads/"); // Save uploaded images to the "uploads" directory
-	},
-	filename: function (req, file, cb) {
-		const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-		cb(
-			null,
-			file.fieldname + "-" + uniqueSuffix + path.extname(file.originalname)
-		);
-	},
-});
-
-const upload = multer({ storage: storage });
+const upload = multer({ dest: '/tmp/' }); // Use '/tmp/' directory to store uploaded files
 
 app.use(
 	cors({
@@ -62,9 +49,6 @@ mongoose
 				.status(200)
 				.json({ message: "Image uploaded successfully.", image: req.file });
 		});
-
-		// Set up a route to serve uploaded images
-		app.use("/uploads", express.static("uploads"));
 
 		// Set up routes after the database connection is established
 		app.use("/auth", require("./Routers/userRouter"));
