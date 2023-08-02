@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
 // Set up Multer middleware
-const upload = multer({ dest: '/tmp/' }); // Use '/tmp/' directory to store uploaded files
+const upload = multer({ dest: "/tmp/uploads" }); // Use '/tmp/uploads' directory to store uploaded files
 
 app.use(
 	cors({
@@ -49,6 +49,9 @@ mongoose
 				.status(200)
 				.json({ message: "Image uploaded successfully.", image: req.file });
 		});
+
+		// Set up a route to serve uploaded images
+		app.use("/uploads", express.static("/tmp/uploads")); // Serve images from '/tmp/uploads' directory
 
 		// Set up routes after the database connection is established
 		app.use("/auth", require("./Routers/userRouter"));
