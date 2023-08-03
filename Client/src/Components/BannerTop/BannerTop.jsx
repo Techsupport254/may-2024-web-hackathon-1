@@ -16,9 +16,7 @@ const BannerTop = () => {
 	useEffect(() => {
 		const fetchUsersData = async () => {
 			try {
-				const response = await axios.get(
-					"https://agrisolve-techsupport254.vercel.app/auth/users"
-				);
+				const response = await axios.get("http://localhost:4000/auth/users");
 				setUserData(response.data);
 
 				// filter the data to get the agriproffesionals

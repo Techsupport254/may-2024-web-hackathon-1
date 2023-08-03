@@ -34,13 +34,20 @@ const TopLeft = ({ userData }) => {
 			second: "numeric",
 			hour12: false,
 		};
-		// return date without timezone when it's 4 days or more ago
-		if (Date.now() - date.getTime() >= 345600000) {
+
+		// Calculate the time difference in milliseconds
+		const timeDiffInMilliseconds = Date.now() - date.getTime();
+
+		// If the time difference is 3 days or more, format the date without the time
+		if (timeDiffInMilliseconds >= 3 * 24 * 60 * 60 * 1000) {
 			return date.toLocaleString("en-US", {
 				...options,
-				timeZone: "UTC",
+				hour: undefined,
+				minute: undefined,
+				second: undefined,
 			});
 		}
+
 		return date.toLocaleString("en-US", options);
 	};
 
