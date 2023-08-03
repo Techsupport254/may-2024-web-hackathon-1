@@ -4,8 +4,6 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const Token = require("./Routers/TokenRouter");
-const path = require("path");
-const multer = require("multer");
 
 // Set up server
 const app = express();
@@ -13,15 +11,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
-// Set up Multer middleware
-const upload = multer({ dest: "/tmp/uploads" }); // Use '/tmp/uploads' directory to store uploaded files
-
 app.use(
 	cors({
-		origin: [
-			"https://64a9a4a990908322a0ade04c--agrisolve.netlify.app",
-			"http://localhost:5173",
-		],
+		origin: "*",
 		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 		credentials: true,
 	})
@@ -36,22 +28,6 @@ mongoose
 	})
 	.then(() => {
 		console.log("MongoDB connection established");
-
-		// Use the "upload" middleware for handling image uploads
-		app.post("/api/images", upload.single("image"), (req, res, next) => {
-			// Check if an image file was provided
-			if (!req.file) {
-				return res.status(400).json({ message: "No image file provided." });
-			}
-			// The uploaded image file can be accessed using "req.file"
-			console.log("Uploaded image:", req.file);
-			res
-				.status(200)
-				.json({ message: "Image uploaded successfully.", image: req.file });
-		});
-
-		// Set up a route to serve uploaded images
-		app.use("/uploads", express.static("/tmp/uploads")); // Serve images from '/tmp/uploads' directory
 
 		// Set up routes after the database connection is established
 		app.use("/auth", require("./Routers/userRouter"));
