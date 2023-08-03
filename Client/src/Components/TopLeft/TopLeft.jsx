@@ -34,6 +34,13 @@ const TopLeft = ({ userData }) => {
 			second: "numeric",
 			hour12: false,
 		};
+		// return date without timezone when it's 4 days or more ago
+		if (Date.now() - date.getTime() >= 345600000) {
+			return date.toLocaleString("en-US", {
+				...options,
+				timeZone: "UTC",
+			});
+		}
 		return date.toLocaleString("en-US", options);
 	};
 
