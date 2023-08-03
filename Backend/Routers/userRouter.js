@@ -2,8 +2,6 @@ const router = require("express").Router();
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
 
 // Handler for GET request to /api/user
 // Fetches user data

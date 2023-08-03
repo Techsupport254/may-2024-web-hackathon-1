@@ -1,8 +1,7 @@
 import React from "react";
 import "./Bank.css";
-import Cards from "react-credit-cards";
-import "react-credit-cards/es/styles-compiled.css";
-
+import Cards from "react-credit-cards-2";
+import "react-credit-cards-2/dist/es/styles-compiled.css";
 const Bank = ({ onClose }) => {
 	const [success, setSuccess] = React.useState(false);
 	const [error, setError] = React.useState(false);

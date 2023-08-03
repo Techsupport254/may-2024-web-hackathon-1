@@ -13,7 +13,10 @@ app.use(express.json());
 
 app.use(
 	cors({
-		origin: "*",
+		origin: [
+			"https://64a9a4a990908322a0ade04c--agrisolve.netlify.app",
+			"http://localhost:5173",
+		],
 		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
 		credentials: true,
 	})

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Payment.css";
 import { Modal, Button } from "antd";
-import "react-credit-cards/es/styles-compiled.css";
+import "react-credit-cards-2/dist/es/styles-compiled.css";
 import Location from "../Location/Location";
 import Bank from "../Bank/Bank";
 import { Carousel } from "react-responsive-carousel";
