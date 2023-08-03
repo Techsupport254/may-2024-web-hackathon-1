@@ -59,9 +59,7 @@ const TopRight = ({ userData }) => {
 										<img
 											src={
 												user.profilePicture
-													? `https://agrisolve-techsupport254.vercel.app/uploads/${
-															user.profilePicture
-													  }?${Date.now()}`
+													? user.profilePicture
 													: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 											}
 											alt={user.name}
@@ -78,11 +76,7 @@ const TopRight = ({ userData }) => {
 							);
 						})
 					) : (
-						<div
-							className="ErrorLoading"
-							
-							
-						>
+						<div className="ErrorLoading">
 							<i className="fas fa-exclamation-triangle"></i>
 							<p
 								style={{

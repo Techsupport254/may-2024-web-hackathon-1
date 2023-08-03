@@ -2,11 +2,7 @@ import React, { useState, useRef } from "react";
 import "./ProfileAccount.css";
 import { Badge } from "@mui/material";
 import axios from "axios";
-import cloudinary from "cloudinary-core";
-
-const cloudinaryCore = new cloudinary.Cloudinary({
-	cloud_name: "YOUR_CLOUD_NAME",
-});
+import { Image } from "cloudinary-react";
 
 const ProfileAccount = ({ userData }) => {
 	const [edit, setEdit] = useState(true);
@@ -54,51 +50,184 @@ const ProfileAccount = ({ userData }) => {
 
 	const handleFileChange = async (event) => {
 		const file = event.target.files[0];
-
+		const CLOUD_NAME = "agrisolve";
 		setUploading(true);
 
 		try {
-			// Upload the image to Cloudinary
 			const formData = new FormData();
 			formData.append("file", file);
-			formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); // Replace "YOUR_UPLOAD_PRESET" with your actual Cloudinary upload preset name
-			const response = await fetch(
-				`https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload`, // Replace "YOUR_CLOUD_NAME" with your actual Cloudinary cloud name
-				{
-					method: "POST",
-					body: formData,
-				}
-			);
+			formData.append("upload_preset", "agrisolve");
 
-			const data = await response.json();
+			axios
+				.post(
+					`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+					formData
+				)
+				.then((res) => {
+					console.log(res);
+					setProfilePicture(res.data.secure_url);
 
-			// Update the user data with the Cloudinary image URL
-			const patchRes = await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
-				{
-					profilePicture: data.secure_url,
-				}
-			);
-			console.log(patchRes);
+					// Update the profile picture in the database
+					axios
+						.patch(
+							`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+							{
+								profilePicture: res.data.secure_url,
+							},
+							{
+								headers: {
+									"x-auth-token": userData.token,
+								},
+							}
+						)
+						.then((res) => {
+							console.log(res);
+							fetchUpdatedUserData();
+						})
+						.catch((err) => {
+							console.log(err);
+						});
 
-			// Fetch the updated user data after the image is uploaded
-			await fetchUpdatedUserData();
-
-			// Update the profile picture state with the new URL
-			setProfilePicture(data.secure_url);
-
-			setTimeout(() => {
-				setUploading(false);
-			}, 3000);
+					setUploading(false);
+				});
 		} catch (err) {
 			console.log(err);
+			setUploading(false);
 		}
 	};
 
 	const renderAccountInfo = () => {
 		return (
 			<div className="AccountInfo">
-				{/* ... Rest of the component code ... */}
+				<div className="AccountInfoContainer">
+					<div className="AccountInfoLeft">
+						<Badge
+							badgeContent={
+								edit ? (
+									<i className="fas fa-edit"></i>
+								) : (
+									<i className="fas fa-check"></i>
+								)
+							}
+							color="primary"
+							overlap="circular"
+							anchorOrigin={{
+								vertical: "top",
+								horizontal: "topRight",
+							}}
+							className="ProfileBadge"
+							onClick={handleToggleEdit}
+						></Badge>
+						<div className="ProfilePic">
+							<div className={`Pic ${uploading ? "Uploading" : ""}`}>
+								<Image
+									cloudName="agrisolve"
+									publicId={
+										profilePicture ||
+										"https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+									}
+									alt="Profile"
+									style={{
+										filter: uploading ? "blur(1px)" : "none",
+										transition: "all 0.5s ease",
+									}}
+								/>
+							</div>
+
+							<Badge
+								badgeContent={<i className="fas fa-camera"></i>}
+								color="primary"
+								overlap="circular"
+								anchorOrigin={{
+									vertical: "bottom",
+									horizontal: "right",
+								}}
+								className="ProfilePicBadge"
+								onClick={handleUpdateProfilePic}
+							></Badge>
+							<input
+								type="file"
+								accept="image/*"
+								ref={fileInputRef}
+								style={{ display: "none" }}
+								onChange={handleFileChange}
+							/>
+						</div>
+
+						<p>
+							{userData?.name}
+							<span>({userData.username})</span>
+							<br />
+							<span>
+								Joined on <i className="fas fa-calendar-alt"></i>{" "}
+								{userData.created_at
+									? new Date(userData.created_at).toDateString()
+									: "N/A"}
+							</span>
+						</p>
+						<h5>
+							<i className="fas fa-user-tag"></i>&nbsp;
+							{userData?.userType}
+						</h5>
+						<div className="ProfileContent">
+							<span>
+								<i className="fas fa-store"></i>&nbsp;{userData?.businessName}{" "}
+								&nbsp;&nbsp;|&nbsp;&nbsp; {userData?.businessType}
+							</span>
+							<h5>
+								<i className="fas fa-map-marker-alt"></i>&nbsp;
+								{userData?.businessLocation}
+							</h5>
+
+							<p>
+								<i className="fas fa-info-circle"></i>&nbsp;
+								{userData?.businessDescription}
+							</p>
+						</div>
+					</div>
+					<div className="AccountInfoRight">
+						<div className="AccountInfoItem">
+							<label htmlFor="email">Email</label>
+							<input
+								type="email"
+								name="email"
+								id="email"
+								value={accountInfo.email}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="phone">Phone</label>
+							<input
+								type="text"
+								name="phone"
+								id="phone"
+								value={accountInfo.phone}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="address">Address</label>
+							<input
+								type="text"
+								name="address"
+								id="address"
+								value={accountInfo.address}
+								disabled={edit}
+							/>
+						</div>
+						<div className="AccountInfoItem">
+							<label htmlFor="password">Password</label>
+							<input
+								type="password"
+								name="password"
+								id="password"
+								value={accountInfo.password}
+								disabled={edit}
+							/>
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	};

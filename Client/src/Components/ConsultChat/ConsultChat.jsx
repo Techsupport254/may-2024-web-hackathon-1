@@ -108,9 +108,7 @@ const ConsultChat = ({ consult, userData }) => {
 							<img
 								src={
 									consult?.profilePicture
-										? `https://agrisolve-techsupport254.vercel.app/uploads/${
-												consult?.profilePicture
-										  }?${Date.now()}`
+										? consult?.profilePicture
 										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 								}
 								alt={consult?.name}

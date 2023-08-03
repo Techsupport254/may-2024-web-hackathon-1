@@ -125,9 +125,7 @@ const ConsultLeft = ({ userData }) => {
 									alt={item.name}
 									image={
 										item.profilePicture
-											? `https://agrisolve-techsupport254.vercel.app/uploads/${
-													item.profilePicture
-											  }?${Date.now()}`
+											? item.profilePicture
 											: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 									}
 								/>

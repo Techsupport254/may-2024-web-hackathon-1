@@ -53,7 +53,7 @@ const TopLeft = ({ userData }) => {
 
 	return (
 		<div className="TopLeft">
-			<h3>{verified ? "Verified" : "Unverified"} Agriprofessionals</h3>
+			<h3>Agriprofessionals</h3>
 			{userData.length === 0 ? (
 				<div className="ErrorLoading">
 					<i className="fas fa-exclamation-triangle"></i>
@@ -74,9 +74,7 @@ const TopLeft = ({ userData }) => {
 							<img
 								src={
 									item.profilePicture
-										? `https://agrisolve-techsupport254.vercel.app/uploads/${
-												item.profilePicture
-										  }?${Date.now()}`
+										? item.profilePicture
 										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 								}
 								alt={item.name}

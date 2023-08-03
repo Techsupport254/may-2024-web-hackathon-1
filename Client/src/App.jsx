@@ -34,7 +34,7 @@ const App = () => {
 	const inactivityLogoutTimeout = 10 * 60 * 1000; // 10 minutes
 
 	useEffect(() => {
-		axios.defaults.withCredentials = true;
+
 		const fetchUserData = async () => {
 			const user = JSON.parse(localStorage.getItem("agrisolveData"));
 			console.log(user);
