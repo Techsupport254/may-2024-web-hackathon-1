@@ -12,8 +12,6 @@ const BannerTop = () => {
 	const [Agribusinesses, setAgribusinesses] = useState([]);
 	const [error, setError] = useState(null);
 
-	axios.defaults.withCredentials = true;
-
 	// Fetching the data from the API
 	useEffect(() => {
 		const fetchUsersData = async () => {
