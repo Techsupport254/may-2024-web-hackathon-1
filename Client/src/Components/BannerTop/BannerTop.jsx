@@ -10,6 +10,7 @@ const BannerTop = () => {
 	const [isLoggedin, setIsLoggedin] = useState(false);
 	const [agriproffesionals, setAgriproffesionals] = useState([]);
 	const [Agribusinesses, setAgribusinesses] = useState([]);
+	const [error, setError] = useState(null);
 
 	axios.defaults.withCredentials = true;
 
@@ -33,8 +34,10 @@ const BannerTop = () => {
 					(user) => user.userType === "agribusiness"
 				);
 				setAgribusinesses(agribusinessesData);
+
+				setError(null);
 			} catch (err) {
-				console.log(err);
+				setError("Could not load data.");
 			}
 		};
 
@@ -43,15 +46,31 @@ const BannerTop = () => {
 
 	return (
 		<div className="BannerTop">
-			<div className="BannerLeft">
-				<TopLeft userData={agriproffesionals} />
-			</div>
-			<div className="BannerCenter">
-				<TopCenter />
-			</div>
-			<div className="BannerRight">
-				<TopRight userData={Agribusinesses} />
-			</div>
+			<>
+				<div className="BannerLeft">
+					{error ? (
+						<div className="Error">
+							<i className="fas fa-exclamation-triangle"></i>
+							<p>{error}</p>
+						</div>
+					) : (
+						<TopLeft userData={agriproffesionals} />
+					)}
+				</div>
+				<div className="BannerCenter">
+					<TopCenter />
+				</div>
+				<div className="BannerRight">
+					{error ? (
+						<div className="Error">
+							<i className="fas fa-exclamation-triangle"></i>
+							<p>{error}</p>
+						</div>
+					) : (
+						<TopRight userData={Agribusinesses} />
+					)}
+				</div>
+			</>
 		</div>
 	);
 };

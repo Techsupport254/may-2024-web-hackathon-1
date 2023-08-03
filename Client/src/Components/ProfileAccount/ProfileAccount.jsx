@@ -2,9 +2,11 @@ import React, { useState, useRef } from "react";
 import "./ProfileAccount.css";
 import { Badge } from "@mui/material";
 import axios from "axios";
-import cloudinary from "cloudinary-core"; // Import the cloudinary library
+import cloudinary from "cloudinary-core";
 
-const cloudinaryCore = new cloudinary.Cloudinary({ cloud_name: "YOUR_CLOUD_NAME" }); // Replace "YOUR_CLOUD_NAME" with your actual Cloudinary cloud name
+const cloudinaryCore = new cloudinary.Cloudinary({
+	cloud_name: "YOUR_CLOUD_NAME",
+});
 
 const ProfileAccount = ({ userData }) => {
 	const [edit, setEdit] = useState(true);
@@ -39,7 +41,7 @@ const ProfileAccount = ({ userData }) => {
 				email: res.data.email,
 				phone: res.data.phone,
 				address: res.data.location,
-				password: "**********", // You might want to update this with the actual password if available
+				password: "**********",
 			});
 		} catch (err) {
 			console.log(err);
