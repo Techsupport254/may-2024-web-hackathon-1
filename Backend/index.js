@@ -13,11 +13,11 @@ app.use(express.json());
 
 // Set up CORS to allow all origins with credentials
 app.use(
-	cors({
-		origin: true,
-		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-		credentials: true,
-	})
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    credentials: true,
+  })
 );
 
 app.use(cookieParser());
