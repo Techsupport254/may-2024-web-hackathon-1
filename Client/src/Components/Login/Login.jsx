@@ -54,33 +54,39 @@ const Login = () => {
 		setLoading(true);
 
 		try {
-			const response = await fetch("http://localhost:4000/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({ email, password }),
-			});
+			const response = await fetch(
+				"https://agrisolve-techsupport254.vercel.app/auth/login",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ email, password }),
+				}
+			);
 
 			if (response.ok) {
 				const data = await response.json();
-				console.log(data);
 
 				// User logged in successfully
 				setSuccess(data.message);
 
 				// Save the user data in local storage (email, username, token, verificationStatus)
 				localStorage.setItem("user", JSON.stringify(data));
+				console.log(data);
 				setToken(data.token);
 
 				// Update login status in the database
-				await fetch(`http://localhost:4000/auth/user/${email}`, {
-					method: "PATCH",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ loginStatus: "loggedIn" }),
-				});
+				await fetch(
+					`https://agrisolve-techsupport254.vercel.app/auth/user/${email}`,
+					{
+						method: "PATCH",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ loginStatus: "loggedIn" }),
+					}
+				);
 
 				// Set the remember me cookie
 				if (isRemember) {

@@ -35,17 +35,30 @@ const TopLeft = ({ userData }) => {
 			hour12: false,
 		};
 
-		// Calculate the time difference in milliseconds
 		const timeDiffInMilliseconds = Date.now() - date.getTime();
+		const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
 
-		// If the time difference is 3 days or more, format the date without the time
-		if (timeDiffInMilliseconds >= 3 * 24 * 60 * 60 * 1000) {
+		if (timeDiffInMilliseconds >= 3 * oneDayInMilliseconds) {
 			return date.toLocaleString("en-US", {
 				...options,
 				hour: undefined,
 				minute: undefined,
 				second: undefined,
 			});
+		} else if (timeDiffInMilliseconds >= 2 * oneDayInMilliseconds) {
+			return "Yesterday";
+		} else if (timeDiffInMilliseconds >= oneDayInMilliseconds) {
+			return `${Math.floor(
+				timeDiffInMilliseconds / oneDayInMilliseconds
+			)} days ago`;
+		} else if (timeDiffInMilliseconds >= 60 * 60 * 1000) {
+			return `${Math.floor(
+				timeDiffInMilliseconds / (60 * 60 * 1000)
+			)} hours ago`;
+		} else if (timeDiffInMilliseconds >= 60 * 1000) {
+			return `${Math.floor(timeDiffInMilliseconds / (60 * 1000))} minutes ago`;
+		} else if (timeDiffInMilliseconds >= 1000) {
+			return `${Math.floor(timeDiffInMilliseconds / 1000)} seconds ago`;
 		}
 
 		return date.toLocaleString("en-US", options);
@@ -129,9 +142,7 @@ const TopLeft = ({ userData }) => {
 								<img
 									src={
 										activeUserData.profilePicture
-											? `https://agrisolve-techsupport254.vercel.app/uploads/${
-													activeUserData.profilePicture
-											  }?${Date.now()}`
+											? activeUserData.profilePicture
 											: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 									}
 									alt={activeUserData.name}

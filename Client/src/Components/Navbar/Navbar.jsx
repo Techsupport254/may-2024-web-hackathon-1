@@ -22,7 +22,7 @@ const Navbar = ({ userData, handleLogout }) => {
 		e.preventDefault();
 		setMenuVisible((prevVisible) => !prevVisible);
 	};
-
+	console.log(user);
 	return (
 		<div className="Navbar">
 			<div className="NavbarContainer">
@@ -201,7 +201,13 @@ const Navbar = ({ userData, handleLogout }) => {
 							})}
 						</div>
 					</div>
-					<div className="NavBottom"></div>
+					<div className="NavBottom">
+						{user?.userType !== "farmer" && (
+							<Link to="https://agrisolve-admin-git-main-techsupport254.vercel.app/">
+								Admin
+							</Link>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>
