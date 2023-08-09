@@ -13,11 +13,11 @@ app.use(express.json());
 
 // Set up CORS to allow all origins with credentials
 app.use(
-  cors({
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    credentials: true,
-  })
+	cors({
+		origin: "*",
+		methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+		credentials: true,
+	})
 );
 
 app.use(cookieParser());
@@ -38,6 +38,7 @@ mongoose
 		app.use("/tokens", Token);
 		app.use("/consults", require("./Routers/consultRouter"));
 		app.use("/chats", require("./Routers/chatRouter"));
+		app.use("/products", require("./Routers/ProductRoute"));
 
 		// Start the server
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

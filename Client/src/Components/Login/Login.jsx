@@ -26,7 +26,6 @@ const Login = () => {
 
 	useEffect(() => {
 		const agrisolveData = JSON.parse(localStorage.getItem("agrisolveData"));
-		console.log(agrisolveData);
 		if (agrisolveData) {
 			setEmail(agrisolveData.email);
 			setIsRemember(agrisolveData.isRemember);
@@ -73,7 +72,6 @@ const Login = () => {
 
 				// Save the user data in local storage (email, username, token, verificationStatus)
 				localStorage.setItem("user", JSON.stringify(data));
-				console.log(data);
 				setToken(data.token);
 
 				// Update login status in the database

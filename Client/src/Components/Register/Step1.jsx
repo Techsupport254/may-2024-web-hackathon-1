@@ -1,3 +1,6 @@
+import "./Register.css";
+import { TextField } from "@mui/material";
+import { MenuItem } from "@mui/material";
 import { Modal, Spin } from "antd";
 import React, { useState, useEffect } from "react";
 
@@ -5,6 +8,8 @@ const Step1 = ({ onNextStep }) => {
 	const [userType, setUserType] = useState("");
 	const [farmingType, setFarmingType] = useState("");
 	const [businessType, setBusinessType] = useState("");
+	const [businessName, setBusinessName] = useState("");
+	const [businessLocation, setBusinessLocation] = useState("");
 	const [formData, setFormData] = useState({});
 	const [isFormValid, setIsFormValid] = useState(false);
 	const [error, setError] = useState("");
@@ -67,10 +72,18 @@ const Step1 = ({ onNextStep }) => {
 				formData1.quantity = quantity.value;
 			}
 		} else if (["agribusiness", "agriprofessional"].includes(userType)) {
-			const { businessName, location, businessType, businessDescription } =
-				e.target.elements;
+			const {
+				businessName,
+				businessLocation,
+				businessType,
+				businessDescription,
+			} = e.target.elements;
 
-			if (!businessName.value || !location.value || !businessDescription.value) {
+			if (
+				!businessName.value ||
+				!businessLocation.value ||
+				!businessDescription.value
+			) {
 				// Input values are empty
 				return;
 			}
@@ -78,7 +91,7 @@ const Step1 = ({ onNextStep }) => {
 			formData1.userType = userType;
 			formData1.businessName = businessName.value;
 			formData1.businessType = businessType.value;
-			formData1.businessLocation = location.value;
+			formData1.businessLocation = businessLocation.value;
 			formData1.businessDescription = businessDescription.value;
 		}
 
@@ -103,9 +116,13 @@ const Step1 = ({ onNextStep }) => {
 				return !!quantity.value;
 			}
 		} else if (["agribusiness", "agriprofessional"].includes(userType)) {
-			const { businessName, location, businessDescription } =
+			const { businessName, businessLocation, businessDescription } =
 				document.forms[0].elements;
-			return !!businessName.value && !!location.value && !!businessDescription.value;
+			return (
+				!!businessName.value &&
+				!!businessLocation.value &&
+				!!businessDescription.value
+			);
 		}
 
 		return false;
@@ -120,60 +137,51 @@ const Step1 = ({ onNextStep }) => {
 
 		if (userType === "farmer") {
 			return (
-				<>
-					<div
-						className="RegisterInput"
-						style={{
-							width: "90%",
-							marginRight: "1rem",
-						}}
-					>
-						<label htmlFor="farmingType">Type of Farming</label>
-						<select
+				<div className="RegisterInputs">
+					<div className="RegisterInput">
+						<TextField
+							label="Type of Farming"
+							variant="outlined"
 							name="farmingType"
 							id="farmingType"
 							value={farmingType}
 							onChange={(e) => setFarmingType(e.target.value)}
+							select
+							fullWidth
 						>
 							{farmingOptions.map((option) => (
-								<option key={option.value} value={option.value}>
+								<MenuItem key={option.value} value={option.value}>
 									{option.label}
-								</option>
+								</MenuItem>
 							))}
-						</select>
+						</TextField>
 					</div>
 					{farmingType === "crop" ? (
-						<div
-							className="RegisterInput"
-							style={{
-								width: "90%",
-							}}
-						>
-							<label htmlFor="acreage">Acreage</label>
-							<input
-								type="text"
+						<div className="RegisterInput">
+							<TextField
+								label="Acreage"
+								variant="outlined"
 								name="acreage"
+								id="acreage"
 								placeholder="Enter the size of the farm"
+								fullWidth
 							/>
 						</div>
 					) : (
-						<div
-							className="RegisterInput"
-							style={{
-								width: "90%",
-							}}
-						>
-							<label htmlFor="quantity">Quantity</label>
-							<input
-								type="text"
-								name="quantity" // Add name attribute
+						<div className="RegisterInput">
+							<TextField
+								label="Quantity"
+								variant="outlined"
+								name="quantity"
+								id="quantity"
 								placeholder={`Approximate number of ${
 									farmingType === "livestock" ? "animals" : "birds"
 								}`}
+								fullWidth
 							/>
 						</div>
 					)}
-				</>
+				</div>
 			);
 		}
 
@@ -184,42 +192,44 @@ const Step1 = ({ onNextStep }) => {
 			];
 
 			return (
-				<>
-					<div
-						className="RegisterInput"
-						style={{
-							width: "44%",
-							marginRight: "1rem",
-						}}
-					>
-						<label htmlFor="businessName">Business Name</label>
-						<input
-							type="text"
+				<div className="RegisterInputs">
+					<div className="RegisterInput">
+						<TextField
+							label="Business Name"
+							variant="outlined"
 							name="businessName"
-							placeholder="Enter the name of your business"
+							id="businessName"
+							fullWidth
+							size="small"
 						/>
-					</div>
-					<div className="RegisterInput" style={{ width: "44%" }}>
-						<label htmlFor="businessType">Business Type</label>
-						<select
+						<TextField
+							label="Business Type"
+							variant="outlined"
 							name="businessType"
 							id="businessType"
 							value={businessType}
 							onChange={(e) => setBusinessType(e.target.value)}
+							select
+							fullWidth
+							size="small"
 						>
 							{businessOptions.map((option) => (
-								<option key={option.value} value={option.value}>
+								<MenuItem key={option.value} value={option.value}>
 									{option.label}
-								</option>
+								</MenuItem>
 							))}
-						</select>
+						</TextField>
 					</div>
 					<div className="RegisterInput" style={{ width: "100%" }}>
-						<label htmlFor="location">Location</label>
-						<input
-							type="text"
-							name="location"
-							placeholder="Enter the location of your business"
+						<TextField
+							label="Business Location"
+							variant="outlined"
+							name="businessLocation"
+							id="businessLocation"
+							value={businessLocation}
+							onChange={(e) => setBusinessLocation(e.target.value)}
+							fullWidth
+							size="small"
 						/>
 					</div>
 					<div
@@ -228,13 +238,18 @@ const Step1 = ({ onNextStep }) => {
 							width: "100%",
 						}}
 					>
-						<label htmlFor="businessDescription">Description</label>
-						<textarea
+						<TextField
+							label="Business Description"
+							variant="outlined"
 							name="businessDescription"
-							placeholder="Enter a brief description of your business"
+							id="businessDescription"
+							multiline
+							rows={4}
+							fullWidth
+							size="small"
 						/>
 					</div>
-				</>
+				</div>
 			);
 		}
 

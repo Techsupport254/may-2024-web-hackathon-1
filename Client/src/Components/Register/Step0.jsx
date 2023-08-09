@@ -1,6 +1,8 @@
 import { Modal, Spin } from "antd";
 import React, { useState, useEffect } from "react";
 import jwtDecode from "jwt-decode";
+import TextField from "@mui/material/TextField";
+import { MenuItem } from "@mui/material";
 
 const Step0 = ({ onNextStep }) => {
 	const [name, setName] = useState("");
@@ -158,88 +160,108 @@ const Step0 = ({ onNextStep }) => {
 			<p>Please enter your details here</p>
 			<form>
 				<div className="RegisterInput">
-					<label htmlFor="name">Name</label>
-					<input
-						type="text"
-						placeholder="Enter your name"
+					<TextField
+						label="Name"
+						variant="outlined"
 						value={name}
 						onChange={(e) => setName(e.target.value)}
 						required
+						color="success"
+						size="small"
+						fullWidth
 					/>
-				</div>
-				<div className="RegisterInput">
-					<label htmlFor="name">Username</label>
-					<input
+					<TextField
+						label="Username"
+						variant="outlined"
 						type="text"
-						placeholder="Enter your username"
 						value={username}
 						onChange={(e) => setUsername(e.target.value)}
 						required
+						size="small"
+						fullWidth
+						color="success"
 					/>
 				</div>
+				<div className="RegisterInput"></div>
 				<div className="RegisterInput">
-					<label htmlFor="email">Email</label>
-					<input
+					<TextField
+						label="Email"
+						variant="outlined"
 						type="email"
-						placeholder="Enter your email"
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						required
+						size="small"
+						fullWidth
+						color="success"
 					/>
 				</div>
 				<div className="RegisterInput">
-					<label htmlFor="phone">Phone</label>
-					<input
-						type="text"
-						placeholder="Enter your phone number"
+					<TextField
+						label="Phone"
+						variant="outlined"
+						type="phone"
 						value={phone}
 						onChange={(e) => setPhone(e.target.value)}
 						required
+						size="small"
+						fullWidth
+						color="success"
 					/>
-				</div>
-				<div className="RegisterInput">
-					<label htmlFor="userType">User Type</label>
-					<select
-						name="userType"
-						id="userType"
+					<TextField
+						label="User Type"
+						variant="outlined"
+						type="text"
 						value={userType}
 						onChange={(e) => setUserType(e.target.value)}
 						required
+						select
+						fullWidth
+						size="small"
+						color="success"
 					>
-						<option value="">Select user type</option>
-						<option value="farmer">Farmer</option>
-						<option value="agribusiness">Agribusiness</option>
-						<option value="agriprofessional">Agriprofessional</option>
-					</select>
+						<MenuItem value="farmer">Farmer</MenuItem>
+						<MenuItem value="agribusiness">Agribusiness</MenuItem>
+						<MenuItem value="agriprofessional">Agriprofessional</MenuItem>
+					</TextField>
 				</div>
 				<div className="RegisterInput">
-					<label htmlFor="location">Location</label>
-					<input
+					<TextField
+						label="Location"
+						variant="outlined"
 						type="text"
-						placeholder="Enter your location"
 						value={location}
 						onChange={(e) => setLocation(e.target.value)}
 						required
+						size="small"
+						fullWidth
+						color="success"
 					/>
 				</div>
 				<div className="RegisterInput">
-					<label htmlFor="password">Password</label>
-					<input
+					<TextField
+						label="Password"
+						variant="outlined"
 						type="password"
-						placeholder="Enter your password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						required
+						helperText="Password must be at least 6 characters long"
+						size="small"
+						fullWidth
+						color="success"
 					/>
-				</div>
-				<div className="RegisterInput">
-					<label htmlFor="confirmPassword">Confirm Password</label>
-					<input
+					<TextField
+						label="Confirm Password"
+						variant="outlined"
 						type="password"
-						placeholder="Confirm your password"
 						value={confirmPassword}
 						onChange={(e) => setConfirmPassword(e.target.value)}
 						required
+						helperText="Passwords must match"
+						size="small"
+						fullWidth
+						color="success"
 					/>
 				</div>
 

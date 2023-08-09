@@ -7,7 +7,7 @@ const Profile = ({ userData, isLoggedin, shippingData, paymentData }) => {
 	const [activeMenu, setActiveMenu] = useState(""); // State to keep track of active menu item
 
 	const handleMenuClick = (item) => {
-		setActiveMenu(item); // Update the active menu item
+		setActiveMenu(item);
 	};
 
 	return (

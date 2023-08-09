@@ -5,6 +5,7 @@
     width: 100%;
     height: 75vh;
     overflow-y: auto;
+
 }
 
 .ProfileAccount h4 {
@@ -12,6 +13,7 @@
     font-weight: bold;
     text-align: center;
     margin: 0 .5rem;
+
 }
 
 .AccountInfoContainer {
@@ -26,10 +28,10 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 45%;
+    width: 30%;
     height: 90%;
     margin: .5rem;
-    box-shadow: 0 0 5px 1px #ccc;
+    box-shadow: var(--boxShadow);
     border-radius: 4px;
     gap: 0.5rem;
     overflow: hidden;
@@ -44,6 +46,15 @@
         height: 10rem;
         object-fit: cover;
         overflow: hidden;
+        border-radius: 50%;
+
+        &:hover {
+            cursor: pointer;
+
+            & .UpdatePhoto {
+                display: flex;
+            }
+        }
     }
 
     & .Pic {
@@ -55,12 +66,15 @@
         border-radius: 50%;
         padding: 5px;
 
+
         & img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
         }
+
+
     }
 
     & h5 {
@@ -82,6 +96,31 @@
         font-size: .8rem;
         font-weight: normal;
         color: #777;
+    }
+}
+
+.UpdatePhoto {
+    height: 8rem;
+    width: 8rem;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    cursor: pointer;
+    color: var(--white);
+    transition: color 0.3s ease-in-out;
+    position: absolute;
+    background: var(--bg-color-clear);
+    border-radius: 50%;
+
+    & i {
+        font-size: 1.3rem;
+    }
+
+    & h1 {
+        font-size: 1rem;
+        font-weight: 600;
     }
 }
 
@@ -114,12 +153,53 @@
     }
 }
 
-.ProfilePicBadge {
-    margin: 5rem 0 0 0;
+.ProfileMore {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ProfileMoreItem {
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
+
+    & p {
+        font-size: .8rem;
+        font-weight: 600;
+        text-align: center;
+        margin: 0 .5rem;
+        color: var(--bg-color);
+    }
+}
+
+.ProfileBtns {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: .5rem;
+    margin-top: 1rem;
+
+    & button {
+        width: 100%;
+        height: 2rem;
+        border-radius: 4px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        font-size: .8rem;
+        font-weight: 600;
+        transition: all .3s ease-in-out;
+        background: var(--error-light);
+        color: var(--error-dark);
+
+        &:hover {
+            background: var(--error-lighter);
+            color: var(--error-darker);
+        }
+    }
 }
 
 .ProfileContent {
@@ -131,7 +211,7 @@
     gap: .5rem;
     overflow: hidden;
     border-radius: 4px;
-    box-shadow: 0 0 5px 1px #ccc;
+    box-shadow: var(--boxShadow);
     padding-bottom: .5rem;
     opacity: 0.8;
 
@@ -175,26 +255,12 @@
     height: 2rem;
     border-radius: 50%;
     background-color: #007bff;
-    box-shadow: 0 0 5px 1px #ccc;
+    box-shadow: var(--boxShadow);
 
     & i {
         font-size: 1rem;
         color: #fff;
     }
-}
-
-.AccountInfoRight {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 48%;
-    height: 90%;
-    margin: .5rem;
-    box-shadow: 0 0 5px 1px #ccc;
-    border-radius: 4px;
-    gap: 0.5rem;
-    overflow: hidden;
 }
 
 .AccountInfo {
@@ -205,49 +271,81 @@
     width: 100%;
     height: 90%;
     overflow-y: auto;
-    margin: .5rem;
-    padding: .5rem;
-    box-shadow: 0 0 5px 1px #ccc;
-    border-radius: 4px;
+}
 
+.AccountInfoRight {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 60%;
+    height: 90%;
+    gap: 1rem;
+    padding: 1rem;
+    box-shadow: var(--boxShadow);
 }
 
 .AccountInfoItem {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 96%;
-    margin-bottom: .5rem;
-}
-
-.AccountInfoItem label,
-.PaymentInfoItem label,
-.ShippingInfoItem label {
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: .8rem;
-}
-
-.AccountInfoItem input,
-.PaymentInfoItem input,
-.ShippingInfoItem input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.ProfileAccount button {
-    padding: 10px;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
     width: 100%;
-    background-color: #007bff;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
+    gap: 1rem;
 }
 
-.ProfileAccount button:hover {
-    background-color: #0056b3;
+.ChangeBtn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+    gap: .5rem;
+    margin-top: 1rem;
+
+    & .SaveChanges {
+        background: var(--success-light);
+        color: var(--success-darker);
+        padding: .5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            background: var(--success-lighter);
+            color: var(--success-darker);
+        }
+    }
+
+    & .CancelChanges {
+        background: var(--error-light);
+        color: var(--error-darker);
+        padding: .5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            background: var(--error-lighter);
+            color: var(--error-darker);
+        }
+    }
+
+    & .EditProfile {
+        background: var(--bg-color);
+        color: var(--white);
+        padding: .5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        transition: all .3s ease-in-out;
+
+        &:hover {
+            background: var(--warning-lighter);
+            border: var(--bg-color) 2px solid;
+            color: var(--bg-color);
+        }
+    }
 }

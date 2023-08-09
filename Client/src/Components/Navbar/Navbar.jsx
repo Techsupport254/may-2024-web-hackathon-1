@@ -203,9 +203,7 @@ const Navbar = ({ userData, handleLogout }) => {
 					</div>
 					<div className="NavBottom">
 						{user?.userType !== "farmer" && (
-							<Link to="https://agrisolve-admin-git-main-techsupport254.vercel.app/">
-								Admin
-							</Link>
+							<Link to="https://agrisolve-admin.vercel.app">Admin</Link>
 						)}
 					</div>
 				</div>

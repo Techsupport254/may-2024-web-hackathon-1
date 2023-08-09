@@ -1,18 +1,24 @@
 import React, { useState, useRef } from "react";
 import "./ProfileAccount.css";
-import { Badge } from "@mui/material";
+import { Badge, MenuItem, Switch, TextField } from "@mui/material";
 import axios from "axios";
 import { Image } from "cloudinary-react";
 
 const ProfileAccount = ({ userData }) => {
-	const [edit, setEdit] = useState(true);
+	const [edit, setEdit] = useState(false);
 	const [uploading, setUploading] = useState(false);
 
 	const [accountInfo, setAccountInfo] = useState({
 		name: userData?.name || "",
 		email: userData?.email || "",
 		phone: userData?.phone || "",
+		username: userData?.username || "",
 		address: userData?.location || "",
+		userType: userData?.userType || "",
+		businessName: userData?.businessName || "",
+		businessType: userData?.businessType || "",
+		businessLocation: userData?.businessLocation || "",
+		businessDescription: userData?.businessDescription || "",
 		password: "**********",
 	});
 
@@ -50,74 +56,84 @@ const ProfileAccount = ({ userData }) => {
 
 	const handleFileChange = async (event) => {
 		const file = event.target.files[0];
-		const CLOUD_NAME = "agrisolve";
+		const CLOUD_NAME = __CLOUD_NAME__;
+		const PRESET_NAME = __UPLOAD_PRESET__;
 		setUploading(true);
 
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
-			formData.append("upload_preset", "agrisolve");
+			formData.append("upload_preset", PRESET_NAME);
 
-			axios
-				.post(
-					`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-					formData
-				)
-				.then((res) => {
-					console.log(res);
-					setProfilePicture(res.data.secure_url);
+			const uploadResponse = await axios.post(
+				`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+				formData
+			);
 
-					// Update the profile picture in the database
-					axios
-						.patch(
-							`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
-							{
-								profilePicture: res.data.secure_url,
-							},
-							{
-								headers: {
-									"x-auth-token": userData.token,
-								},
-							}
-						)
-						.then((res) => {
-							console.log(res);
-							fetchUpdatedUserData();
-						})
-						.catch((err) => {
-							console.log(err);
-						});
+			setProfilePicture(uploadResponse.data.secure_url);
 
-					setUploading(false);
-				});
+			const updateResponse = await axios.patch(
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+				{
+					profilePicture: uploadResponse.data.secure_url,
+				},
+				{
+					headers: {
+						"x-auth-token": userData.token,
+					},
+				}
+			);
+
+			console.log("Update Response:", updateResponse.data);
+
+			setUploading(false);
 		} catch (err) {
-			console.log(err);
+			console.error("Error:", err);
 			setUploading(false);
 		}
 	};
 
+	const handleUpdateAccountInfo = async () => {
+		try {
+			const res = await axios.patch(
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+				{
+					name: accountInfo.name,
+					email: accountInfo.email,
+					phone: accountInfo.phone,
+					location: accountInfo.address,
+				},
+				{
+					headers: {
+						"x-auth-token": userData.token,
+					},
+				}
+			);
+
+			console.log("Update Response:", res.data);
+
+			fetchUpdatedUserData();
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	const handleSave = () => {
+		// TODO: Save the updated data to the server
+		handleUpdateAccountInfo();
+		setEdit(!edit);
+	};
+
+	const handleEdit = (e) => {
+		setAccountInfo({ ...accountInfo, [e.target.name]: e.target.value });
+	};
+
+	console.log(userData);
 	const renderAccountInfo = () => {
 		return (
 			<div className="AccountInfo">
 				<div className="AccountInfoContainer">
 					<div className="AccountInfoLeft">
-						<Badge
-							badgeContent={
-								edit ? (
-									<i className="fas fa-edit"></i>
-								) : (
-									<i className="fas fa-check"></i>
-								)
-							}
-							color="primary"
-							overlap="circular"
-							anchorOrigin={{
-								vertical: "top",
-								horizontal: "topRight",
-							}}
-							className="ProfileBadge"
-							onClick={handleToggleEdit}
-						></Badge>
 						<div className="ProfilePic">
 							<div className={`Pic ${uploading ? "Uploading" : ""}`}>
 								<Image
@@ -133,18 +149,10 @@ const ProfileAccount = ({ userData }) => {
 									}}
 								/>
 							</div>
-
-							<Badge
-								badgeContent={<i className="fas fa-camera"></i>}
-								color="primary"
-								overlap="circular"
-								anchorOrigin={{
-									vertical: "bottom",
-									horizontal: "right",
-								}}
-								className="ProfilePicBadge"
-								onClick={handleUpdateProfilePic}
-							></Badge>
+							<div className="UpdatePhoto" onClick={handleUpdateProfilePic}>
+								<i className="fa fa-camera"></i>
+								<h1>Update photo</h1>
+							</div>
 							<input
 								type="file"
 								accept="image/*"
@@ -165,66 +173,179 @@ const ProfileAccount = ({ userData }) => {
 									: "N/A"}
 							</span>
 						</p>
-						<h5>
-							<i className="fas fa-user-tag"></i>&nbsp;
-							{userData?.userType}
-						</h5>
-						<div className="ProfileContent">
-							<span>
-								<i className="fas fa-store"></i>&nbsp;{userData?.businessName}{" "}
-								&nbsp;&nbsp;|&nbsp;&nbsp; {userData?.businessType}
-							</span>
-							<h5>
-								<i className="fas fa-map-marker-alt"></i>&nbsp;
-								{userData?.businessLocation}
-							</h5>
-
-							<p>
-								<i className="fas fa-info-circle"></i>&nbsp;
-								{userData?.businessDescription}
-							</p>
+						<h5>{userData?.userType}</h5>
+						<div className="ProfileMore">
+							<div className="ProfileMoreItem">
+								{userData?.verificationStatus !== "verified" ? (
+									<>
+										<p>Verify</p>
+										<Switch
+											checked={false}
+											disabled
+											inputProps={{ "aria-label": "controlled" }}
+										/>
+									</>
+								) : (
+									<>
+										<p>Verified</p>
+										<Switch
+											checked
+											disabled
+											inputProps={{ "aria-label": "controlled" }}
+										/>
+									</>
+								)}
+							</div>
+							<div className="ProfileBtns">
+								<button>Delete Account</button>
+							</div>
 						</div>
 					</div>
 					<div className="AccountInfoRight">
 						<div className="AccountInfoItem">
-							<label htmlFor="email">Email</label>
-							<input
-								type="email"
-								name="email"
-								id="email"
+							<TextField
+								label="Name"
+								variant="outlined"
+								value={accountInfo.name}
+								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, name: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+							/>
+							<TextField
+								label="Email"
+								variant="outlined"
 								value={accountInfo.email}
 								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, email: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
 							/>
 						</div>
 						<div className="AccountInfoItem">
-							<label htmlFor="phone">Phone</label>
-							<input
-								type="text"
-								name="phone"
-								id="phone"
+							<TextField
+								label="Phone"
+								variant="outlined"
 								value={accountInfo.phone}
 								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, phone: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+							/>
+							<TextField
+								label="Username"
+								variant="outlined"
+								value={accountInfo.username}
+								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, username: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
 							/>
 						</div>
 						<div className="AccountInfoItem">
-							<label htmlFor="address">Address</label>
-							<input
-								type="text"
-								name="address"
-								id="address"
+							<TextField
+								label="Address"
+								variant="outlined"
 								value={accountInfo.address}
 								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, address: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+							/>
+							<TextField
+								label="User Type"
+								variant="outlined"
+								value={accountInfo.userType}
+								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, city: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+								select
+								defaultValue={accountInfo.userType}
+							>
+								<MenuItem value="agriprofessional">Agriprofessional</MenuItem>
+								<MenuItem value="agribusiness">Agribusiness</MenuItem>
+								<MenuItem value="farmer">Farmer</MenuItem>
+							</TextField>
+						</div>
+						<div className="AccountInfoItem">
+							<TextField
+								label="Business Name"
+								variant="outlined"
+								value={accountInfo.businessName}
+								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, state: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+							/>
+							<TextField
+								label="Business Location"
+								variant="outlined"
+								value={accountInfo.businessLocation}
+								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, country: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
 							/>
 						</div>
 						<div className="AccountInfoItem">
-							<label htmlFor="password">Password</label>
-							<input
-								type="password"
-								name="password"
-								id="password"
-								value={accountInfo.password}
+							<TextField
+								label="Business Description"
+								variant="outlined"
+								value={accountInfo.businessDescription}
 								disabled={edit}
+								onChange={(e) =>
+									setAccountInfo({ ...accountInfo, country: e.target.value })
+								}
+								color="success"
+								fullWidth
+								size="small"
+								multiline
+								rows={4}
 							/>
+						</div>
+						<div className="ChangeBtn">
+							{edit ? (
+								<>
+									<button className="SaveChanges" onClick={handleSave}>
+										Save Changes
+									</button>
+									<button
+										className="CancelChanges"
+										onClick={() => setEdit(false)}
+									>
+										Cancel
+									</button>
+								</>
+							) : (
+								<button className="EditProfile" onClick={() => setEdit(true)}>
+									Edit Profile
+								</button>
+							)}
 						</div>
 					</div>
 				</div>

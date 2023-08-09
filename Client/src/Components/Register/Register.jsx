@@ -18,6 +18,10 @@ const Register = () => {
 		setActiveStep((prevStep) => prevStep + 1);
 	};
 
+	// fetch formData from localStorage
+	const formData = JSON.parse(localStorage.getItem("formData"));
+	console.log(formData);
+
 	return (
 		<div className="Register">
 			<div className="RegisterContainer">
@@ -60,7 +64,7 @@ const Register = () => {
 						{activeStep === 1 && (
 							<Step1
 								onNextStep={handleNextStep}
-								userType={userType}
+								userType={formData.userType}
 								activeStep={activeStep}
 								setActiveStep={setActiveStep}
 							/>

@@ -1,6 +1,8 @@
+import "./Register.css";
 import React, { useEffect } from "react";
 import axios from "axios";
 import { Modal, Spin } from "antd";
+import { TextField } from "@mui/material";
 
 const Step2 = ({ onNextStep }) => {
 	const [loading, setLoading] = React.useState(false);
@@ -62,7 +64,10 @@ const Step2 = ({ onNextStep }) => {
 			await new Promise((resolve) => setTimeout(resolve, 2000));
 
 			// Make an HTTP request to your backend API to register the user
-			await axios.post("https://agrisolve-techsupport254.vercel.app/auth", registerData);
+			await axios.post(
+				"https://agrisolve-techsupport254.vercel.app/auth",
+				registerData
+			);
 
 			localStorage.removeItem("formData1");
 
@@ -90,146 +95,174 @@ const Step2 = ({ onNextStep }) => {
 			<p>Please review your details before completing the registration</p>
 			<form>
 				<div className="RegisterInput">
-					<label htmlFor="name">Name</label>
-					<input
-						type="text"
+					<TextField
+						label="Name"
+						variant="outlined"
 						value={`${user.name} (${user.username})`}
 						disabled
+						size="small"
+					/>
+					<TextField
+						label="Email"
+						variant="outlined"
+						value={user.email}
+						disabled
+						size="small"
 					/>
 				</div>
 
 				<div className="RegisterInput">
-					<label htmlFor="email">Email</label>
-					<input type="email" value={user.email} disabled />
-				</div>
-				<div
-					className="RegisterInput"
-					style={{
-						width: "44%",
-					}}
-				>
-					<label htmlFor="phone">Phone</label>
-					<input type="text" value={user.phone} disabled />
+					<TextField
+						label="Phone"
+						variant="outlined"
+						value={user.phone}
+						disabled
+						size="small"
+					/>
+					<TextField
+						label="User Type"
+						variant="outlined"
+						value={user.userType}
+						disabled
+						size="small"
+					/>
 				</div>
 				<div className="RegisterInput">
-					<label htmlFor="userType">User Type</label>
-					<input type="text" value={user.userType} disabled />
+					<TextField
+						label="Location"
+						variant="outlined"
+						value={user.location}
+						disabled
+						size="small"
+					/>
+					<TextField
+						label="Password"
+						variant="outlined"
+						value={user.password}
+						disabled
+						size="small"
+					/>
 				</div>
-				<div className="RegisterInput">
-					<label htmlFor="location">Location</label>
-					<input type="text" value={user.location} disabled />
-				</div>
-				<div
-					className="RegisterInput"
-					style={{
-						width: "44%",
-					}}
-				>
-					<label htmlFor="password">Password</label>
-					<input type="password" value={user.password} disabled />
-				</div>
+				<div className="RegisterInput"></div>
 				{user.userType === "farmer" && (
 					<>
 						<div className="RegisterInput">
-							<label htmlFor="farmingType">Farming Type</label>
-							<input type="text" value={user.farmingType} disabled />
+							<TextField
+								label="Farming Type"
+								variant="outlined"
+								value={user.farmingType}
+								disabled
+								size="small"
+							/>
+							{user.farmingType === "crop" ? (
+								<div className="RegisterInput">
+									<TextField
+										label="Acreage"
+										variant="outlined"
+										value={
+											user.acreage
+												? user.acreage
+														.toString()
+														.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+														.concat(" acres")
+												: ""
+										}
+										disabled
+										size="small"
+									/>
+								</div>
+							) : (
+								<div className="RegisterInput">
+									<TextField
+										label="Quantity"
+										variant="outlined"
+										value={
+											user.quantity
+												? user.quantity
+														.toString()
+														.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+														.concat(
+															user.farmingType === "poultry"
+																? " birds"
+																: " animals"
+														)
+												: ""
+										}
+										disabled
+										size="small"
+									/>
+								</div>
+							)}
 						</div>
-						{user.farmingType === "crop" ? (
-							<div className="RegisterInput">
-								<label htmlFor="acreage">Acreage</label>
-								<input
-									type="text"
-									name="acreage"
-									value={
-										user.acreage
-											? user.acreage
-													.toString()
-													.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-													.concat(" acres")
-											: ""
-									}
-									disabled
-								/>
-							</div>
-						) : (
-							<div className="RegisterInput">
-								<label htmlFor="quantity">Quantity</label>
-								<input
-									type="text"
-									name="quantity"
-									value={
-										user.quantity
-											? user.quantity
-													.toString()
-													.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-													.concat(
-														user.farmingType === "poultry"
-															? " birds"
-															: " animals"
-													)
-											: ""
-									}
-									disabled
-								/>
-							</div>
-						)}
 					</>
 				)}
-
-				{(user.userType === "agribusiness" ||
-					user.userType === "agriprofessional") && (
-					<div className="RegisterInput">
-						<label htmlFor="businessName">Business Name</label>
-						<input type="text" value={user.businessName} disabled />
-					</div>
-				)}
-				{(user.userType === "agribusiness" ||
-					user.userType === "agriprofessional") && (
-					<div
-						className="RegisterInput"
-						style={{
-							width: "44%",
-						}}
-					>
-						<label htmlFor="businessType">Business Type</label>
-						<input type="text" value={user.businessType} disabled />
-					</div>
-				)}
-				{(user.userType === "agribusiness" ||
-					user.userType === "agriprofessional") && (
-					<div
-						className="RegisterInput"
-						style={{
-							width: "44%",
-						}}
-					>
-						<label htmlFor="businessLocation">Business Location</label>
-						<input type="text" value={user.businessLocation} disabled />
-					</div>
-				)}
+				<div className="RegisterInput">
+					{(user.userType === "agribusiness" ||
+						user.userType === "agriprofessional") && (
+						<div className="RegisterInput">
+							<TextField
+								label="Business Name"
+								variant="outlined"
+								value={user.businessName}
+								disabled
+								size="small"
+							/>
+							{(user.userType === "agribusiness" ||
+								user.userType === "agriprofessional") && (
+								<div className="RegisterInput">
+									<TextField
+										label="Business Type"
+										variant="outlined"
+										value={user.businessType}
+										disabled
+										size="small"
+									/>
+								</div>
+							)}
+						</div>
+					)}
+				</div>
+				<div className="RegisterInput">
+					{(user.userType === "agribusiness" ||
+						user.userType === "agriprofessional") && (
+						<div className="RegisterInput">
+							<TextField
+								label="Business Location"
+								variant="outlined"
+								value={user.businessLocation}
+								disabled
+								size="small"
+							/>
+						</div>
+					)}
+				</div>
 				{user.userType === "agriprofessional" && (
-					<div
-						className="RegisterInput"
-						style={{
-							width: "44%",
-						}}
-					>
-						<label htmlFor="professionalType">Professional Type</label>
-						<input type="text" value={user.businessType} disabled />
+					<div className="RegisterInput">
+						<TextField
+							label="Professional Type"
+							variant="outlined"
+							value={user.professionalType}
+							disabled
+							size="small"
+						/>
 					</div>
 				)}
-				{(user.userType === "agribusiness" ||
-					user.userType === "agriprofessional") && (
-					<div
-						className="RegisterInput"
-						style={{
-							width: "44%",
-						}}
-					>
-						<label htmlFor="businessDescription">Business Description</label>
-						<input type="text" value={user.businessDescription} disabled />
-					</div>
-				)}
+				<div className="RegisterInput">
+					{(user.userType === "agribusiness" ||
+						user.userType === "agriprofessional") && (
+						<div className="RegisterInput">
+							<TextField
+								label="Business Description"
+								variant="outlined"
+								value={user.businessDescription}
+								disabled
+								size="small"
+								multiline
+								rows={4}
+							/>
+						</div>
+					)}
+				</div>
 			</form>
 			<div className="BottomBtn">
 				<button className="RegisterBtn" onClick={handleContinue}>
