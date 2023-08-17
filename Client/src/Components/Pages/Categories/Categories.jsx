@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import "./Categories.css";
-import { CategoriesData, ProductsData } from "../../../Data";
+import { CategoriesData } from "../../../Data";
 import ProductCards from "../../ProductCards/ProductCards";
 
-const Categories = () => {
+const Categories = ({ products }) => {
 	const categoryRefs = useRef([]);
 	const [activeCategory, setActiveCategory] = useState(null);
 
@@ -12,9 +12,15 @@ const Categories = () => {
 	};
 
 	const renderCategoryComponent = (title) => {
-		const filteredProducts = ProductsData.filter(
-			(product) => product.category === title
-		);
+		let filteredProducts;
+
+		if (title === "All") {
+			filteredProducts = products;
+		} else {
+			filteredProducts = products.filter(
+				(product) => product.category === title
+			);
+		}
 
 		if (
 			activeCategory === null ||
@@ -22,7 +28,12 @@ const Categories = () => {
 				CategoriesData.findIndex((item) => item.title === title)
 		) {
 			if (filteredProducts.length === 0) {
-				return <p>No product available for this category</p>;
+				return (
+					<div className="NA">
+						<i className="fas fa-exclamation-triangle"></i>
+						<p>No product available for this category</p>
+					</div>
+				);
 			} else {
 				return <ProductCards products={filteredProducts} />;
 			}
@@ -39,7 +50,6 @@ const Categories = () => {
 	return (
 		<div className="Categories">
 			<div className="CategoriesItems">
-				<h3>Categories</h3>
 				<div className="CategoryButtons">
 					{CategoriesData.map((item, index) => (
 						<button

@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Pay.css";
-import { cartData } from "../../Data";
 import { Modal } from "antd";
 import axios from "axios";
 
-const Pay = ({ totalPrice, handleNext, userData }) => {
+const Pay = ({ totalPrice, handleNext, userData, products }) => {
 	const [selectedAccount, setSelectedAccount] = useState(null);
 	const [selectedLocation, setSelectedLocation] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -25,8 +24,6 @@ const Pay = ({ totalPrice, handleNext, userData }) => {
 		}, 2000);
 	};
 
-	console.log(userData);
-
 	const handlePayment = () => {
 		setPaying(true);
 
@@ -44,21 +41,26 @@ const Pay = ({ totalPrice, handleNext, userData }) => {
 			userId: userData._id,
 			paymentMethod: paymentMethod,
 			deliveryMethod: deliveryMethod,
-			products: cartData,
+			products: products,
 			location: selectedLocation,
 			reason: "Payment for products",
 		};
 
 		// Send a POST request to the server to create a new payment
 		axios
-			.post("https://agrisolve-techsupport254.vercel.app/tokens/stkPush", paymentData)
+			.post(
+				"https://agrisolve-techsupport254.vercel.app/tokens/stkPush",
+				paymentData
+			)
 			.then((response) => {
 				console.log("Payment response:", response.data);
 
 				// wait for payment confirmation from the server
 				const interval = setInterval(() => {
 					axios
-						.get("https://agrisolve-techsupport254.vercel.app/tokens/stk_callback")
+						.get(
+							"https://agrisolve-techsupport254.vercel.app/tokens/stk_callback"
+						)
 						.then((response) => {
 							console.log("Payment confirmation:", response.data);
 							if (response.data.status === "success") {

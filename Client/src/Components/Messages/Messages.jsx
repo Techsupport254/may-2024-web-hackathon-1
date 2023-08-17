@@ -64,6 +64,7 @@ const Messages = ({ userData, consults, chats, handleChatClick }) => {
 					</div>
 				)}
 				{chats.map((chat, index) => {
+					console.log("chat: ", chat);
 					const lastMessage = chat.conversations[0].messages.slice(-1)[0];
 					const unreadCount =
 						lastMessage.sender !== userData.username

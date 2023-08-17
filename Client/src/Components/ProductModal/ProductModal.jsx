@@ -7,7 +7,7 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 	const [added, setAdded] = React.useState(false);
 	const [success, setSuccess] = React.useState(false);
 	const [error, setError] = React.useState(false);
-
+	console.log(selectedProduct);
 	if (!isOpen) {
 		return null;
 	}
@@ -27,10 +27,10 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 			// Add to cart local storage
 			const cart = JSON.parse(localStorage.getItem("cart")) || [];
 			const product = {
-				id: selectedProduct.id,
-				name: selectedProduct.name,
-				price: selectedProduct.price,
-				image: selectedProduct.image,
+				id: selectedProduct?._id,
+				name: selectedProduct?.productName,
+				price: selectedProduct?.price,
+				image: selectedProduct?.images[0],
 				quantity: 1,
 			};
 
@@ -90,19 +90,26 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 				{/* Modal Content */}
 				<div className="ModalContent" onClick={handleModalContentClick}>
 					<div className="ModalLeft">
-						<img src={selectedProduct.image} alt={selectedProduct.name} />
+						<img
+							src={selectedProduct.images[0]}
+							alt={selectedProduct?.productName}
+						/>
 						<div className="ImagePreview">
-							<img src={selectedProduct.image} alt={selectedProduct.name} />
-							<img src={selectedProduct.image} alt={selectedProduct.name} />
-							<img src={selectedProduct.image} alt={selectedProduct.name} />
+							{selectedProduct.images.map((image, index) => (
+								<img
+									key={index}
+									src={image}
+									alt={selectedProduct?.productName}
+								/>
+							))}
 						</div>
 					</div>
 					<div className="ModalRight">
-						<h3>{selectedProduct.name}</h3>
-						<p>Price: KSh.{selectedProduct.price}</p>
-						<p>Availability: {selectedProduct.available}</p>
+						<h3>{selectedProduct?.productName}</h3>
+						<p>Price: KSh.{selectedProduct?.price}</p>
+						<p>Availability: {selectedProduct?.stock}</p>
 						<div className="Desc">
-							<p>{selectedProduct.description}</p>
+							<p>{selectedProduct?.productDescription}</p>
 						</div>
 						{added && success && (
 							<div

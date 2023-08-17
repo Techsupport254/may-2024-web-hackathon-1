@@ -1,0 +1,104 @@
+.Landing {
+    width: 100%;
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.LandingContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.LandingLeft,
+.LandingRight {
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+
+}
+
+.LandingLeft {
+    padding: 0 3rem;
+
+    & h1 {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    & span {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--warning);
+    }
+
+    & p {
+        font-size: 1rem;
+        font-weight: 500;
+    }
+
+
+}
+
+.LandingBtns {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 50%;
+    gap: 1rem;
+
+    & button {
+        border: none;
+        border-radius: 5px;
+        background-color: var(--success-lighter);
+        color: var(--success-darker);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        padding: .5rem 1rem;
+
+        &:hover {
+            background-color: var(--success-light);
+            color: var(--success-darker);
+            transition: all 0.3s ease-in-out;
+        }
+    }
+
+    & button:last-child {
+        background-color: var(--bg-color);
+        color: var(--white);
+
+        &:hover {
+            background-color: var(--success-lighter);
+            color: var(--bg-color);
+            transition: all 0.3s ease-in-out;
+        }
+    }
+}
+
+.LandingRight {
+
+    & .LandingImage {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        & img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+}

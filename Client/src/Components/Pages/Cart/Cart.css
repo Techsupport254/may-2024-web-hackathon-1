@@ -7,7 +7,7 @@
 .LeftCart {
   width: 75%;
   background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ box-shadow: var(--boxShadow);
   border-radius: .5rem;
   display: flex;
   flex-direction: column;
@@ -22,7 +22,7 @@
 .RightCart {
   width: 25%;
   background-color: #f9f9f9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ box-shadow: var(--boxShadow);
   border-radius: .5rem;
   display: flex;
   flex-direction: column;

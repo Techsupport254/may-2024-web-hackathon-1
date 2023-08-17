@@ -1,17 +1,15 @@
 import React from "react";
 import "./Banner.css";
-import BannerTop from "../BannerTop/BannerTop";
-import BannerBottom from "../BannerBottom/BannerBottom";
+import BannerCard from "../BannerCard/BannerCard";
 
-const Banner = () => {
+const Banner = ({ products }) => {
 	return (
-		<div className="Banner">
-			<div className="BannersTop">
-				<BannerTop />
-			</div>
-			<div className="BannersBottom">
-				<BannerBottom />
-			</div>
+		<div className="BannerContainer">
+			{products.map((product) => (
+				<div className="BannerCard">
+					<BannerCard product={product} />
+				</div>
+			))}
 		</div>
 	);
 };

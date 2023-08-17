@@ -62,7 +62,7 @@
   width: 100vw;
   height: auto;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   font-family: sans-serif;
 }
 
@@ -72,18 +72,17 @@ a {
 
 /* scrollbar */
 ::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
-  color: #fff;
+  width: 1px;
+  height: 1px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #bfbcbc;
+  background: #ccc;
 
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #fff;
+  background: #888;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -103,4 +102,10 @@ textarea {
   justify-content: center;
   align-items: center;
   gap: 1rem;
+}
+
+.Header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--bg-color);
 }

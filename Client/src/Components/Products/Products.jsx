@@ -1,14 +1,12 @@
 import React from "react";
 import "./Products.css";
 import ProductCards from "../ProductCards/ProductCards";
-import { ProductsData } from "../../Data";
 
-const Products = () => {
-	const limitedProducts = limitProducts(ProductsData, 20);
+const Products = ({ products }) => {
+	const limitedProducts = limitProducts(products, 20);
 
 	return (
 		<div className="Products">
-			<h3>Products</h3>
 			<ProductCards products={limitedProducts} />
 		</div>
 	);

@@ -32,12 +32,11 @@ const App = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
 	const inactivityLogoutTimeout = 10 * 60 * 1000; // 10 minutes
+	const [products, setProducts] = useState([]);
 
 	useEffect(() => {
-
 		const fetchUserData = async () => {
 			const user = JSON.parse(localStorage.getItem("agrisolveData"));
-			console.log(user);
 			if (user) {
 				setUserData(user);
 				setToken(user.token);
@@ -157,6 +156,21 @@ const App = () => {
 		navigate("/");
 	};
 
+	useEffect(() => {
+		const fetchProducts = async () => {
+			try {
+				const response = await axios.get(
+					"https://agrisolve-techsupport254.vercel.app/products"
+				);
+				setProducts(response.data);
+			} catch (err) {
+				console.log(err);
+			}
+		};
+
+		fetchProducts();
+	}, []);
+
 	if (!isUserDataLoaded) {
 		return (
 			<div
@@ -196,7 +210,7 @@ const App = () => {
 			)}
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/categories" element={<Categories />} />
+				<Route path="/products" element={<Categories products={products} />} />
 				{isLoggedIn ? (
 					<>
 						<Route path="/consult" element={<Consult userData={userData} />} />

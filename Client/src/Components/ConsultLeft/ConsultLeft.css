@@ -188,8 +188,9 @@
     border-radius: 50%;
 
     & img {
-      width: 70%;
-      height: 70%;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 50%;
       object-fit: cover;
     }
   }

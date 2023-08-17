@@ -1,24 +1,25 @@
-.ProductCard {
-    width: 100%;
-    max-width: 220px;
-    height: 320px;
-    margin-bottom: 1rem;
+.Product-Card {
+    width: 200px;
+    min-height: 250px;
+    margin-bottom: .5rem;
     box-sizing: border-box;
     overflow: hidden;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--boxShadow);
     border-radius: .5rem;
     transition: all .3s ease-in-out;
     padding: .5rem;
+    cursor: pointer;
 }
 
-.ProductCard:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+.Product-Card:hover {
+    box-shadow: var(--boxShadowHover);
     scale: 1.01;
 }
 
-.ProductCard img {
+.Product-Card img {
     width: 100%;
-    max-height: 50%;
+    max-height: 60%;
     margin-bottom: .5rem;
     border-radius: .5rem;
 }
@@ -28,7 +29,7 @@
     height: 80%;
 }
 
-.ProductCard h3 {
+.Product-Card h3 {
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 0.5rem;
@@ -38,26 +39,13 @@
 }
 
 
-.ProductCard p {
+.Product-Card p {
     font-size: .8rem;
 }
-
-.Desc {
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-    margin-top: .5rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 
 .ProductButtons {
     display: flex;
     justify-content: flex-start;
-    margin: .5rem;
     gap: .5rem;
 }
 
@@ -66,20 +54,39 @@
     padding: .5rem .5rem;
     border: none;
     border-radius: 5px;
-    background-color: rgb(69, 180, 69);
-    color: #fff;
+    background-color: var(--success-lighter);
+    color: var(--success-darker);
     font-size: .6rem;
     font-weight: 600;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        background-color: var(--success-light);
+        transition: all 0.3s ease-in-out;
+    }
 }
 
 .ProductButton:nth-child(2) {
-    border: 1px solid var(--green);
+    border: 1px solid var(--success-darker);
     background-color: transparent;
-    color: var(--green);
+    color: var(--success-darker);
 
 }
 
 .ProductButton i {
     margin-right: .5rem;
+}
+
+.Ratings {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .5rem;
+
+    & i {
+        color: var(--warning);
+        font-size: .8rem;
+    }
 }

@@ -1,6 +1,5 @@
 // NavbarData
 
-
 export const NavbarData = [
 	{
 		id: 1,
@@ -10,8 +9,8 @@ export const NavbarData = [
 	},
 	{
 		id: 2,
-		title: "Categories",
-		path: "/categories",
+		title: "Products",
+		path: "/products",
 		icon: <i className="fas fa-list"></i>,
 	},
 	{
@@ -363,311 +362,53 @@ export const BannerBottomData = [
 export const CategoriesData = [
 	{
 		id: 1,
+		title: "All",
+		path: "/categories",
+	},
+	{
+		id: 2,
 		title: "Antibiotics",
 		path: ".antibiotics",
 	},
 	{
-		id: 2,
+		id: 3,
 		title: "Supplements",
 		path: ".supplements",
 	},
 	{
-		id: 3,
+		id: 4,
 		title: "Injectables",
 		path: ".injectables",
 	},
 	{
-		id: 4,
+		id: 5,
 		title: "Wormers",
 		path: ".wormers",
 	},
 	{
-		id: 5,
+		id: 6,
 		title: "Anabolic",
 		path: ".anabolic",
 	},
 	{
-		id: 6,
+		id: 7,
 		title: "Antiinflammatory",
 		path: ".anti-Inflammatory",
 	},
 	{
-		id: 7,
+		id: 8,
 		title: "Hormonal",
 		path: ".hormonal",
 	},
 	{
-		id: 8,
+		id: 9,
 		title: "Anesthetics",
 		path: ".anesthetics",
 	},
 	{
-		id: 9,
+		id: 10,
 		title: "Nutrition",
 		path: ".nutrition",
-	},
-];
-
-export const ProductsData = [
-	{
-		id: 1,
-		name: "Antibiotics 1",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 2,
-		name: "Antibiotics 2",
-		brand: "Antibiotics",
-		image: Stock1,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 3,
-		name: "Antibiotics 3",
-		brand: "Antibiotics",
-		image: Stock2,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 4,
-		name: "Antibiotics 4",
-		brand: "Antibiotics",
-		image: Stock3,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 5,
-		name: "Antibiotics 5",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 6,
-		name: "Antibiotics 6",
-		brand: "Antibiotics",
-		image: Stock1,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Supplements",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 7,
-		name: "Antibiotics 7",
-		brand: "Antibiotics",
-		image: Stock2,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 8,
-		name: "Antibiotics 8",
-		brand: "Antibiotics",
-		image: Stock3,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 9,
-		name: "Antibiotics 9",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-	{
-		id: 10,
-		name: "Antibiotics 10",
-		brand: "Antibiotics",
-		image: Stock1,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		available: "5pcs",
-		specification: {
-			weight: "100g",
-			age: "1-2 months",
-			quantity: "5pcs",
-			brand: "Antibiotics",
-			manufacturer: "Antibiotics",
-			ingredients: "Antibiotics",
-			storage: "Antibiotics",
-		},
-	},
-];
-
-// Cart Data
-export const cartData = [
-	{
-		id: 1,
-		name: "Antibiotics 1",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		quantity: 1,
-	},
-	{
-		id: 2,
-		name: "Antibiotics 2",
-		brand: "Antibiotics",
-		image: Stock1,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		quantity: 1,
-	},
-
-	{
-		id: 3,
-		name: "Antibiotics 4",
-		brand: "Antibiotics",
-		image: Stock3,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		quantity: 2,
-	},
-	{
-		id: 4,
-		name: "Antibiotics 5",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		quantity: 1,
-	},
-	{
-		id: 5,
-		name: "Antibiotics 5",
-		brand: "Antibiotics",
-		image: Stock,
-		price: 100,
-		description:
-			"Antibiotics are used to treat or prevent some types of bacterial infection.",
-		category: "Antibiotics",
-		quantity: 1,
 	},
 ];
 

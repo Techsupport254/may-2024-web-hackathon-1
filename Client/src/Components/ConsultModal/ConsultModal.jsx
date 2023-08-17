@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { MenuItem, TextField } from "@mui/material";
 
 import "./ConsultModal.css";
 
@@ -50,7 +51,10 @@ const ConsultModal = ({ modalClose, userData }) => {
 		try {
 			setSubmittingConsult(true);
 
-			await axios.post("https://agrisolve-techsupport254.vercel.app/consults/consults", consultInfo);
+			await axios.post(
+				"https://agrisolve-techsupport254.vercel.app/consults/consults",
+				consultInfo
+			);
 
 			setConsultInfo(initialState);
 			setTimeout(() => {
@@ -85,73 +89,97 @@ const ConsultModal = ({ modalClose, userData }) => {
 				<div className="ConsultsOnline"></div>
 				<form className="ConsultsModalLeft">
 					<div className="ConsultRow">
-						<span>Consult Subject:</span>
-						<input
-							type="text"
-							placeholder="Enter a subject related to your concern"
+						<TextField
+							label="Subject"
+							variant="outlined"
 							name="subject"
-							id="consultSubject"
+							id="subject"
+							fullWidth
+							color="success"
 							value={consultInfo.subject}
 							onChange={handleChange}
+							size="small"
 						/>
 					</div>
 					<div className="ConsultRow">
-						<span>Farming Type:</span>
-						<select
+						<TextField
+							label="Farming Type"
+							variant="outlined"
 							name="farmingType"
 							id="farmingType"
+							fullWidth
+							color="success"
 							value={consultInfo.farmingType}
 							onChange={handleChange}
+							size="small"
+							select
+							SelectProps={{
+								value: consultInfo.farmingType,
+								onChange: handleChange,
+							}}
 						>
-							<option>Select type of farming</option>
-							<option value="Dairy">Livestock</option>
-							<option value="Poultry">Poultry</option>
-							<option value="Crops">Crops</option>
-							<option value="Other">Other</option>
-						</select>
+							<MenuItem value="Dairy">Livestock</MenuItem>
+							<MenuItem value="Poultry">Poultry</MenuItem>
+							<MenuItem value="Crops">Crops</MenuItem>
+							<MenuItem value="Other">Other</MenuItem>
+						</TextField>
 					</div>
 					<div className="ConsultRow">
-						<span>Consult Type:</span>
-						<select
+						<TextField
+							label="Consult Type"
+							variant="outlined"
 							name="consultType"
 							id="consultType"
+							fullWidth
+							color="success"
 							value={consultInfo.consultType}
 							onChange={handleChange}
+							size="small"
+							select
 						>
-							<option>Select type of consult</option>
-							<option value="Online">Online</option>
-							<option value="Offline">Physical</option>
-						</select>
+							<MenuItem value="Online">Online</MenuItem>
+							<MenuItem value="Physical">Physical</MenuItem>
+						</TextField>
 					</div>
 					<div className="ConsultRow">
-						<span>Urgency:</span>
-						<select
+						<TextField
+							label="Urgency"
+							variant="outlined"
 							name="urgency"
 							id="urgency"
+							fullWidth
+							color="success"
 							value={consultInfo.urgency}
-							onChange={handleChange}
+							size="small"
+							select
+							SelectProps={{
+								value: consultInfo.urgency,
+								onChange: handleChange,
+							}}
 						>
-							<option>Select urgency level</option>
-							<option value="Low">Low</option>
-							<option value="Medium">Medium</option>
-							<option value="High">High</option>
-						</select>
+							<MenuItem value="Low">Low</MenuItem>
+							<MenuItem value="Medium">Medium</MenuItem>
+							<MenuItem value="High">High</MenuItem>
+						</TextField>
 					</div>
 				</form>
 				<div className="ConsultsModalRight">
 					<div className="ConsultRow">
-						<span>Consult Description:</span>
-						<textarea
+						<TextField
+							label="Consult Description"
+							variant="outlined"
 							name="consultDescription"
 							id="consultDescription"
-							cols="30"
-							rows="10"
-							placeholder="Enter a description of your concern"
+							fullWidth
+							multiline
+							rows={4}
+							color="success"
 							value={consultInfo.consultDescription}
 							onChange={handleChange}
-						></textarea>
+							size="small"
+						/>
 					</div>
-
+					{/* 
 					<div className="ConsultRow">
 						<span>Upload Image(s):</span>
 						<input
@@ -160,7 +188,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 							id="consultImage"
 							onChange={handleConsultImageUpload}
 						/>
-					</div>
+					</div> */}
 				</div>
 			</div>
 			<div className="ConsultButton">

@@ -10,17 +10,17 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 		// Add to cart local storage
 		const cart = JSON.parse(localStorage.getItem("cart")) || [];
 		const newProduct = {
-			id: product.id,
-			name: product.name,
-			price: product.price,
-			image: product.image,
-			brand : product.brand,
-			category : product.category,
+			id: product?._id,
+			name: product.productName,
+			price: product?.price,
+			image: product?.images[0],
+			brand: product?.brandName,
+			category: product?.productCategory,
 			quantity: 1,
 		};
 
 		const existingProductIndex = cart.findIndex(
-			(item) => item.id === product.id
+			(item) => item.id === product?._id
 		);
 
 		if (existingProductIndex !== -1) {
@@ -45,18 +45,22 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 	}
 
 	return (
-		<div className="ProductCard">
+		<div className="Product-Card">
 			<div
 				className="ProductContent"
-				onClick={() => onProductClick(product.id)}
+				onClick={() => onProductClick(product?._id)} // Compare with '_id'
 			>
-				<img src={product.image} alt={product.name} />
-				<h3>{product.name}</h3>
-				<p>Price: KSh.{product.price}</p>
-				<p>Availability: {product.available}</p>
-				<div className="Desc">
-					<p>{product.description}</p>
-				</div>
+				<img src={product?.images[0]} alt={product?.productName} />
+				<h3>{product?.productName}</h3>
+				<p>KSh.{product?.price}</p>
+				<p>{product.stock}</p>
+			</div>
+			<div className="Ratings">
+				<i className="fas fa-star"></i>
+				<i className="fas fa-star"></i>
+				<i className="fas fa-star"></i>
+				<i className="fas fa-star-half-alt"></i>
+				<i className="far fa-star"></i>
 			</div>
 			<div className="ProductButtons">
 				<button className="ProductButton" onClick={handleToCart}>

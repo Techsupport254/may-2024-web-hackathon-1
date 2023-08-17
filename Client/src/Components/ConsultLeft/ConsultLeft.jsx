@@ -192,8 +192,8 @@ const ConsultLeft = ({ userData }) => {
 				>
 					<div className="CLeftModal">
 						<div className="CLeftModalImage">
-							{selectedUser && selectedUser.image ? (
-								<img src={selectedUser.image} alt="profile" />
+							{selectedUser && selectedUser.profilePicture ? (
+								<img src={selectedUser.profilePicture} alt="profile" />
 							) : (
 								<img
 									src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
