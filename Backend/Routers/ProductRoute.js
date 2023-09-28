@@ -64,6 +64,7 @@ router.post("/new", async (req, res) => {
 		wholesale: req.body.wholesale,
 		productStatus: req.body.productStatus,
 		stock: req.body.stock,
+		refId: req.body.refId,
 	});
 
 	try {
@@ -96,6 +97,8 @@ router.patch("/:productId", async (req, res) => {
 					wholesalePrice: req.body.wholesalePrice,
 					wholesaleRate: req.body.wholesaleRate,
 					wholesale: req.body.wholesale,
+					productStatus: req.body.productStatus,
+					stock: req.body.stock,
 				},
 			}
 		);

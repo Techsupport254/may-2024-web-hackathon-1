@@ -53,7 +53,7 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 				<img src={product?.images[0]} alt={product?.productName} />
 				<h3>{product?.productName}</h3>
 				<p>KSh.{product?.price}</p>
-				<p>{product.stock}</p>
+				<p>{product.stock} in stock</p>
 			</div>
 			<div className="Ratings">
 				<i className="fas fa-star"></i>

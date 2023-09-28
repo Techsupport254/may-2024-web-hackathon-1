@@ -162,7 +162,10 @@ const App = () => {
 				const response = await axios.get(
 					"https://agrisolve-techsupport254.vercel.app/products"
 				);
-				setProducts(response.data);
+				const filteredProducts = response.data.filter(
+					(product) => product.productStatus !== "Draft"
+				);
+				setProducts(filteredProducts);
 			} catch (err) {
 				console.log(err);
 			}
@@ -209,7 +212,7 @@ const App = () => {
 				/>
 			)}
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route path="/" element={<Home products={products} />} />
 				<Route path="/products" element={<Categories products={products} />} />
 				{isLoggedIn ? (
 					<>

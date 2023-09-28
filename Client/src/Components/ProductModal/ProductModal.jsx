@@ -7,10 +7,12 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 	const [added, setAdded] = React.useState(false);
 	const [success, setSuccess] = React.useState(false);
 	const [error, setError] = React.useState(false);
-	console.log(selectedProduct);
+	const [selectedPreview, setSelectedPreview] = React.useState(0);
+
 	if (!isOpen) {
 		return null;
 	}
+	console.log(selectedProduct);
 
 	const handleModalContentClick = (event) => {
 		event.stopPropagation();
@@ -77,6 +79,10 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 		return existingProductIndex !== -1;
 	};
 
+	const handlePreviewClick = (index) => {
+		setSelectedPreview(index);
+	};
+
 	return (
 		<div className="Modal" onClick={onClose}>
 			<Modal
@@ -91,12 +97,16 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 				<div className="ModalContent" onClick={handleModalContentClick}>
 					<div className="ModalLeft">
 						<img
-							src={selectedProduct.images[0]}
+							src={
+								selectedProduct?.images[selectedPreview] ||
+								selectedProduct?.images[0]
+							}
 							alt={selectedProduct?.productName}
 						/>
 						<div className="ImagePreview">
 							{selectedProduct.images.map((image, index) => (
 								<img
+									onClick={() => handlePreviewClick(index)}
 									key={index}
 									src={image}
 									alt={selectedProduct?.productName}
@@ -105,9 +115,19 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 						</div>
 					</div>
 					<div className="ModalRight">
-						<h3>{selectedProduct?.productName}</h3>
-						<p>Price: KSh.{selectedProduct?.price}</p>
-						<p>Availability: {selectedProduct?.stock}</p>
+						<h3>
+							{selectedProduct?.productName},{selectedProduct?.brandName}
+							{selectedProduct?.labels.map((label, index) => (
+								<small key={index}>[{label}]</small>
+							))}
+						</h3>
+						<p>
+							Price: KSh.
+							{selectedProduct?.price
+								.toString()
+								.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+						</p>
+						<p>Stock: {selectedProduct?.stock} Items</p>
 						<div className="Desc">
 							<p>{selectedProduct?.productDescription}</p>
 						</div>
@@ -163,6 +183,21 @@ const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
 									</>
 								)}
 							</button>
+						</div>
+						<div className="MoreDetails">
+							<h4>More Details</h4>
+							<div className="Usage">
+								<h5>Usage Instructions</h5>
+								<p>{selectedProduct?.instructions}</p>
+							</div>
+							<div className="Tags">
+								<i className="fas fa-tag"></i>
+								{selectedProduct?.tags.map((tag, index) => (
+									<div key={index}>
+										<span>{tag}</span>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>

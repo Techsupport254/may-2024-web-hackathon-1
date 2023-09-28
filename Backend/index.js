@@ -39,6 +39,7 @@ mongoose
 		app.use("/consults", require("./Routers/consultRouter"));
 		app.use("/chats", require("./Routers/chatRouter"));
 		app.use("/products", require("./Routers/ProductRoute"));
+		app.use("/news", require("./Routers/NewsRouter"));
 
 		// Start the server
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

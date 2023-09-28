@@ -70,7 +70,13 @@ const ProductSchema = mongoose.Schema(
 			required: true,
 		},
 	},
-	{ timestamps: true }
+	{
+		timestamps: true,
+		refId: {
+			type: String,
+			required: true,
+		},
+	}
 );
 
 module.exports = mongoose.model("agrisolveProduct", ProductSchema);
