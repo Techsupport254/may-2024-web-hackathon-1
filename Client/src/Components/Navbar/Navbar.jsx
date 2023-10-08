@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
+import { InputAdornment, TextField } from "@mui/material";
 
 const Navbar = ({ userData, handleLogout }) => {
 	const [user, setUser] = useState(null);
@@ -35,10 +36,28 @@ const Navbar = ({ userData, handleLogout }) => {
 				<div className="NavRight">
 					<div className="NavTop">
 						<div className="Searchbar">
-							<input type="text" placeholder="Search" />
-							<button>
-								<i className="fas fa-search"></i>
-							</button>
+							<TextField
+								id="outlined-basic"
+								label="Search ..."
+								variant="outlined"
+								size="small"
+								color="success"
+								fullWidth
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">
+											<i
+												className="fa fa-search"
+												style={{
+													color: "#000",
+													fontSize: "1.2rem",
+													cursor: "pointer",
+												}}
+											></i>
+										</InputAdornment>
+									),
+								}}
+							/>
 						</div>
 						<div className="NavbarLinks">
 							{NavbarData.map((item, index) => {

@@ -19,6 +19,7 @@ import Register from "./Components/Register/Register";
 import Login from "./Components/Login/Login";
 import Forgot from "./Components/Forgot/Forgot";
 import axios from "axios";
+import ProductModal from "./Components/ProductModal/ProductModal";
 
 const App = () => {
 	const [paymentData, setPaymentData] = useState(null);
@@ -212,8 +213,18 @@ const App = () => {
 				/>
 			)}
 			<Routes>
-				<Route path="/" element={<Home products={products} />} />
-				<Route path="/products" element={<Categories products={products} />} />
+				<Route
+					path="/"
+					element={<Home products={products} userData={userData} />}
+				/>
+				<Route
+					path="/product/:id"
+					element={<ProductModal products={products} userData={userData} />}
+				/>
+				<Route
+					path="/products"
+					element={<Categories products={products} userData={userData} />}
+				/>
 				{isLoggedIn ? (
 					<>
 						<Route path="/consult" element={<Consult userData={userData} />} />

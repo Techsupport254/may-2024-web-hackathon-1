@@ -69,6 +69,10 @@ const ProductSchema = mongoose.Schema(
 			type: String,
 			required: true,
 		},
+		refId: {
+			type: String,
+			required: true,
+		},
 	},
 	{
 		timestamps: true,

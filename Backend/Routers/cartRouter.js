@@ -1,68 +1,91 @@
 const express = require("express");
 const router = express.Router();
-const Product = require("../Models/ProductModel");
-const auth = require("../Middleware/auth");
+const Product = require("../Models/cartModel");
 
 // Handler POST requests to /cart
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
 	try {
-		const { userId, productId, productQty } = req.body;
+		const { userId, productId } = req.body;
 
 		// Validation
 		if (!userId || !productId) {
 			return res.status(400).json({ message: "Please enter all fields" });
 		}
 
-		const newProduct = new Product({
-			userId,
-			productId,
-			productQty,
-		});
-		const savedProduct = await newProduct.save();
-		res.json(savedProduct);
+		// Check if the user already has a cart
+		let userCart = await Product.findOne({ userId });
+
+		if (!userCart) {
+			// If no cart, create a new one
+			userCart = new Product({
+				userId,
+				products: [
+					{
+						productId,
+					},
+				],
+			});
+		} else {
+			// If cart exists, add the new product
+			userCart.products.push({
+				productId,
+			});
+		}
+
+		const savedCartProduct = await userCart.save();
+		res.json({ message: "Product added to cart", cart: savedCartProduct });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
 });
 
-// Handler for GET requests to /cart
-router.get("/", async (req, res) => {
+// Handler GET requests to /cart/:userId
+router.get("/:userId", async (req, res) => {
 	try {
-		const products = await Product.find();
-		res.json(products);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
-});
-
-// Handler for DELETE requests to /cart/:id
-router.delete("/:id", auth, async (req, res) => {
-	try {
-		const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-		res.json(deletedProduct);
-	} catch (err) {
-		res.status(500).json({ error: err.message });
-	}
-});
-
-// Handler for PATCH requests to /cart/:id
-router.patch("/:id", auth, async (req, res) => {
-	try {
-		const { productQty } = req.body;
+		const { userId } = req.params;
 
 		// Validation
-		if (!productQty) {
+		if (!userId) {
 			return res.status(400).json({ message: "Please enter all fields" });
 		}
 
-		const updatedProduct = await Product.findByIdAndUpdate(
-			req.params.id,
-			{
-				productQty,
-			},
-			{ new: true }
+		// Check if the user already has a cart
+		const userCart = await Product.findOne({ userId });
+
+		if (!userCart) {
+			return res.status(404).json({ message: "Cart not found" });
+		}
+
+		res.json({ cart: userCart });
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// Handler DELETE requests to /cart
+router.delete("/", async (req, res) => {
+	try {
+		const { userId, productId } = req.body;
+
+		// Validation
+		if (!userId || !productId) {
+			return res.status(400).json({ message: "Please enter all fields" });
+		}
+
+		// Check if the user already has a cart
+		const userCart = await Product.findOne({ userId });
+
+		if (!userCart) {
+			return res.status(404).json({ message: "Cart not found" });
+		}
+
+		// Remove the product from the cart
+		userCart.products = userCart.products.filter(
+			(product) => product.productId !== productId
 		);
-		res.json(updatedProduct);
+
+		const savedCartProduct = await userCart.save();
+		res.json({ message: "Product removed from cart", cart: savedCartProduct });
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

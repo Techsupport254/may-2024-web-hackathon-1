@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion"; // Make sure you have framer-motion installed
 import "./Discount.css";
 
-const Discount = ({ product }) => {
+const Discount = ({ product, userData }) => {
 	const calculateTimeLeft = (expiryDate) => {
 		const difference = expiryDate - new Date();
 		const days = Math.floor(difference / (1000 * 60 * 60 * 24));

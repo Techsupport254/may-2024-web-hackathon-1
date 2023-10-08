@@ -1,7 +1,7 @@
 import React from "react";
 import "./BestSales.css";
 
-const BestSales = ({ products }) => {
+const BestSales = ({ products, userData }) => {
 	return (
 		<div className="BestSales">
 			{products.map((product, index) => {
@@ -11,9 +11,7 @@ const BestSales = ({ products }) => {
 							<span>{product.productName}</span>
 							<p>{product.productDescription}</p>
 							<h3>KSh.{product.price}</h3>
-              <button>
-                SHOP NOW
-              </button>
+							<button>SHOP NOW</button>
 						</div>
 						<div className="BestImage">
 							<img src={product.images[0]} alt="product" />

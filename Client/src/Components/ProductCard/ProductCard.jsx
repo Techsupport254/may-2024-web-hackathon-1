@@ -1,42 +1,55 @@
 import React, { useState } from "react";
 import "./ProductCard.css";
 import Skeleton from "../Skeleton/Skeleton";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
-const ProductCard = ({ product, isLoading, onProductClick }) => {
+const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 	const [adding, setAdding] = useState(false);
 	const [added, setAdded] = useState(false);
 
-	const handleToCart = () => {
-		// Add to cart local storage
-		const cart = JSON.parse(localStorage.getItem("cart")) || [];
-		const newProduct = {
-			id: product?._id,
-			name: product.productName,
-			price: product?.price,
-			image: product?.images[0],
-			brand: product?.brandName,
-			category: product?.productCategory,
-			quantity: 1,
-		};
-
-		const existingProductIndex = cart.findIndex(
-			(item) => item.id === product?._id
-		);
-
-		if (existingProductIndex !== -1) {
-			cart[existingProductIndex].quantity += 1;
-		} else {
-			cart.push(newProduct);
-		}
-
-		localStorage.setItem("cart", JSON.stringify(cart));
-
-		// Show success message
+	const handleToCart = async () => {
 		setAdding(true);
-		setTimeout(() => {
-			setAdded(true);
-			setAdding(false);
-		}, 2000);
+		try {
+			const response = await axios.post(
+				"http://localhost:8000/cart",
+				{
+					userId: userData?._id,
+					productId: product?._id,
+					quantity: 1,
+				},
+				{
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			);
+			console.log(response);
+			if (response.status === 200) {
+				setAdding(false);
+				setAdded(true);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const renderActionButton = () => {
+		if (adding) {
+			return <i className="fas fa-spinner fa-spin"></i>;
+		} else if (added) {
+			return (
+				<>
+					<i className="fas fa-check"></i> In Cart
+				</>
+			);
+		} else {
+			return (
+				<>
+					<i className="fas fa-shopping-cart"></i> Add to Cart
+				</>
+			);
+		}
 	};
 
 	if (isLoading) {
@@ -45,10 +58,12 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 	}
 
 	return (
-		<div className="Product-Card">
+		<Link to={`/product/${product?._id}`}
+			className="Product-Card"
+		>
 			<div
 				className="ProductContent"
-				onClick={() => onProductClick(product?._id)} // Compare with '_id'
+				onClick={() => onProductClick(product?._id)}
 			>
 				<img src={product?.images[0]} alt={product?.productName} />
 				<h3>{product?.productName}</h3>
@@ -64,23 +79,13 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 			</div>
 			<div className="ProductButtons">
 				<button className="ProductButton" onClick={handleToCart}>
-					{adding ? (
-						<i className="fas fa-spinner fa-spin"></i>
-					) : added ? (
-						<>
-							<i className="fas fa-check"></i> In Cart
-						</>
-					) : (
-						<>
-							<i className="fas fa-shopping-cart"></i> Add to Cart
-						</>
-					)}
+					{renderActionButton()}
 				</button>
 				<button className="ProductButton">
 					Buy Now <i className="fas fa-arrow-right"></i>
 				</button>
 			</div>
-		</div>
+		</Link>
 	);
 };
 

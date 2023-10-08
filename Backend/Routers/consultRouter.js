@@ -80,6 +80,20 @@ router.post("/consults", async (req, res) => {
 	}
 });
 
+// get by id
+router.get("/consults/:id", async (req, res) => {
+	try {
+		// Fetch the consults data from the database
+		const consult = await Consult.findById(req.params.id);
+		res.status(200).json(consult);
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching consults data",
+			error: err,
+		});
+	}
+});
+
 // Handler for DELETE request to /api/consults/:id
 // Deletes a consult by id
 router.delete("/consults/:id", async (req, res) => {

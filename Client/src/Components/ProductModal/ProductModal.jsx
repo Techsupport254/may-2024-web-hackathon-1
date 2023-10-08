@@ -1,207 +1,123 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ProductModal.css";
-import { Modal } from "antd";
+import { Link, useParams } from "react-router-dom";
 
-const ProductModal = ({ isOpen, selectedProduct, onClose, onContentClick }) => {
-	const [loading, setLoading] = React.useState(false);
-	const [added, setAdded] = React.useState(false);
-	const [success, setSuccess] = React.useState(false);
-	const [error, setError] = React.useState(false);
-	const [selectedPreview, setSelectedPreview] = React.useState(0);
+const ProductModal = ({ products }) => {
+	const id = useParams().id;
 
-	if (!isOpen) {
-		return null;
-	}
-	console.log(selectedProduct);
+	const [currentImage, setCurrentImage] = useState(0);
+	const [menuVisible, setMenuVisible] = useState(false);
 
-	const handleModalContentClick = (event) => {
-		event.stopPropagation();
-		onContentClick();
-	};
-
-	const handleAddToCart = async () => {
-		setLoading(true);
-
-		try {
-			// Simulate API request delay
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-
-			// Add to cart local storage
-			const cart = JSON.parse(localStorage.getItem("cart")) || [];
-			const product = {
-				id: selectedProduct?._id,
-				name: selectedProduct?.productName,
-				price: selectedProduct?.price,
-				image: selectedProduct?.images[0],
-				quantity: 1,
-			};
-
-			const existingProductIndex = cart.findIndex(
-				(item) => item.id === product.id
-			);
-
-			if (existingProductIndex !== -1) {
-				cart[existingProductIndex].quantity += 1;
-			} else {
-				cart.push(product);
-			}
-
-			localStorage.setItem("cart", JSON.stringify(cart));
-
-			// Show success message
-			setLoading(false);
-			setAdded(true);
-			setSuccess(true);
-			setTimeout(() => {
-				setAdded(false);
-				setSuccess(false);
-				onClose();
-			}, 2000);
-		} catch (error) {
-			console.log("Error adding to cart:", error);
-			setLoading(false);
-			setAdded(true);
-			setError(true);
-			setTimeout(() => {
-				setAdded(false);
-				setError(false);
-			}, 2000);
-		}
-	};
-
-	// check if product is in cart
-	const isInCart = () => {
-		const cart = JSON.parse(localStorage.getItem("cart")) || [];
-		const existingProductIndex = cart.findIndex(
-			(item) => item.id === selectedProduct.id
-		);
-
-		return existingProductIndex !== -1;
-	};
-
-	const handlePreviewClick = (index) => {
-		setSelectedPreview(index);
-	};
+	const product = products.find((product) => product?._id === id);
+	console.log(product);
+	const tags = product?.tags?.[0]?.split(",") || [];
 
 	return (
-		<div className="Modal" onClick={onClose}>
-			<Modal
-				open={isOpen}
-				onCancel={onClose}
-				footer={null}
-				width={1000}
-				centered
-				wrapClassName="ModalWrapper"
-			>
-				{/* Modal Content */}
-				<div className="ModalContent" onClick={handleModalContentClick}>
-					<div className="ModalLeft">
+		<div className="ProductModal">
+			<div className="ProductTop">
+				<div className="ProductLeft">
+					<div className="ProductImages">
 						<img
-							src={
-								selectedProduct?.images[selectedPreview] ||
-								selectedProduct?.images[0]
-							}
-							alt={selectedProduct?.productName}
+							src={product?.images[currentImage]}
+							alt={product?.productName}
 						/>
-						<div className="ImagePreview">
-							{selectedProduct.images.map((image, index) => (
-								<img
-									onClick={() => handlePreviewClick(index)}
-									key={index}
-									src={image}
-									alt={selectedProduct?.productName}
-								/>
-							))}
-						</div>
 					</div>
-					<div className="ModalRight">
-						<h3>
-							{selectedProduct?.productName},{selectedProduct?.brandName}
-							{selectedProduct?.labels.map((label, index) => (
-								<small key={index}>[{label}]</small>
-							))}
-						</h3>
-						<p>
-							Price: KSh.
-							{selectedProduct?.price
-								.toString()
-								.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
-						</p>
-						<p>Stock: {selectedProduct?.stock} Items</p>
-						<div className="Desc">
-							<p>{selectedProduct?.productDescription}</p>
-						</div>
-						{added && success && (
-							<div
-								className="Success"
-								style={{
-									color: "green",
-									border: "2px solid green",
-									padding: 5,
-									borderRadius: 5,
-								}}
-							>
-								<i className="fas fa-check"></i> Added to cart successfully!
-							</div>
-						)}
-						{added && error && (
-							<div className="Error">
-								<i className="fas fa-times"></i> Error adding to cart!
-							</div>
-						)}
-
-						<div className="ProductButtons">
-							{isInCart() ? (
-								<button className="ProductButton" disabled>
-									<>
-										<i className="fas fa-check"></i> In Cart
-									</>
-								</button>
-							) : (
-								<button className="ProductButton" onClick={handleAddToCart}>
-									{loading ? (
-										<>
-											<i className="fas fa-spinner fa-spin"></i> Adding to Cart
-										</>
-									) : (
-										<>
-											Add to Cart <i className="fas fa-shopping-cart"></i>
-										</>
-									)}
-								</button>
-							)}
-
-							<button className="ProductButton" disabled={isInCart()}>
-								{isInCart() ? (
-									<>
-										Proceed to Checkout
-										<i className="fas fa-arrow-right"></i>
-									</>
-								) : (
-									<>
-										Buy Now <i className="fas fa-arrow-right"></i>
-									</>
-								)}
-							</button>
-						</div>
-						<div className="MoreDetails">
-							<h4>More Details</h4>
-							<div className="Usage">
-								<h5>Usage Instructions</h5>
-								<p>{selectedProduct?.instructions}</p>
-							</div>
-							<div className="Tags">
-								<i className="fas fa-tag"></i>
-								{selectedProduct?.tags.map((tag, index) => (
-									<div key={index}>
-										<span>{tag}</span>
-									</div>
-								))}
-							</div>
-						</div>
+					<div className="ImagePreview">
+						{product?.images.map((image, index) => (
+							<img
+								key={index}
+								src={image}
+								alt={product.productName}
+								onClick={() => setCurrentImage(index)}
+								className={index === currentImage ? "Active" : ""}
+							/>
+						))}
 					</div>
 				</div>
-			</Modal>
+				<div className="ProductRight">
+					<div className="ProductTitle">
+						<h3>
+							{product?.productName}
+							<li>{product?.productCategory}</li>
+						</h3>
+						<p>Brand: {product?.brandName}</p>
+					</div>
+					<div className="ProductDetails">
+						<p>{product?.productDescription}</p>
+						<p>
+							<b>Stock:</b> {product?.stock} Available
+						</p>
+						<p>
+							<b>Weight:</b> {product?.productWeight}
+						</p>
+					</div>
+					<div className="Price">
+						<h3>
+							KES{" "}
+							{product?.price !== undefined
+								? product.price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+								: ""}
+						</h3>
+						{product?.wholesale === true && (
+							<p>
+								Buy {product?.wholesaleRate} such products @ KES{" "}
+								<b>
+									{product?.wholesalePrice !== undefined
+										? product.wholesalePrice
+												.toString()
+												.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+										: ""}
+								</b>
+								from Agrisolve
+							</p>
+						)}
+					</div>
+
+					<div className="Tags">
+						<i className="fa fa-tags"></i>
+						{tags.map((tag, index) => (
+							<span key={index}>{tag}</span>
+						))}
+					</div>
+					<div className="ProductBtns">
+						<button className="AddToCart">Add to Cart</button>
+						<button className="BuyNow">Buy Now</button>
+					</div>
+					<div className="Usage">
+						<h3>Usage Instructions</h3>
+						<p>{product?.instructions}</p>
+					</div>
+					<div className="Packaging">
+						<h3>Packaging</h3>
+						<p>{product?.packagingType}</p>
+					</div>
+					<div className="Labels">
+						<h3>Labels</h3>
+						<p>{product?.labels}</p>
+					</div>
+				</div>
+			</div>
+			<div className="ProductBottom">
+				<h3>You may also like</h3>
+				<div className="ProductBottomContainer">
+					{products.map((product, index) => (
+						<Link
+							to={`/product/${product?._id}`}
+							className="ProductCard"
+							key={index}
+						>
+							<div className="ProductCardImage">
+								<img src={product?.images[0]} alt={product?.productName} />
+							</div>
+							<div className="ProductCardDetails">
+								<h3>{product?.productName}</h3>
+								<p>KES {product?.price}</p>
+								<small>{product?.productCategory}</small>
+							</div>
+						</Link>
+					))}
+				</div>
+			</div>
 		</div>
 	);
 };

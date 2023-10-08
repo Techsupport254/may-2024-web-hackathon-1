@@ -3,7 +3,7 @@ import "./Landing.css";
 import Farm from "../../assets/farm.png";
 import MaskedImage from "./MaskedImage";
 
-const Landing = ({ product }) => {
+const Landing = ({ product, userData }) => {
 	return (
 		<div className="Landing">
 			<div className="LandingContainer">

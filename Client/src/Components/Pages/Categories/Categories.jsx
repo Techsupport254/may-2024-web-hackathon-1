@@ -3,7 +3,7 @@ import "./Categories.css";
 import { CategoriesData } from "../../../Data";
 import ProductCards from "../../ProductCards/ProductCards";
 
-const Categories = ({ products }) => {
+const Categories = ({ products, userData }) => {
 	const categoryRefs = useRef([]);
 	const [activeCategory, setActiveCategory] = useState(null);
 
@@ -35,11 +35,11 @@ const Categories = ({ products }) => {
 					</div>
 				);
 			} else {
-				return <ProductCards products={filteredProducts} />;
+				return <ProductCards userData={userData} products={filteredProducts} />;
 			}
 		} else {
 			const limitedProducts = limitProducts(filteredProducts, 10);
-			return <ProductCards products={limitedProducts} />;
+			return <ProductCards userData={userData} products={limitedProducts} />;
 		}
 	};
 

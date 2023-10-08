@@ -61,8 +61,6 @@
   align-items: flex-start;
   width: 100vw;
   height: auto;
-  overflow-y: auto;
-  overflow-x: auto;
   font-family: sans-serif;
 }
 

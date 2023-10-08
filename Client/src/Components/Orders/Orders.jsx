@@ -1,6 +1,7 @@
 import React from "react";
 import "./Orders.css";
 import { orderCategory } from "../../Data";
+import axios from "axios";
 
 const Orders = () => {
 	const [selectedCategory, setSelectedCategory] = React.useState("All");

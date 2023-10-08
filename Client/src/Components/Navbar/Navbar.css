@@ -2,10 +2,7 @@
     background-color: #dcdada;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: .5rem 0;
-    top: 0;
     width: 100%;
-    z-index: 1;
-    color: black;
 }
 
 .NavbarContainer {
@@ -74,24 +71,6 @@
     width: 30%;
     gap: .5rem;
     margin: .5rem;
-}
-
-.Searchbar input {
-    height: 80%;
-    width: 80%;
-    border-radius: 5px;
-    border: 1px solid #000;
-    padding: 0 1rem;
-}
-
-.Searchbar button {
-    height: 80%;
-    width: 10%;
-    border-radius: 5px;
-    border: 1px solid #000;
-    background-color: var(--green);
-    color: #fff;
-    outline: none;
 }
 
 .NavbarLinks {

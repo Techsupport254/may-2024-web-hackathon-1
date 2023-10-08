@@ -8,7 +8,7 @@ const SkeletonProduct = () => <Skeleton />;
 
 const LazyProductCard = React.lazy(() => import("../ProductCard/ProductCard"));
 
-const ProductCards = ({ products, isLoading }) => {
+const ProductCards = ({ products, isLoading,userData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -37,6 +37,7 @@ const ProductCards = ({ products, isLoading }) => {
             key={product.id}
             product={product}
             isLoading={isLoading}
+            userData={userData}
             onProductClick={() => {
               setIsModalOpen(true);
               setSelectedProduct(product);
