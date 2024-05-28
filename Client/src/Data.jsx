@@ -13,14 +13,42 @@ export const NavbarData = [
 		path: "/products",
 		icon: <i className="fas fa-list"></i>,
 	},
+
 	{
 		id: 3,
-		title: "Cart",
-		path: "/cart",
-		icon: <i className="fas fa-shopping-cart"></i>,
+		title: "Today's Offer",
+		path: "/offer",
+		icon: <i className="fas fa-calendar-alt"></i>,
 	},
 	{
-		id: 4,
+		id: 5,
+		title: "Others",
+		path: "/others",
+		icon: <i className="fas fa-info-circle"></i>,
+		menu: [
+			{
+				id: 1,
+				title: "Join Vendors",
+				path: "/vendor",
+				icon: <i className="fas fa-user-plus"></i>,
+			},
+			{
+				id: 2,
+				title: "Plus User",
+				path: "/premium",
+				icon: <i className="fas fa-user-plus"></i>,
+			},
+			{
+				id: 3,
+				title: "Highlights",
+				path: "/highlights",
+				icon: <i className="fas fa-info-circle"></i>,
+			},
+		],
+	},
+
+	{
+		id: 5,
 		title: "Help",
 		path: "/help",
 		icon: <i className="fas fa-question-circle"></i>,
@@ -63,12 +91,7 @@ export const NavbarData = [
 			},
 		],
 	},
-	{
-		id: 5,
-		title: "Consult",
-		path: "/consult",
-		icon: <i className="fas fa-comments"></i>,
-	},
+
 	{
 		id: 6,
 		title: "Account",
@@ -87,13 +110,35 @@ export const NavbarData = [
 				path: "/orders",
 				icon: <i className="fas fa-shopping-bag"></i>,
 			},
+
 			{
-				id: 3,
+				id: 4,
+				title: "Consult",
+				path: "/consult",
+				icon: <i className="fas fa-comments"></i>,
+			},
+			{
+				id: 5,
 				title: "Logout",
 				path: "/logout",
 				icon: <i className="fas fa-sign-out-alt"></i>,
 			},
 		],
+		type: "personal",
+	},
+	{
+		id: 7,
+		title: "favorites",
+		path: "/favorite",
+		icon: <i className="fa-regular fa-heart"></i>,
+		type: "personal",
+	},
+	{
+		id: 8,
+		title: "Cart",
+		path: "/cart",
+		icon: <i className="fas fa-shopping-cart"></i>,
+		type: "personal",
 	},
 ];
 
@@ -364,51 +409,57 @@ export const CategoriesData = [
 		id: 1,
 		title: "All",
 		path: "/categories",
+		image:
+			"https://th.bing.com/th/id/OIP.0nY9r2J1a2K5kVvJZzWQVwHaE8?pid=ImgDet&rs=1",
 	},
 	{
 		id: 2,
 		title: "Antibiotics",
 		path: ".antibiotics",
+		image:
+			"https://th.bing.com/th/id/R.b8cb8058cfc8c68966a8251729bdfb67?rik=J3UW1%2fyCsbhAKA&riu=http%3a%2f%2focj.com%2fwp-content%2fuploads%2f2012%2f04%2fantibiotics-e1335277645797.jpg&ehk=O13qoopn4%2fgcwfTVRmJpryDCIs5nxu9LNiWaKFUG5W0%3d&risl=&pid=ImgRaw&r=0",
 	},
 	{
 		id: 3,
 		title: "Supplements",
 		path: ".supplements",
+		image:
+			"https://th.bing.com/th/id/R.6820786d70bc3a2916f44900435e7ad3?rik=4%2bvORsINLEHByQ&pid=ImgRaw&r=0&sres=1&sresct=1",
 	},
 	{
 		id: 4,
 		title: "Injectables",
 		path: ".injectables",
+		image:
+			"https://th.bing.com/th/id/OIP.yKE_yVuM6pT5rD1RY4NxxgAAAA?rs=1&pid=ImgDetMain",
 	},
 	{
 		id: 5,
 		title: "Wormers",
 		path: ".wormers",
+		image:
+			"https://th.bing.com/th/id/R.ab2a45cd1701ebbbdf4cb04c7abf4fd0?rik=X1R%2bF%2bJpSCX%2fww&pid=ImgRaw&r=0",
 	},
-	{
-		id: 6,
-		title: "Anabolic",
-		path: ".anabolic",
-	},
+
 	{
 		id: 7,
 		title: "Antiinflammatory",
 		path: ".anti-Inflammatory",
-	},
-	{
-		id: 8,
-		title: "Hormonal",
-		path: ".hormonal",
+		image:
+			"https://th.bing.com/th/id/OIP.yJspT_w1DNSwc_9a4XUy3QAAAA?rs=1&pid=ImgDetMain",
 	},
 	{
 		id: 9,
 		title: "Anesthetics",
 		path: ".anesthetics",
+		image: "https://www.farmandpetplace.co.uk/shop/gallery/00037724.JPG",
 	},
 	{
 		id: 10,
 		title: "Nutrition",
 		path: ".nutrition",
+		image:
+			"https://img.favpng.com/25/15/6/cattle-feeding-animal-feed-fodder-pelletizing-png-favpng-3R9dFuV2rxFLYWAug43JsA2xM.jpg",
 	},
 ];
 
@@ -465,3 +516,86 @@ export const orderCategory = [
 		title: "Cancelled",
 	},
 ];
+
+// Fetch random user data from Random User Generator API
+export const fetchRandomUserData = async (numberOfResults) => {
+	try {
+		const response = await fetch(
+			`https://randomuser.me/api/?results=${numberOfResults}`
+		);
+		const data = await response.json();
+		return data.results;
+	} catch (error) {
+		console.error("Error fetching random user data:", error);
+		return [];
+	}
+};
+
+// Function to generate random rating between 1 and 5
+export const generateRandomRating = () => Math.floor(Math.random() * 5) + 1;
+
+
+// faq data
+export const faqData = {
+	faqs: [
+		{
+			id: 1,
+			user: "user123",
+			question: "What payment methods do you accept?",
+			timestamp: "2024-04-15T08:30:00Z",
+			category: "Payment",
+			status: "Answered",
+			responses: [
+				{
+					id: 101,
+					user: "supportAgent1",
+					timestamp: "2024-04-16T09:15:00Z",
+					response: "We accept credit cards, PayPal, and bank transfers.",
+					status: "Official",
+				},
+				{
+					id: 102,
+					user: "user123",
+					timestamp: "2024-04-16T10:00:00Z",
+					response: "Thank you for the clarification!",
+					status: "User Acknowledgment",
+				},
+			],
+		},
+		{
+			id: 2,
+			user: "user456",
+			question: "How long does shipping take?",
+			timestamp: "2024-04-17T10:00:00Z",
+			category: "Shipping",
+			status: "Answered",
+			responses: [
+				{
+					id: 201,
+					user: "supportAgent2",
+					timestamp: "2024-04-18T11:00:00Z",
+					response: "Shipping usually takes 3-5 business days.",
+					status: "Official",
+				},
+			],
+		},
+		{
+			id: 3,
+			user: "user789",
+			question: "Do you ship internationally?",
+			timestamp: "2024-04-20T12:45:00Z",
+			category: "Shipping",
+			status: "Answered",
+			responses: [
+				{
+					id: 301,
+					user: "supportAgent3",
+					timestamp: "2024-04-21T13:30:00Z",
+					response:
+						"Yes, we ship to over 100 countries worldwide. Additional shipping charges may apply.",
+					status: "Official",
+				},
+			],
+		},
+	],
+};

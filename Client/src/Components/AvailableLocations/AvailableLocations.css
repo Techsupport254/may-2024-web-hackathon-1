@@ -1,0 +1,17 @@
+.AvailableLocations {
+    gap: 1rem;
+
+    & i {
+        font-size: 1.5rem;
+        color: var(--success);
+    }
+}
+
+.SelectedLocation {
+    margin-top: .5rem;
+    gap: .5rem;
+
+    & p {
+        font-size: .8rem;
+    }
+}

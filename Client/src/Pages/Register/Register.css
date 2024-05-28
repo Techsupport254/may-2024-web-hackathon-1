@@ -1,0 +1,467 @@
+.Register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.RegisterContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 85%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}
+
+.RegisterCont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.RegisterLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 100%;
+    border-radius: 10px 0 0;
+    background: #f1f2f7;
+    overflow: hidden;
+
+}
+
+
+.RegisterLeftCont {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 10px;
+    overflow: auto;
+    margin-top: 1rem;
+}
+
+.RegisterLeftCont p {
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.RegisterLeftCont p:nth-child(2),
+.RegisterLeftCont p:nth-child(3) {
+    font-size: .6rem;
+    font-weight: 400;
+}
+
+.RegisterLeftCont form {
+    padding: 0.5rem;
+    width: fit-content;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0 .5rem;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    gap: 1rem;
+    margin-top: .5rem;
+
+}
+
+.RegisterInput {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.RegisterForm {
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+
+}
+
+.VerifyUser {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid green;
+    border-radius: 5px;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    gap: 0 0.5rem;
+
+    & input {
+        border: none !important;
+    }
+
+    & span {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #2f3542;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        & p {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: #2f3542;
+        }
+    }
+
+    & i {
+        font-size: 1.5rem !important;
+        color: #2f3542;
+    }
+}
+
+.LoadingModal {
+    width: 100vh;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.LoadingModal .ant-modal-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    left: 12%;
+}
+
+.LoadingModal .ant-modal-content .ant-modal-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.AgribusinessReg {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.RegisterNext {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.RegisterSummary {
+    width: 70%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}
+
+.SummaryItem {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+}
+
+.SummaryItem span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2f3542;
+}
+
+.SummaryItem p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #2f3542;
+}
+
+.Successful {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.Successful .RegisterInput {
+    width: 80%;
+}
+
+.Successful i {
+    font-size: 4rem;
+    color: green;
+}
+
+.Successful h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2f3542;
+}
+
+.Successful p {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #2f3542;
+}
+
+.RegisterButtons {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.RegisterBtn {
+    width: 100%;
+    color: #fff;
+    padding: 0.6rem;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    background: green;
+    border: 0;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+
+.RegisterBtn:hover {
+    transform: scale(1.05);
+}
+
+.RegisterBtn i {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 1rem;
+}
+
+.GoogleBtn {
+    width: 100%;
+    color: #2f3542;
+    padding: 0.5rem;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+    border: none;
+}
+
+.GoogleBtn:hover {
+    transform: scale(1.05);
+}
+
+.GoogleBtn i {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 1rem;
+}
+
+
+.BottomReg {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.BottomReg p {
+    margin: .5rem;
+    font-size: 0.8rem;
+    color: #2f3542;
+}
+
+.BottomReg p span {
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+.BottomReg p span:hover {
+    transform: scale(1.05);
+    color: green;
+}
+
+.Remember {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0.5rem;
+    gap: 1rem;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.RegisterRight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 50%;
+    height: 100%;
+    border-radius: 0 0 10px;
+    background: url(../../assets/drone.png);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+.RegisterRightCont {
+    width: 90%;
+    height: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    margin-bottom: 2rem;
+    border-radius: 5px;
+}
+
+.RegisterRightCont h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.RegisterRightCont p {
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #2f3542;
+}
+
+.RegisterRightCont ul {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: .5rem;
+}
+
+.RegisterRightCont ul li {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: #2f3542;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: .5rem;
+
+}
+
+.RegisterRightCont ul li i {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: green;
+}
+
+.PayBtns {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.PayBtns p {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2f3542;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.PayBtns p i {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: green;
+    margin: 0 .5rem;
+}
+
+.PayBtns .PayBtn {
+    width: 40%;
+    padding: 0.6rem;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    border: 0;
+    cursor: pointer;
+    border: 1px solid green;
+    transition: all .3s ease-in-out;
+}
+
+.PayBtn:hover {
+    transform: scale(1.05);
+}
+
+.RegisterInputs {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+
+}

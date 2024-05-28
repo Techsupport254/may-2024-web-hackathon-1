@@ -1,0 +1,224 @@
+.Events {
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+    min-height: 90vh;
+    align-items: flex-start !important;
+    gap: 1rem;
+
+    & i {
+        font-size: 1.5rem;
+        color: var(--green);
+
+    }
+}
+
+.EventsLeft {
+    width: 20%;
+    height: 100%;
+    background: #f1f2f7;
+    border-radius: 5px;
+    justify-content: flex-start !important;
+}
+
+.EventsRight {
+    width: 80%;
+    height: 100%;
+    border-radius: 5px;
+    box-shadow: var(--box-shadow);
+    background: var(--Background-Paper);
+    justify-content: flex-start;
+}
+
+.EventsContainer {
+    gap: .5rem;
+
+    & .Event {
+        width: 100%;
+        gap: 0 !important;
+        background: var(--Background-Paper);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: .3s ease-in-out;
+
+
+        &:hover {
+            border: 1px solid #ccc;
+            box-shadow: var(--box-shadow);
+            background: #f1f2f7;
+        }
+
+    }
+
+    & .Active {
+        border: 1px solid #ccc;
+        box-shadow: var(--box-shadow);
+        background: #f1f2f7;
+    }
+}
+
+.EventHeader {
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+
+    & h3 {
+        font-size: .8rem;
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    & p {
+        font-size: .6rem;
+        font-weight: 600;
+        padding: .2rem .3rem;
+        background: var(--primary-lighter);
+        border-radius: 5px;
+        color: var(--primary-darker);
+    }
+}
+
+.EventContainer {
+    width: 100%;
+    flex-direction: row;
+    margin: 0;
+    padding: 0;
+    gap: .5rem;
+}
+
+.EventLeft {
+    width: 20%;
+    height: 100%;
+    background: #f1f2f7;
+    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+
+    & img {
+        width: 3rem;
+        height: 3rem;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+}
+
+.EventRight {
+    width: 80%;
+    align-items: flex-start !important;
+
+    & p {
+        font-size: .8rem;
+        font-weight: 500;
+    }
+}
+
+.ActiveEvent {
+    width: 100%;
+    height: auto;
+    flex-direction: row !important;
+    gap: .5rem;
+    padding: 1rem;
+    border-radius: 5px;
+    background: var(--Background-Paper);
+    box-shadow: var(--boxShadow);
+}
+
+.ActiveImage,
+.ActiveDetails {
+    width: 50%;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.ActiveImage {
+    gap: .5rem;
+
+    & img {
+        width: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+
+    & .ActiveImagePreview {
+        width: 100%;
+        height: 10%;
+        gap: .5rem;
+        flex-direction: row !important;
+
+        & img {
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        & .Active {
+            border: 1px solid #ccc;
+            box-shadow: var(--box-shadow);
+            background: #ccc;
+        }
+    }
+}
+
+.ActiveDetails {
+    justify-content: flex-start !important;
+    align-items: flex-start !important;
+
+    & .ActiveItem {
+        width: 100%;
+        flex-direction: row !important;
+
+        & .Switch {
+            flex-direction: row !important;
+        }
+    }
+
+    & .Note {
+        width: 100%;
+        height: auto;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: .5rem;
+        font-size: .8rem;
+        font-weight: 500;
+        resize: none;
+        overflow: auto;
+        background: var(--success-lighter);
+        color: var(--success-darker);
+
+        & span {
+            font-size: .8rem;
+            font-weight: 600;
+            color: var(--success-darker);
+        }
+    }
+}
+
+.EventButtons {
+    width: 100%;
+    flex-direction: row !important;
+    justify-content: flex-end;
+    gap: .5rem;
+
+    & button {
+        width: 5rem;
+        height: 2rem;
+        border-radius: 5px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        transition: .3s ease-in-out;
+        font-size: .8rem;
+        font-weight: 600;
+        color: var(--primary-darker);
+        background: var(--primary-lighter);
+
+        &:hover {
+            background: var(--primary-light);
+        }
+    }
+}

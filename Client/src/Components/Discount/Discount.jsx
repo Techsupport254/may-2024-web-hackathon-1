@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Make sure you have framer-motion installed
+import { motion } from "framer-motion";
 import "./Discount.css";
 
 const Discount = ({ product, userData }) => {
@@ -55,6 +55,11 @@ const Discount = ({ product, userData }) => {
 				</div>
 			</div>
 			<div className="DiscountRight">
+				<span>{product?.productName} </span>
+				<p>
+					{product?.productDescription.substring(0, 200)}
+					<small>...</small>
+				</p>
 				<div className="DiscountImage">
 					<img src={product?.images[1]} alt={product?.productName} />
 				</div>

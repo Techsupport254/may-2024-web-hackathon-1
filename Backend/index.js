@@ -7,7 +7,7 @@ const Token = require("./Routers/TokenRouter");
 
 // Set up server
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8001;
 
 app.use(express.json());
 
@@ -31,9 +31,10 @@ mongoose
 	.then(() => {
 		console.log("MongoDB connection established");
 
+		app.get("/", (req, res) => res.send("API running"));
+
 		// Set up routes after the database connection is established
 		app.use("/auth", require("./Routers/userRouter"));
-		app.get("/", (req, res) => res.send("API running"));
 		app.use("/payment", require("./Routers/paymentRouter"));
 		app.use("/tokens", Token);
 		app.use("/consults", require("./Routers/consultRouter"));
@@ -42,10 +43,25 @@ mongoose
 		app.use("/news", require("./Routers/NewsRouter"));
 		app.use("/cart", require("./Routers/cartRouter"));
 		app.use("/order", require("./Routers/OrderRouter"));
+		app.use("/earnings", require("./Routers/EarningsRouter"));
+		app.use("/email", require("./Routers/MailRouter"));
 
 		// Start the server
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 	})
 	.catch((err) => {
 		console.error("MongoDB connection error:", err);
+		process.exit(1); // Exit the process if MongoDB connection fails
 	});
+
+// Handle uncaught exceptions
+process.on("uncaughtException", (err) => {
+	console.error("Uncaught Exception:", err);
+	process.exit(1); // Exit the process after handling uncaught exception
+});
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (err) => {
+	console.error("Unhandled Promise Rejection:", err);
+	process.exit(1); // Exit the process after handling unhandled promise rejection
+});

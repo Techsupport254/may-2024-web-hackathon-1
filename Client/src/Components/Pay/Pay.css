@@ -22,7 +22,11 @@
 }
 
 .SummaryRow span {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+}
+
+.SummaryRow p {
+  font-size: 0.8rem;
 }
 
 .TotalRow {

@@ -52,6 +52,9 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+
 }
 
 .App {
@@ -60,8 +63,14 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 100vw;
-  height: auto;
-  font-family: sans-serif;
+  height: 100%;
+}
+
+.FlexDisplay {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 a {
@@ -102,8 +111,21 @@ textarea {
   gap: 1rem;
 }
 
-.Header h3 {
-  font-size: 1rem;
+.Header {
+  display: flex;
+  flex-direction: row;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: .5rem;
   font-weight: 600;
-  color: var(--bg-color);
+
+  & h3 {
+    font-size: 1rem;
+    color: var(--green);
+  }
+
+  & i {
+    font-size: 1rem;
+    color: var(--green);
+  }
 }

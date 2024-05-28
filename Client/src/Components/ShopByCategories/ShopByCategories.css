@@ -1,0 +1,67 @@
+.ShopByCategories {
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+
+    & .Header h3 {
+        width: 100%;
+        justify-content: flex-start;
+        color: var(--success-darker);
+    }
+
+    & .CategoriesShop {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        flex-basis: 1;
+        gap: .5rem;
+
+        & .CategoryItem {
+            width: 24%;
+            height: 100%;
+            gap: .5rem;
+            background: #e5e5e5;
+            border-radius: 5px;
+            padding: .5rem;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease-in-out;
+            overflow: hidden;
+            cursor: pointer;
+
+
+            & .CategoryImage {
+                width: 100%;
+                height: 8rem;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: all 0.3s ease-in-out;
+                overflow: hidden;
+
+                & img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 5px;
+                }
+            }
+
+            & .CategoryTitle {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+            }
+
+            &:hover {
+                transform: scale(0.95);
+            }
+        }
+    }
+}

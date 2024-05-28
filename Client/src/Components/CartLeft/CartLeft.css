@@ -19,7 +19,7 @@
 }
 
 .EmptyCart h2 {
-    font-size: 24px;
+    font-size: 1.5rem;
     margin-bottom: 20px;
 }
 
@@ -46,16 +46,17 @@
 .CartTitle {
     font-size: 1rem;
     margin: 0;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 .CartItems {
     width: 100%;
-    height: 70vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     overflow-y: auto;
+    gap: .5rem;
 }
 
 .CartItem {
@@ -63,79 +64,126 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-bottom: .5rem;
     padding: .5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    border-radius: 4px;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    gap: 1rem;
+
 }
 
 .CartItemImg {
-    width: 20%;
-    height: 100%;
-    height: 100%;
-    border-radius: 4px;
-
+    width: 10%;
+    height: auto;
+    border-radius: 5px;
+    object-fit: cover;
 }
 
 .CartItemDetails {
-    width: 55%;
+    width: 50%;
+    height: auto;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: flex-start;
     justify-content: flex-start;
-    margin: 0 1rem;
+    border-radius: 4px;
+}
+
+.Categor,
+.Brand {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    & span {
+        font-size: .8rem;
+        color: var(--primary-darker);
+    }
 }
 
 .CartItemTitle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 1rem;
     margin: 0;
-    margin-bottom: 8px;
+    color: var(--primary-darker);
+
+    & i {
+        font-size: .8rem;
+    }
 }
 
 .CartItemPrice {
-    font-size: 1rem;
+    font-size: .8rem;
     color: #888;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
+}
+
+.CartInfo {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .CartInfo p {
-    font-size: 1rem;
-    margin: 0;
+    width: auto;
+    font-size: .8rem;
+    line-height: 1.5;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
 }
 
+
+
 .CartButtons {
-    width: 15%;
+    width: 30%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.QuantityInput {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
+    width: 25%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0 .5rem;
+    outline: none;
 }
 
 .QuantityBtns {
+    width: 70%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: space-between;
+
 }
 
 .QuantityBtn {
-    background-color: #f2f2f2;
+    background-color: #fff;
     border: none;
-    font-size: 1.2rem;
-    border-radius: 4px;
+    height: 2rem;
+    width: 2rem;
     cursor: pointer;
     outline: none;
-    padding: 4px 8px;
+    padding: 8px;
     border-radius: 50%;
 }
 
@@ -153,7 +201,6 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 1rem;
 }
 
 .CheckoutBtn {

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./ProductCard.css";
 import Skeleton from "../Skeleton/Skeleton";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
 const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 	const [adding, setAdding] = useState(false);
 	const [added, setAdded] = useState(false);
+	const [error, setError] = useState(null);
 
-	const handleToCart = async () => {
+	const handleToCart = async (e) => {
+		e.stopPropagation(); // Prevent link navigation when clicking the button
 		setAdding(true);
 		try {
 			const response = await axios.post(
@@ -19,18 +22,30 @@ const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 					quantity: 1,
 				},
 				{
-					headers: {
-						"Content-Type": "application/json",
-					},
+					headers: { "Content-Type": "application/json" },
 				}
 			);
-			console.log(response);
 			if (response.status === 200) {
-				setAdding(false);
 				setAdded(true);
+				return true; // Indicates successful addition
 			}
 		} catch (error) {
-			console.log(error);
+			setError(error.message || "An error occurred while adding to cart.");
+		} finally {
+			setAdding(false);
+		}
+		return false; // Indicates failure
+	};
+
+	const buyNow = async (e) => {
+		e.stopPropagation(); // Prevent link navigation when clicking the button
+		if (!added) {
+			const addedSuccessfully = await handleToCart(e);
+			if (addedSuccessfully) {
+				window.location.href = "/cart"; // Redirect to cart page
+			}
+		} else {
+			window.location.href = "/cart"; // Redirect to cart if already added
 		}
 	};
 
@@ -53,40 +68,58 @@ const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 	};
 
 	if (isLoading) {
-		// Show skeleton loading effect
 		return <Skeleton />;
 	}
 
 	return (
-		<Link to={`/product/${product?._id}`}
-			className="Product-Card"
-		>
-			<div
+		<div className="Product-Card">
+			<Link
+				to={`/product/${product?._id}`}
+				onClick={(e) => {
+					if (!e.target.classList.contains("ProductButton")) {
+						onProductClick(product?._id);
+					}
+				}}
 				className="ProductContent"
-				onClick={() => onProductClick(product?._id)}
 			>
 				<img src={product?.images[0]} alt={product?.productName} />
 				<h3>{product?.productName}</h3>
 				<p>KSh.{product?.price}</p>
 				<p>{product.stock} in stock</p>
-			</div>
-			<div className="Ratings">
-				<i className="fas fa-star"></i>
-				<i className="fas fa-star"></i>
-				<i className="fas fa-star"></i>
-				<i className="fas fa-star-half-alt"></i>
-				<i className="far fa-star"></i>
-			</div>
+				<div className="Ratings">
+					<i className="fas fa-star"></i>
+					<i className="fas fa-star"></i>
+					<i className="fas fa-star"></i>
+					<i className="fas fa-star-half-alt"></i>
+					<i className="far fa-star"></i>
+				</div>
+			</Link>
+
 			<div className="ProductButtons">
-				<button className="ProductButton" onClick={handleToCart}>
+				<button
+					className="ProductButton"
+					onClick={handleToCart}
+					disabled={adding}
+				>
 					{renderActionButton()}
 				</button>
-				<button className="ProductButton">
+				<button
+					className="ProductButton"
+					onClick={buyNow} // Implementing the buyNow functionality
+				>
 					Buy Now <i className="fas fa-arrow-right"></i>
 				</button>
 			</div>
-		</Link>
+			{error && <p className="ErrorMessage">{error}</p>}
+		</div>
 	);
 };
 
 export default ProductCard;
+
+ProductCard.propTypes = {
+	product: PropTypes.object,
+	isLoading: PropTypes.bool,
+	onProductClick: PropTypes.func,
+	userData: PropTypes.object,
+};

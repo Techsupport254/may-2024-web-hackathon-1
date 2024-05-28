@@ -7,14 +7,14 @@ const BestSales = ({ products, userData }) => {
 			{products.map((product, index) => {
 				return (
 					<div className="BestSalesProduct" key={index}>
+						<div className="BestImage">
+							<img src={product.images[0]} alt="product" />
+						</div>
 						<div className="BestDetails">
 							<span>{product.productName}</span>
 							<p>{product.productDescription}</p>
 							<h3>KSh.{product.price}</h3>
 							<button>SHOP NOW</button>
-						</div>
-						<div className="BestImage">
-							<img src={product.images[0]} alt="product" />
 						</div>
 					</div>
 				);

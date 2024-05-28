@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./Navbar.css";
 import Logo from "../../Assets/Logo.png";
 import { Link } from "react-router-dom";
@@ -6,14 +6,12 @@ import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
 import { InputAdornment, TextField } from "@mui/material";
+import PropTypes from "prop-types";
 
-const Navbar = ({ userData, handleLogout }) => {
+const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 	const [user, setUser] = useState(null);
-
-	// fetch cart data from local storage
-	const cartItems = JSON.parse(localStorage.getItem("cart"));
-	const cartCount = cartItems?.length;
-	const cartItemsCount = cartCount ? cartCount : 0;
+	const [searching, setSearching] = useState(false);
+	const [searchInput, setSearchInput] = useState("");
 
 	useEffect(() => {
 		setUser(userData);
@@ -23,167 +21,156 @@ const Navbar = ({ userData, handleLogout }) => {
 		e.preventDefault();
 		setMenuVisible((prevVisible) => !prevVisible);
 	};
-	console.log(user);
+
+	const handleSearchToggle = (e) => {
+		e.preventDefault();
+		setSearching((prevVisible) => !prevVisible);
+	};
+
+	const personalItems = NavbarData?.filter((item) => item.type === "personal");
+	// common items don't have type
+	const commonItems = NavbarData?.filter((item) => !item.type);
 	return (
 		<div className="Navbar">
 			<div className="NavbarContainer">
 				<div className="NavbarLogo">
 					<Link to="/">
 						<img src={Logo} alt="logo" />
-						<span>Agrisolve</span>
+						<span>
+							Agri<p>solve</p>
+						</span>
 					</Link>
 				</div>
-				<div className="NavRight">
-					<div className="NavTop">
-						<div className="Searchbar">
-							<TextField
-								id="outlined-basic"
-								label="Search ..."
-								variant="outlined"
-								size="small"
-								color="success"
-								fullWidth
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
+				<div className="NavLeft">
+					<div className="Searchbar">
+						<TextField
+							placeholder="Search for products ..."
+							size="small"
+							color="success"
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position="end">
+										{searching ? (
 											<i
-												className="fa fa-search"
+												className="fas fa-circle-notch fa-spin"
 												style={{
-													color: "#000",
+													color: "var(--success-darker)",
 													fontSize: "1.2rem",
 													cursor: "pointer",
 												}}
 											></i>
-										</InputAdornment>
-									),
-								}}
-							/>
-						</div>
-						<div className="NavbarLinks">
-							{NavbarData.map((item, index) => {
-								if (item.title === "Cart") {
-									return (
-										<div className="NavItem" key={index}>
-											<Link to={item.path}>
-												<Badge badgeContent={cartItemsCount} color="primary">
-													<i className="fas fa-shopping-cart"></i>
-												</Badge>
-												{item.title}
-											</Link>
-										</div>
-									);
-								} else if (item.title === "Account") {
-									return (
-										<div className="NavItem" key={index}>
-											{user && user.loginStatus === "loggedIn" ? (
-												<Dropdown
-													overlay={
-														<Menu>
-															{item.menu.map((subItem, index) => (
-																<Menu.Item key={index}>
-																	{subItem.title === "Logout" ? (
-																		<div
-																			style={{
-																				display: "flex",
-																				gap: "10px",
-																				borderTop: "1px solid #777",
-																			}}
-																			onClick={handleLogout}
-																		>
-																			<div
-																				className="subItemIcon"
-																				style={{ color: "green" }}
-																			>
-																				{subItem.icon}
-																			</div>
-																			<div className="subItemTitle">
-																				{subItem.title}
-																			</div>
-																		</div>
-																	) : (
-																		<Link
-																			to={subItem.path}
-																			style={{
-																				display: "flex",
-																				gap: "10px",
-																			}}
-																		>
-																			<div
-																				className="subItemIcon"
-																				style={{ color: "green" }}
-																			>
-																				{subItem.icon}
-																			</div>
-																			<div className="subItemTitle">
-																				{subItem.title}
-																			</div>
-																		</Link>
-																	)}
-																</Menu.Item>
-															))}
-														</Menu>
-													}
-													placement="bottomCenter"
-													trigger={["click"]}
-													arrow
-												>
-													<Link
-														to={item.path}
-														onClick={(e) => {
-															e.preventDefault();
-															handleMenuToggle(e);
-														}}
-													>
-														{user.profilePicture ? (
-															<img
-																src={
-																	user.profilePicture
-																		? user.profilePicture
-																		: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
-																}
+										) : (
+											<i
+												className="fa fa-search"
+												style={{
+													color: "var(--success-darker)",
+													fontSize: "1.2rem",
+													cursor: "pointer",
+												}}
+											></i>
+										)}
+									</InputAdornment>
+								),
+							}}
+							value={searchInput}
+							onChange={(e) => setSearchInput(e.target.value)}
+							style={{
+								cursor: "pointer",
+								padding: "0",
+								margin: "0",
+							}}
+						/>
+					</div>
+					<div className="NavbarLinks">
+						{commonItems?.map((item, index) => {
+							return (
+								<div className="NavItem" key={index}>
+									{item.menu ? (
+										<Dropdown
+											overlay={
+												<Menu>
+													{item.menu.map((subItem, index) => (
+														<Menu.Item key={index}>
+															<Link
+																to={subItem.path}
 																style={{
-																	width: "30px",
-																	height: "30px",
-																	borderRadius: "50%",
-																	objectFit: "cover",
+																	display: "flex",
+																	gap: "10px",
 																}}
-																alt={user.name}
-															/>
-														) : (
-															<i
-																className="fas fa-user-circle"
-																style={{
-																	fontSize: "30px",
-																}}
-															></i>
-														)}
+															>
+																<div
+																	className="subItemIcon"
+																	style={{ color: "green" }}
+																>
+																	{subItem.icon}
+																</div>
 
-														{user.username}
-														<i className="fas fa-caret-down"></i>
-													</Link>
-												</Dropdown>
-											) : (
-												<Link to={item.path}>
-													{item.icon}
-													{item.title}
-												</Link>
-											)}
-										</div>
-									);
-								} else {
-									return (
-										<div className="NavItem" key={index}>
-											{item.menu ? (
-												<Dropdown
-													overlay={
-														<Menu>
-															{item.menu.map((subItem, index) => (
-																<Menu.Item key={index}>
+																{subItem.title}
+															</Link>
+														</Menu.Item>
+													))}
+												</Menu>
+											}
+											placement="bottomCenter"
+											trigger={["click"]}
+											arrow
+										>
+											<Link to={item.path} onClick={handleMenuToggle}>
+												{item.icon}
+												{item.title}
+												<i className="fas fa-caret-down"></i>
+											</Link>
+										</Dropdown>
+									) : (
+										<Link to={item.path}>
+											{item.icon}
+											{item.title}
+										</Link>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				</div>
+				<div className="NavRight">
+					<div className="NavbarLinks">
+						{personalItems?.map((item, index) => {
+							if (item.title === "Account") {
+								return (
+									<div className="NavItem" key={index}>
+										{user && user?.loginStatus === "loggedIn" ? (
+											<Dropdown
+												overlay={
+													<Menu>
+														{item.menu.map((subItem, index) => (
+															<Menu.Item key={index}>
+																{subItem.title === "Logout" ? (
+																	<div
+																		style={{
+																			display: "flex",
+
+																			gap: "10px",
+																			borderTop: "1px solid #777",
+																		}}
+																		onClick={handleLogout}
+																	>
+																		<div
+																			className="subItemIcon"
+																			style={{ color: "green" }}
+																		>
+																			{subItem.icon}
+																		</div>
+																		<div className="subItemTitle">
+																			{subItem.title}
+																		</div>
+																	</div>
+																) : (
 																	<Link
 																		to={subItem.path}
 																		style={{
 																			display: "flex",
 																			gap: "10px",
+																			alignItems: "center",
 																		}}
 																	>
 																		<div
@@ -192,38 +179,89 @@ const Navbar = ({ userData, handleLogout }) => {
 																		>
 																			{subItem.icon}
 																		</div>
-																		{subItem.title}
+																		<div className="subItemTitle">
+																			{subItem.title}
+																		</div>
+																		{subItem.title === "Cart" &&
+																			cartItems?.length !== 0 && (
+																				<Badge
+																					badgeContent={cartItems?.length}
+																					color="success"
+																				/>
+																			)}
+																		{subItem.title === "Orders" &&
+																			pendingOrders.length !== 0 && (
+																				<Badge variant="dot" color="success" />
+																			)}
 																	</Link>
-																</Menu.Item>
-															))}
-														</Menu>
-													}
-													placement="bottomCenter"
-													trigger={["click"]}
-													arrow
+																)}
+															</Menu.Item>
+														))}
+													</Menu>
+												}
+												placement="bottomCenter"
+												trigger={["click"]}
+												arrow
+											>
+												<Link
+													to={item.path}
+													onClick={(e) => {
+														e.preventDefault();
+														handleMenuToggle(e);
+													}}
 												>
-													<Link to={item.path} onClick={handleMenuToggle}>
-														{item.icon}
-														{item.title}
-														<i className="fas fa-caret-down"></i>
-													</Link>
-												</Dropdown>
-											) : (
-												<Link to={item.path}>
-													{item.icon}
-													{item.title}
+													{user.profilePicture ? (
+														<img
+															src={
+																user.profilePicture
+																	? user.profilePicture
+																	: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+															}
+															style={{
+																width: "30px",
+																height: "30px",
+																borderRadius: "50%",
+																objectFit: "cover",
+															}}
+															alt={user.name}
+														/>
+													) : (
+														<i
+															className="fas fa-user-circle"
+															style={{
+																fontSize: "30px",
+															}}
+														></i>
+													)}
+
+													{user.username}
+													<i className="fas fa-caret-down"></i>
 												</Link>
+											</Dropdown>
+										) : (
+											<Link to={item.path}>
+												{item.icon}
+												{item.title}
+											</Link>
+										)}
+									</div>
+								);
+							} else {
+								return (
+									<div className="NavItem" key={index}>
+										<Link to={item.path}>
+											{item.icon}
+											{item.title == "Cart" && cartItems?.length !== 0 && (
+												<Badge
+													badgeContent={cartItems?.length}
+													color="success"
+												/>
 											)}
-										</div>
-									);
-								}
-							})}
-						</div>
-					</div>
-					<div className="NavBottom">
-						{user?.userType !== "farmer" && (
-							<Link to="https://agrisolve-admin.vercel.app">Admin</Link>
-						)}
+										</Link>
+									</div>
+								);
+							}
+						})}
 					</div>
 				</div>
 			</div>
@@ -232,3 +270,20 @@ const Navbar = ({ userData, handleLogout }) => {
 };
 
 export default Navbar;
+
+// prop types
+
+Navbar.propTypes = {
+	NavbarData: PropTypes.array.isRequired,
+	userData: PropTypes.object,
+	handleLogout: PropTypes.func.isRequired,
+	cartItems: PropTypes.array.isRequired,
+	pendingOrders: PropTypes.array.isRequired,
+	handleMenuToggle: PropTypes.func.isRequired,
+	handleSearchToggle: PropTypes.func.isRequired,
+	searchInput: PropTypes.string.isRequired,
+	setSearchInput: PropTypes.func.isRequired,
+	searching: PropTypes.bool.isRequired,
+	setSearching: PropTypes.func.isRequired,
+	user: PropTypes.object.isRequired,
+};

@@ -1,8 +1,8 @@
 import React, { Suspense, useState } from "react";
 import "./ProductCards.css";
 import Skeleton from "../Skeleton/Skeleton";
-import ProductModal from "../ProductModal/ProductModal";
-import { motion, AnimatePresence } from "framer-motion";
+import ProductModal from "../../Pages/ProductModal/ProductModal";
+import {  AnimatePresence } from "framer-motion";
 
 const SkeletonProduct = () => <Skeleton />;
 

@@ -1,4 +1,4 @@
-.Location {
+.LocationForm {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,7 +8,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
     background-color: #f2f2f2;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

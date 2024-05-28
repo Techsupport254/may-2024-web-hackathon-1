@@ -9,6 +9,7 @@
     box-sizing: border-box;
     box-shadow: var(--boxShadow);
     border-radius: .5rem;
+    
 
     @media (max-width: 768px) {
         justify-content: center;

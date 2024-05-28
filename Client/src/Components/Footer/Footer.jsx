@@ -1,116 +1,68 @@
 import React from "react";
 import "./Footer.css";
 import { TextField } from "@mui/material";
+import Logo from "../../assets/Logo.png";
 
 const Footer = () => {
 	return (
 		<footer>
 			<div className="FooterContainer">
 				<div className="FooterLogo">
-					<img
-						src="https://th.bing.com/th/id/OIP.kl96ZWbZQTjPvNOPNGbUOQHaFO?w=317&h=181&c=7&r=0&o=5&dpr=1.5&pid=1.7"
-						alt="logo"
-					/>
+					<img src={Logo} alt="logo" />
 					<span>Agrisolve</span>
 				</div>
 				<div className="FooterContent">
-					<div className="FooterServices">
-						<h3>Services</h3>
-						<div className="ServiceItem">
-							<i className="fas fa-check"></i>
-							<span>Agricultural E-commerce</span>
-						</div>
-						<div className="ServiceItem">
-							<i className="fas fa-check"></i>
-							<span>Agricultural Community Support</span>
-						</div>
-						<div className="ServiceItem">
-							<i className="fas fa-check"></i>
-							<span>Agricultural E-commerce</span>
-						</div>
-						<div className="ServiceItem">
-							<i className="fas fa-check"></i>
-							<span>Agricultural E-commerce</span>
-						</div>
+					<div className="FooterItems">
+						<h3>Get to Know Us</h3>
+						<a href="">Careers</a>
+						<a href="">Blog</a>
+						<a href="">About Us</a>
+						<a href="">Investor Relations</a>
+						<a href="">Agrisolve Products</a>
 					</div>
-					<div className="PopularCategories">
-						<h3>Popular Categories</h3>
-						<div className="CategoryItem">
-							<i className="fas fa-seedling"></i>
-							<span>Seeds</span>
-						</div>
-						<div className="CategoryItem">
-							<i className="fas fa-tractor"></i>
-							<span>Farm Machinery</span>
-						</div>
-						<div className="CategoryItem">
-							<i className="fas fa-tractor"></i>
-							<span>Farm Machinery</span>
-						</div>
-						<div className="CategoryItem">
-							<i className="fas fa-tractor"></i>
-							<span>Farm Machinery</span>
-						</div>
+					<div className="FooterItems">
+						<h3>Make Money with Us</h3>
+						<a href="">Sell products with Us</a>
+						<a href="">Offer consultation Services</a>
+						<a href="">Partner with Us</a>
+						<a href="">See more ways</a>
 					</div>
-					<div className="FooterContact">
-						<h3>Contact</h3>
-						<div className="ContactItem">
-							<i className="fas fa-map-marker-alt"></i>
-							<span>Juja, Kiambu, Nairobi</span>
-						</div>
-						<div className="ContactItem">
-							<i className="fas fa-phone"></i>
-							<span>+254 796 511 114</span>
-						</div>
-						<div className="ContactItem">
-							<i className="fas fa-envelope"></i>
-							<span>Kiruivictor097@gmail.com</span>
-						</div>
-						<div className="ContactItem">
-							<TextField
-								id="outlined-multiline-static"
-								label="Subscribe to our newsletter"
-								variant="outlined"
-								size="small"
-								color="success"
-								style={{ width: "100%" }}
-								// button input props
-								InputProps={{
-									endAdornment: (
-										<i
-											className="fas fa-paper-plane"
-											style={{
-												color: "green",
-												marginLeft: "10px",
-											}}
-										></i>
-									),
-								}}
-							/>
-						</div>
+					<div className="FooterItems">
+						<h3>Let Us help You</h3>
+						<a href="">Your Account</a>
+						<a href="">Your Orders</a>
+						<a href="">Shipping Rates & Policies</a>
+						<a href="">Return & Replacements</a>
+						<a href="">Agrisolve Consultations</a>
 					</div>
-					<div className="FooterLinks">
-						<h3>Links</h3>
-						<div className="LinkItem">
-							<i className="fas fa-home"></i>
-							<span>Home</span>
-						</div>
-						<div className="LinkItem">
-							<i className="fas fa-bars"></i>
-							<span>Products</span>
-						</div>
-						<div className="LinkItem">
-							<i className="fas fa-question"></i>
-							<span>Help</span>
-						</div>
-						<div className="LinkItem">
-							<i className="fas fa-phone"></i>
-							<span>Consultation</span>
-						</div>
-						<div className="LinkItem">
-							<i className="fas fa-user"></i>
-							<span>Account</span>
-						</div>
+					<div className="FooterItems">
+						<h3>Agrisolve Payments</h3>
+						<a href="">Powered by Paystack</a>
+						<a href="">Mpesa Supported</a>
+						<a href="">Bank Payments Supported</a>
+						<a href="">Payment on Delivery Supported</a>
+					</div>
+				</div>
+			</div>
+			<div className="Developer">
+				<div className="DeveloperContainer">
+					<div className="RightsReserved">
+						<p>© 2024 Agrisolve. All rights reserved.</p>
+						<p>
+							<a href="">Privacy Policy</a>
+						</p>
+						<p>
+							<a href="">Terms of Use</a>
+						</p>
+						<p>
+							<a href="">Contact Us</a>
+						</p>
+					</div>
+					<div className="DeveloperContent">
+						<p>Developed by</p>
+						<p>
+							<a href="https://quaint.kitchen360.co.ke/">Victor Kirui</a>
+						</p>
 					</div>
 				</div>
 			</div>

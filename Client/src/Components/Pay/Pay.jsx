@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import "./Pay.css";
 import { Modal } from "antd";
 import axios from "axios";
+// props
+import PropTypes from "prop-types";
 
-const Pay = ({ totalPrice, handleNext, userData, products }) => {
+const Pay = ({
+	totalPrice,
+	handleNext,
+	userData,
+	products,
+	deliveryFee,
+	deliveryMethod,
+	selectedLocation,
+}) => {
 	const [selectedAccount, setSelectedAccount] = useState(null);
-	const [selectedLocation, setSelectedLocation] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [paying, setPaying] = useState(false);
 	const [isPaid, setIsPaid] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [pendingPayment, setPendingPayment] = useState(false);
 	const [paymentMethod, setPaymentMethod] = useState("");
-	const [deliveryMethod, setDeliveryMethod] = useState("");
 
 	const handleOpenModal = () => {
 		setOpenModal(true);
@@ -23,139 +31,87 @@ const Pay = ({ totalPrice, handleNext, userData, products }) => {
 			setPendingPayment(true);
 		}, 2000);
 	};
-
-	const handlePayment = () => {
-		setPaying(true);
-
-		const username = userData.username;
-
-		const uid = Date.now();
-
-		const orderId = `${username}-${uid}`;
-
-		// Prepare the payment data to send to the server
-		const paymentData = {
-			phone: "254" + selectedAccount.phoneNumber.toString().substring(1),
-			amount: parseFloat(totalAmount.toFixed(2)),
-			orderId: orderId,
-			userId: userData._id,
-			paymentMethod: paymentMethod,
-			deliveryMethod: deliveryMethod,
-			products: products,
-			location: selectedLocation,
-			reason: "Payment for products",
-		};
-
-		// Send a POST request to the server to create a new payment
-		axios
-			.post(
-				"https://agrisolve-techsupport254.vercel.app/tokens/stkPush",
-				paymentData
-			)
-			.then((response) => {
-				console.log("Payment response:", response.data);
-
-				// wait for payment confirmation from the server
-				const interval = setInterval(() => {
-					axios
-						.get(
-							"https://agrisolve-techsupport254.vercel.app/tokens/stk_callback"
-						)
-						.then((response) => {
-							console.log("Payment confirmation:", response.data);
-							if (response.data.status === "success") {
-								clearInterval(interval);
-								setPaying(false);
-								setIsPaid(true);
-								Modal.success({
-									title: "Payment Successful",
-									content: "Your payment was successful.",
-								});
-								handleNext();
-							}
-
-							if (response.data.status === "failed") {
-								clearInterval(interval);
-								setPaying(false);
-								Modal.error({
-									title: "Payment Error",
-									content: "Your payment was not successful.",
-								});
-							}
-
-							if (response.data.status === "timeout") {
-								clearInterval(interval);
-								setPaying(false);
-								Modal.error({
-									title: "Payment Error",
-									content: "Your payment was not successful.",
-								});
-							}
-
-							if (response.data.status === "cancelled") {
-								clearInterval(interval);
-								setPaying(false);
-								Modal.error({
-									title: "Payment Error",
-									content: "Your payment was not successful.",
-								});
-							}
-						})
-						.catch((error) => {
-							console.error("Error confirming payment:", error);
-							clearInterval(interval);
-							setPaying(false);
-							Modal.error({
-								title: "Payment Error",
-								content: "Your payment was not successful.",
-							});
-						});
-				}, 5000);
-			})
-			.catch((error) => {
-				console.error("Error making payment:", error);
-				setPaying(false);
-				Modal.error({
-					title: "Payment Error",
-					content:
-						"There was an error processing your payment." + " " + error.message,
-				});
-			});
-	};
-
-	useEffect(() => {
+	const handlePayment = async () => {
 		try {
-			// fetch payment and delivery methods from local storage
-			const paymentMethod = JSON.parse(localStorage.getItem("paymentMethod"));
-			const deliveryMethod = JSON.parse(localStorage.getItem("deliveryMethod"));
+			setPaying(true); // Assuming you have a state setter for tracking payment status
 
-			// fetch the selected Account and Location from local storage
-			const selectedAccountJson = localStorage.getItem("selectedAccount");
-			const selectedAccount = selectedAccountJson
-				? JSON.parse(selectedAccountJson)
-				: null;
-			const selectedLocationJson = localStorage.getItem("selectedLocation");
-			const selectedLocation = selectedLocationJson
-				? JSON.parse(selectedLocationJson)
-				: null;
-			setPaymentMethod(paymentMethod);
-			setDeliveryMethod(deliveryMethod);
-			setSelectedAccount(selectedAccount);
-			setSelectedLocation(selectedLocation);
+			const username = userData?.username; // Assuming userData is your user's data
+			const uid = Date.now();
+			const orderId = `${username}-${uid}`;
+
+			const paymentData = {
+				amount: parseFloat(totalAmount.toFixed(2)),
+				email: userData?.email,
+				orderId: orderId,
+				userId: userData._id,
+				paymentMethod: paymentMethod, // Assuming this is defined in your context
+				deliveryMethod: deliveryMethod, // Assuming this is defined in your context
+				products: products, // Assuming this is defined in your context
+				location: selectedLocation?.display_name, // Assuming this is defined in your context
+				reason: "Payment for products",
+			};
+
+			const response = await axios.post(
+				"http://localhost:8000/payment/initiate-payment",
+				paymentData
+			);
+
+			if (response.status === 200 && response.data.paymentUrl) {
+				console.log(
+					"Payment initiated successfully. Redirecting to payment gateway..."
+				);
+				window.location.href = response.data.paymentUrl;
+			} else {
+				throw new Error("Unable to initiate payment");
+			}
 		} catch (error) {
-			console.error("Error parsing JSON:", error);
+			console.error("Error initiating payment:", error);
+			setPaying(false);
+			Modal.error({
+				title: "Payment Error",
+				content: "There was an error initiating your payment.",
+			});
 		}
-	}, []);
-
-	const handleBack = () => {
-		setPendingPayment(false);
-		setOpenModal(false);
 	};
 
-	const handleSaveAndNext = () => {
-		setPendingPayment(false);
-		setOpenModal(false);
-		handleNext();
+	const checkPaymentStatus = async (orderId) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8000/payment/status/${orderId}`
+			);
+
+			if (response.status === 200) {
+				const paymentStatus = response.data.status;
+				setPaying(false);
+
+				switch (paymentStatus) {
+					case "success":
+						console.log("Payment successful");
+						// Update your application state or UI as needed
+						break;
+					case "failed":
+						console.error("Payment failed");
+						// Handle failed payment case
+						break;
+					case "cancelled":
+						console.error("Payment was cancelled by the user");
+						// Handle cancelled payment case
+						break;
+					default:
+						console.error("Unknown payment status");
+					// Handle unknown status
+				}
+			} else {
+				throw new Error("Unable to check payment status");
+			}
+		} catch (error) {
+			console.error("Error checking payment status:", error);
+			setPaying(false);
+			Modal.error({
+				title: "Payment Error",
+				content: "There was an error checking the payment status.",
+			});
+		}
 	};
 
 	const handleDownload = () => {
@@ -173,8 +129,7 @@ const Pay = ({ totalPrice, handleNext, userData, products }) => {
 		});
 	};
 
-	const tax = 100;
-	const deliveryFee = 300;
+	const tax = 0.0;
 	const totalAmount = totalPrice + tax + deliveryFee;
 
 	return (
@@ -205,68 +160,25 @@ const Pay = ({ totalPrice, handleNext, userData, products }) => {
 					<h3>Confirm Payment Details</h3>
 					<div className="PaymentSummary">
 						<div className="SummaryRow">
-							<span>Payment Method:</span>
-							<p
-								style={{
-									textTransform: "capitalize",
-								}}
-							>
-								{paymentMethod ? paymentMethod : "Not Selected"}
-							</p>
-						</div>
-						<div className="SummaryRow">
-							{paymentMethod === "mpesa" && (
-								<>
-									<p>Phone Number:</p>
-									<p>{selectedAccount.phoneNumber}</p>
-								</>
-							)}
-							{paymentMethod === "bank" && (
-								<>
-									<p>Card Number:</p>
-									<p>
-										{selectedAccount.number &&
-											selectedAccount.number
-												.toString()
-												.match(/.{1,4}/g)
-												.join(" ")}
-									</p>
-								</>
-							)}
-							{paymentMethod === "paypal" && (
-								<>
-									<p>Paypal Email:</p>
-									<p>{selectedAccount.email}</p>
-								</>
-							)}
-						</div>
-
-						<div className="SummaryRow">
 							<span>Delivery Method:</span>
 							<p
 								style={{
 									textTransform: "capitalize",
 								}}
 							>
-								{deliveryMethod}
+								{deliveryMethod && deliveryMethod}
 							</p>
 						</div>
 						<div className="SummaryRow">
 							{deliveryMethod !== "pickup" ? (
 								<>
 									<span>Delivery Location:</span>
-									<p>
-										{selectedLocation.address}, {selectedLocation.city},{" "}
-										{selectedLocation.county}
-									</p>
+									<p>{selectedLocation?.display_name}</p>
 								</>
 							) : (
 								<>
 									<span>Pickup Location:</span>
-									<p>
-										{selectedLocation.address}, {selectedLocation.city},{" "}
-										{selectedLocation.county}
-									</p>
+									<p>{selectedLocation?.display_name}</p>
 								</>
 							)}
 						</div>
@@ -371,3 +283,13 @@ const Pay = ({ totalPrice, handleNext, userData, products }) => {
 };
 
 export default Pay;
+
+// validate props
+
+Pay.propTypes = {
+	totalPrice: PropTypes.number.isRequired,
+	deliveryFee: PropTypes.number.isRequired,
+	deliveryMethod: PropTypes.string.isRequired,
+	products: PropTypes.array.isRequired,
+	selectedLocation: PropTypes.object.isRequired,
+};

@@ -3,46 +3,36 @@ import "./Info.css";
 import Button from "@mui/material/Button";
 
 const Info = ({ handleNext, handleBack, isLastStep }) => {
-	const [paymentMethod, setPaymentMethod] = useState("");
 	const [deliveryMethod, setDeliveryMethod] = useState("");
 	const [isSaved, setIsSaved] = useState(false);
-
-	const handlePaymentMethodChange = (event) => {
-		setPaymentMethod(event.target.value);
-	};
 
 	const handleDeliveryMethodChange = (event) => {
 		setDeliveryMethod(event.target.value);
 	};
 
 	const handleSaveAndNext = () => {
-		// save paymentMethod and deliveryMethod to local storage as object
 		localStorage.setItem(
 			"AgrisolveMethods",
-			JSON.stringify({ paymentMethod, deliveryMethod })
+			JSON.stringify({ deliveryMethod })
 		);
 		setIsSaved(true);
-		handleNext(paymentMethod, deliveryMethod); // Pass paymentMethod and deliveryMethod as props
+		handleNext(deliveryMethod);
 	};
+
 
 	return (
 		<div className="Info">
-			<div className="PaymentMethod">
-				<h3>Payment Method</h3>
-				<select value={paymentMethod} onChange={handlePaymentMethodChange}>
-					<option value="">Select payment method</option>
-					<option value="mpesa">Mpesa</option>
-					<option value="bank">Bank</option>
-					<option value="paypal">PayPal</option>
-					<option value="cod">Cash On Delivery</option>
-				</select>
-			</div>
 			<div className="DeliveryMethod">
 				<h3>Delivery Method</h3>
+				<img
+					src="https://img.icons8.com/color/48/000000/delivery.png"
+					alt="delivery"
+					className="DeliveryIcon"
+				/>
 				<select value={deliveryMethod} onChange={handleDeliveryMethodChange}>
 					<option value="">Select delivery method</option>
-					<option value="standard">Standard</option>
 					<option value="express">Express</option>
+					<option value="standard">Standard</option>
 					<option value="Pick-up">Pick-up</option>
 				</select>
 			</div>
@@ -60,7 +50,7 @@ const Info = ({ handleNext, handleBack, isLastStep }) => {
 				<Button
 					variant="contained"
 					onClick={handleSaveAndNext}
-					disabled={!paymentMethod || !deliveryMethod}
+					disabled={!deliveryMethod}
 				>
 					{isSaved ? "Saved!" : isLastStep ? "Finish" : "Next"}
 				</Button>

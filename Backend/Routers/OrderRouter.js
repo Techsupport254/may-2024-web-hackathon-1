@@ -1,44 +1,66 @@
 const express = require("express");
 const router = express.Router();
 const Order = require("../Models/OrderModel");
+const Cart = require("../Models/cartModel");
+const Product = require("../Models/ProductModel"); // Assuming this is correctly set up now
 
-// Handler POST requests to /order
+// POST: Create a new order and clear the cart
 router.post("/", async (req, res) => {
+	const {
+		userId,
+		orderId,
+		status,
+		payment,
+		products,
+		shipping,
+		billingAddress,
+		shippingAddress,
+		totalAmount,
+		notes,
+		discounts,
+		tax,
+	} = req.body;
+
+	if (!userId || !products || products.length === 0 || !orderId || !payment) {
+		return res
+			.status(400)
+			.json({ message: "Missing required fields or no products provided." });
+	}
+
 	try {
-		const { userId, products, orderId, status, payment } = req.body;
-
-		// Validation
-		if (!userId || !products || !orderId || !payment) {
-			return res
-				.status(400)
-				.json({ message: "Please enter all required fields" });
-		}
-
-		// Create an array of product objects
 		const productObjects = products.map((product) => ({
-			userId: product.userId,
-			ownerId: product.ownerId,
 			productId: product.productId,
 			quantity: product.quantity,
+			status: product.status,
 		}));
 
-		// Create the order with multiple products
-		const userOrder = new Order({
+		const newOrder = new Order({
 			userId,
 			orderId,
 			status,
 			payment,
 			products: productObjects,
+			shipping,
+			billingAddress,
+			shippingAddress,
+			totalAmount,
+			notes,
+			discounts,
+			tax,
 		});
 
-		const savedOrderProduct = await userOrder.save();
-		res.json({ message: "Products added to order", order: savedOrderProduct });
+		const savedOrder = await newOrder.save();
+		await Cart.deleteOne({ userId }); // Clear the cart after saving the order
+		res.status(201).json({
+			message: "Order created and cart cleared successfully!",
+			order: savedOrder,
+		});
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
 });
 
-// Handler GET requests to /order
+// GET: Retrieve all orders
 router.get("/", async (req, res) => {
 	try {
 		const orders = await Order.find();
@@ -48,26 +70,61 @@ router.get("/", async (req, res) => {
 	}
 });
 
-// Handler GET requests to /order/:userId
-router.get("/:id", async (req, res) => {
+// GET: Retrieve all orders by userId
+router.get("/user/:userId", async (req, res) => {
+	const { userId } = req.params;
 	try {
-		const { id } = req.params;
-
-		// Validation
-		if (!id) {
-			return res.status(400).json({ message: "Please enter all fields" });
+		const orders = await Order.find({ userId });
+		if (orders.length === 0) {
+			return res
+				.status(404)
+				.json({ message: "No orders found for this user." });
 		}
+		res.json(orders);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
 
-		// Check if the user already has an order
-		const userOrder = await Order.findOne({
-			$or: [{ userId: id }, { ownerId: id }],
+// GET: Retrieve all orders by ownerId
+router.get("/owner/:ownerId", async (req, res) => {
+	const { ownerId } = req.params;
+	try {
+		const orders = await Order.find().populate({
+			path: "products.productId",
+			model: "agrisolveProduct", // Ensure this matches your Product model registration
 		});
 
-		if (!userOrder) {
-			return res.status(404).json({ message: "Order not found" });
-		}
+		const filteredOrders = orders
+			.filter((order) =>
+				order.products.some(
+					(product) => product.productId && product.productId.refId === ownerId
+				)
+			)
+			.map((order) => ({
+				...order.toObject(),
+				products: order.products.filter(
+					(product) => product.productId && product.productId.refId === ownerId
+				),
+			}));
 
-		res.json({ order: userOrder });
+		if (filteredOrders.length === 0) {
+			return res.status(404).json({
+				message: "No orders found containing products from this owner.",
+			});
+		}
+		res.json(filteredOrders);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// DELETE: Delete an order by orderId
+router.delete("/:orderId", async (req, res) => {
+	const { orderId } = req.params;
+	try {
+		const removedOrder = await Order.deleteOne({ orderId });
+		res.json(removedOrder);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

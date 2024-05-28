@@ -32,6 +32,7 @@ router.post("/", async (req, res) => {
 		address,
 		link,
 		images,
+		fee,
 	} = req.body;
 
 	try {
@@ -46,6 +47,7 @@ router.post("/", async (req, res) => {
 			address,
 			link,
 			images,
+			fee,
 		});
 
 		const news = await newNews.save();
@@ -72,6 +74,7 @@ router.patch("/:id", async (req, res) => {
 		address,
 		link,
 		images,
+		fee,
 	} = req.body;
 
 	try {
@@ -89,6 +92,7 @@ router.patch("/:id", async (req, res) => {
 					address,
 					link,
 					images,
+					fee,
 				},
 			}
 		);

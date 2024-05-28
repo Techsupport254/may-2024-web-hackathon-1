@@ -1,5 +1,5 @@
-import React from "react";
 import "./BannerCard.css";
+import propTypes from "prop-types";
 
 const BannerCard = ({ product }) => {
 	return (
@@ -16,3 +16,9 @@ const BannerCard = ({ product }) => {
 };
 
 export default BannerCard;
+
+// validate props
+
+BannerCard.propTypes = {
+	product: propTypes.object.isRequired,
+};

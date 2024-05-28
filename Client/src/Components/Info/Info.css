@@ -1,22 +1,28 @@
 .Info {
     background-color: #f9f9f9;
-    padding: 1rem;
+    padding: .5rem;
     border-radius: 4px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
 }
 
-
-
-.PaymentMethod,
 .DeliveryMethod {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-.PaymentMethod h3,
 .DeliveryMethod h3 {
     font-size: 1rem;
     margin-bottom: .5rem;
+    color: var(--primary-darker);
+}
+
+.DeliveryMethod img {
+    width: 5rem;
+    height: auto;
+    object-fit: cover;
 }
 
 .Info select {
@@ -52,14 +58,15 @@
     text-decoration: underline;
 }
 
-.SaveBtn{
+.SaveBtn {
     display: flex;
     justify-content: flex-end;
     margin-top: 1rem;
     gap: 1rem;
 
 }
-.SaveBtn button{
+
+.SaveBtn button {
     width: 5rem;
     height: 2.5rem;
     gap: 1rem;
@@ -73,10 +80,10 @@
     transition: background-color 0.2s ease-in-out;
 }
 
-.SaveBtn span{
+.SaveBtn span {
     margin: .5rem;
 }
 
-.SaveBtn button:hover{
+.SaveBtn button:hover {
     background-color: #0069d9;
 }

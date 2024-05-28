@@ -32,14 +32,15 @@ const Location = () => {
 		const errors = validateForm();
 		if (Object.keys(errors).length === 0) {
 			// Form is valid, save the data to local storage
-			saveFormData(formValues);
+			saveFormData(formValues); // Save form data
 			setMessage({
 				type: "success",
 				text: "Location data saved successfully!",
 			});
-			setFormValues(initialState);
+			setFormValues(initialState); // Reset form values after submission
+			setFormErrors({}); // Clear form errors
 		} else {
-			setFormErrors(errors);
+			setFormErrors(errors); // Set form errors if validation fails
 			setMessage({ type: "error", text: "Please fix the form errors." });
 		}
 	};
@@ -53,6 +54,7 @@ const Location = () => {
 
 		// Store the updated array in local storage
 		localStorage.setItem("locationData", JSON.stringify(newData));
+		console.log("Form data saved to local storage:", newData);
 	};
 
 	const validateForm = () => {
@@ -72,6 +74,9 @@ const Location = () => {
 		if (!formValues.nearestPostOffice) {
 			errors.nearestPostOffice = "Nearest Post Office is required";
 		}
+		if (Object.keys(errors).length > 0) {
+			console.log("Form validation errors:", errors);
+		}
 		return errors;
 	};
 
@@ -81,7 +86,7 @@ const Location = () => {
 
 	return (
 		<div className="Location">
-			<form className="LocationForm" onSubmit={handleSubmit}>
+			<form className="LocationForm">
 				<h2>Add Location</h2>
 				<div className="LocationInfo">
 					<div className="RightInfo">
@@ -164,7 +169,7 @@ const Location = () => {
 					>
 						Cancel
 					</button>
-					<button className="SaveButton" type="submit">
+					<button className="SaveButton" onClick={handleSubmit}>
 						Save
 					</button>
 				</div>
