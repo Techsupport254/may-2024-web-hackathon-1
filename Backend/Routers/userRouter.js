@@ -1,31 +1,33 @@
 const router = require("express").Router();
+const mongoose = require("mongoose");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Handler for GET request to /api/user
-// Fetches user data
-router.get("/user", async (req, res) => {
-	try {
-		// Fetch the user data from the database
-		const users = await User.find();
-		res.status(200).json(users);
-	} catch (err) {
-		res.status(400).json({
-			message: "Error fetching user data",
-			error: err,
-		});
-	}
-});
+// Handler for GET request to /api/users/:value
+// Fetches user data by id, email, or username
+router.get("/users/:value", async (req, res) => {
+	const { value } = req.params;
 
-// Handler for GET request to /api/users
-// Fetches users data by id
-router.get("/user/:id", async (req, res) => {
 	try {
-		// Fetch the user data from the database
-		const user = await User.findOne({ _id: req.params.id });
+		let user;
+		if (mongoose.Types.ObjectId.isValid(value)) {
+			user = await User.findById(value);
+		} else if (value.includes("@")) {
+			user = await User.findOne({ email: value });
+		} else {
+			user = await User.findOne({ username: value });
+		}
+
+		if (!user) {
+			return res.status(404).json({
+				message: "User not found.",
+			});
+		}
+
 		res.status(200).json(user);
 	} catch (err) {
+		console.error("Error fetching user data:", err);
 		res.status(400).json({
 			message: "Error fetching user data",
 			error: err,
@@ -33,31 +35,42 @@ router.get("/user/:id", async (req, res) => {
 	}
 });
 
-// Handler for GET request to /api/users
-// Fetches users data
+// Existing routes
+router.get("/user/:id", async (req, res) => {
+	try {
+		const user = await User.findById(req.params.id);
+		res.status(200).json(user);
+	} catch (err) {
+		console.error("Error fetching user data by ID:", err);
+		res.status(400).json({
+			message: "Error fetching user data",
+			error: err,
+		});
+	}
+});
+
 router.get("/users", async (req, res) => {
 	try {
-		// Fetch the user data from the database
 		const users = await User.find();
 		res.status(200).json(users);
 	} catch (err) {
+		console.error("Error fetching users data:", err);
 		res.status(400).json({
-			message: "Error fetching user data",
+			message: "Error fetching users data",
 			error: err,
 		});
 	}
 });
 
-// patch all users loginStatus to "loggedOut"
 router.patch("/users", async (req, res) => {
 	try {
-		// Fetch the user data from the database
 		const users = await User.updateMany(
 			{},
 			{ $set: { loginStatus: "loggedOut" } }
 		);
 		res.status(200).json(users);
 	} catch (err) {
+		console.error("Error updating user data:", err);
 		res.status(400).json({
 			message: "Error updating user data",
 			error: err,
@@ -65,11 +78,8 @@ router.patch("/users", async (req, res) => {
 	}
 });
 
-// Handler for Patch request to /api/user/:email
-// Updates user data by email
 router.patch("/user/:email", async (req, res) => {
 	try {
-		// Fetch the user data from the database
 		const user = await User.findOne({ email: req.params.email });
 		const updatedUser = await User.updateOne(
 			{ email: req.params.email },
@@ -77,6 +87,7 @@ router.patch("/user/:email", async (req, res) => {
 		);
 		res.status(200).json(updatedUser);
 	} catch (err) {
+		console.error("Error updating user data by email:", err);
 		res.status(400).json({
 			message: "Error updating user data",
 			error: err,
@@ -84,14 +95,12 @@ router.patch("/user/:email", async (req, res) => {
 	}
 });
 
-// Handler for GET request to /api/user/:email
-// Fetches user data by email
 router.get("/user/:email", async (req, res) => {
 	try {
-		// Fetch the user data from the database
 		const user = await User.findOne({ email: req.params.email });
 		res.status(200).json(user);
 	} catch (err) {
+		console.error("Error fetching user data by email:", err);
 		res.status(400).json({
 			message: "Error fetching user data",
 			error: err,
@@ -99,8 +108,6 @@ router.get("/user/:email", async (req, res) => {
 	}
 });
 
-// Handler for POST requests to /users
-// Registers a new user
 router.post("/", async (req, res) => {
 	const {
 		name,
@@ -119,7 +126,6 @@ router.post("/", async (req, res) => {
 	} = req.body;
 
 	try {
-		// Validation
 		if (
 			!name ||
 			!username ||
@@ -132,7 +138,7 @@ router.post("/", async (req, res) => {
 			return res.status(400).json({ message: "Please enter all fields" });
 		}
 
-		const existingUser = await User.findOne({ email: email });
+		const existingUser = await User.findOne({ email });
 		if (existingUser) {
 			return res.status(400).json({ message: "User already exists" });
 		}
@@ -143,11 +149,9 @@ router.post("/", async (req, res) => {
 				.json({ message: "Password must be at least 6 characters" });
 		}
 
-		// Hash password
 		const salt = await bcrypt.genSalt();
 		const passwordHash = await bcrypt.hash(password, salt);
 
-		// Save new user
 		const newUser = new User({
 			name,
 			username,
@@ -166,7 +170,6 @@ router.post("/", async (req, res) => {
 		});
 		await newUser.save();
 
-		// log in user token
 		const token = jwt.sign(
 			{
 				user: newUser._id,
@@ -174,7 +177,6 @@ router.post("/", async (req, res) => {
 			process.env.JWT_SECRET
 		);
 
-		// send token in HTTP-only cookie
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: true,
@@ -183,6 +185,7 @@ router.post("/", async (req, res) => {
 
 		res.status(200).json({ message: "User created successfully" });
 	} catch (err) {
+		console.error("Error creating user:", err);
 		res.status(400).json({
 			message: "Error creating user",
 			error: err,
@@ -190,24 +193,19 @@ router.post("/", async (req, res) => {
 	}
 });
 
-// Handler for POST request to /users/login
-// Login user
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
 
 	try {
-		// Validation
 		if (!email || !password) {
 			return res.status(400).json({ message: "Please enter all fields" });
 		}
 
-		// Check if user exists
-		const existingUser = await User.findOne({ email: email });
+		const existingUser = await User.findOne({ email });
 		if (!existingUser) {
 			return res.status(400).json({ message: "User does not exist" });
 		}
 
-		// Check if password is correct
 		const passwordMatch = await bcrypt.compare(
 			password,
 			existingUser.passwordHash
@@ -216,7 +214,6 @@ router.post("/login", async (req, res) => {
 			return res.status(400).json({ message: "Invalid password" });
 		}
 
-		// Generate JWT token
 		const token = jwt.sign(
 			{
 				user: existingUser._id,
@@ -224,17 +221,15 @@ router.post("/login", async (req, res) => {
 			process.env.JWT_SECRET
 		);
 
-		// Send token in HTTP-only cookie
 		res.cookie("token", token, {
 			httpOnly: true,
 			secure: true,
 			sameSite: "none",
 		});
 
-		res
-			.status(200)
-			.json({ message: "Logged in successfully", token: token, email: email });
+		res.status(200).json({ message: "Logged in successfully", token, email });
 	} catch (err) {
+		console.error("Error logging in:", err);
 		res.status(400).json({
 			message: "Error logging in",
 			error: err,
@@ -242,8 +237,6 @@ router.post("/login", async (req, res) => {
 	}
 });
 
-// Handler for GET request to /users/logout
-// Logout user
 router.get("/logout", (req, res) => {
 	res
 		.cookie("token", "", {
@@ -255,8 +248,6 @@ router.get("/logout", (req, res) => {
 		.send();
 });
 
-// Handler for GET request to /users/loggedIn
-// Check if user is logged in
 router.get("/loggedIn", (req, res) => {
 	try {
 		const token = req.cookies.token;
@@ -268,12 +259,11 @@ router.get("/loggedIn", (req, res) => {
 
 		res.send(true);
 	} catch (err) {
+		console.error("Error checking login status:", err);
 		res.json(false);
 	}
 });
 
-// Handler for GET request to /users/verify
-// Verify user
 router.get("/verify", async (req, res) => {
 	try {
 		const user = await User.findOne({ verificationCode: req.query.code });
@@ -287,6 +277,7 @@ router.get("/verify", async (req, res) => {
 		);
 		res.status(200).json(updatedUser);
 	} catch (err) {
+		console.error("Error verifying user:", err);
 		res.status(400).json({
 			message: "Error verifying user",
 			error: err,
@@ -294,12 +285,11 @@ router.get("/verify", async (req, res) => {
 	}
 });
 
-// Handler for POST request to /users/forgotPassword
-// Send password reset email
 router.post("/forgotPassword", async (req, res) => {
 	try {
 		// TODO: Send password reset email
 	} catch (err) {
+		console.error("Error sending password reset email:", err);
 		res.status(400).json({
 			message: "Error sending password reset email",
 			error: err,
@@ -307,12 +297,11 @@ router.post("/forgotPassword", async (req, res) => {
 	}
 });
 
-// Handler for POST request to /users/resetPassword
-// Reset user password
 router.post("/resetPassword", async (req, res) => {
 	try {
 		// TODO: Reset user password
 	} catch (err) {
+		console.error("Error resetting password:", err);
 		res.status(400).json({
 			message: "Error resetting password",
 			error: err,

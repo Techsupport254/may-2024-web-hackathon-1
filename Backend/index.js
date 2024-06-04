@@ -7,7 +7,7 @@ const Token = require("./Routers/TokenRouter");
 
 // Set up server
 const app = express();
-const PORT = process.env.PORT || 8001;
+const PORT = process.env.PORT || 8002;
 
 app.use(express.json());
 
