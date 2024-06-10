@@ -1,7 +1,7 @@
 import React from "react";
 import "./Footer.css";
 import { TextField } from "@mui/material";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/logo.png";
 
 const Footer = () => {
 	return (

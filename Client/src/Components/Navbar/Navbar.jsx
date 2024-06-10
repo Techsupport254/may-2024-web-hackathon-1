@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import "./Navbar.css";
-import Logo from "../../assets/logo.png";
+// import Logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
 import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
@@ -33,7 +33,10 @@ const Navbar = () => {
 			<div className="NavbarContainer">
 				<div className="NavbarLogo">
 					<Link to="/">
-						<img src={Logo} alt="logo" />
+						<img
+							src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
+							alt="logo"
+						/>
 						<span>
 							Agri<p>solve</p>
 						</span>
