@@ -1,14 +1,17 @@
 import React from "react";
 import "./Footer.css";
 import { TextField } from "@mui/material";
-import Logo from "../../assets/logo.png";
+// import Logo from "../../assets/logo.png";
 
 const Footer = () => {
 	return (
 		<footer>
 			<div className="FooterContainer">
 				<div className="FooterLogo">
-					<img src={Logo} alt="logo" />
+					<img
+						src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
+						alt="logo"
+					/>
 					<span>Agrisolve</span>
 				</div>
 				<div className="FooterContent">
