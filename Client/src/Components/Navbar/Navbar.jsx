@@ -1,6 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import "./Navbar.css";
-import Logo from "../../Assets/Logo.png";
+import Logo from "../../Assets/logo.png";
 import { Link } from "react-router-dom";
 import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
