@@ -1,3 +1,4 @@
+// Cart.js
 import React, { useState, useEffect, useContext } from "react";
 import "./Cart.css";
 import Box from "@mui/material/Box";
@@ -12,87 +13,126 @@ import Payment from "../../Components/Payment/Payment";
 import CartLeft from "../../Components/CartLeft/CartLeft";
 import { Skeleton } from "antd";
 import { ApiContext } from "../../Context/ApiProvider";
+import axios from "axios";
 
 const steps = ["Payment and Delivery Methods", "Fill Information", "Payment"];
 
 const Cart = () => {
-	const {
-		userData,
-		cartItems: cartItemsData,
-		products,
-	} = useContext(ApiContext);
+	const { userData } = useContext(ApiContext);
+	const [cartItems, setCartItems] = useState([]);
 	const [activeStep, setActiveStep] = useState(0);
 	const [completed, setCompleted] = useState({});
 	const [deliveryMethod, setDeliveryMethod] = useState(null);
 	const [deliveryFee, setDeliveryFee] = useState(0);
 	const [selectedLocation, setSelectedLocation] = useState(null);
-
-	const filteredProductsMap = new Map();
-
-
-	cartItemsData?.forEach((cartItem) => {
-		console.log(cartItem);
-		const product = products.find(
-			(product) => product._id === cartItem.productId
-		);
-		if (product) {
-			if (filteredProductsMap.has(product._id)) {
-				// If the product already exists in the map, increment its quantity
-				filteredProductsMap.get(product._id).quantity += cartItem.quantity;
-			} else {
-				// If the product doesn't exist in the map, add it with its quantity
-				filteredProductsMap.set(product._id, {
-					...product,
-					quantity: cartItem.quantity,
-				});
-			}
-		}
-	});
-
-	const filteredProducts = Array.from(filteredProductsMap?.values());
-
-	// fetch cart items from local storage
-	const [cartItems, setCartItems] = useState(
-		JSON.parse(localStorage.getItem("cart")) || []
-	);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
+	const [totalPrice, setTotalPrice] = useState(0);
 
 	useEffect(() => {
-		localStorage.setItem("cart", JSON.stringify(cartItems));
+		const fetchCartItems = async () => {
+			try {
+				const response = await axios.get(
+					`http://localhost:8000/cart/${userData?._id}`
+				);
+				const itemsWithPrices = await Promise.all(
+					response.data.products.map(async (item) => {
+						const productResponse = await axios.get(
+							`http://localhost:8000/products/${item.productId}`
+						);
+						return { ...item, price: productResponse.data.price };
+					})
+				);
+				setCartItems(itemsWithPrices);
+				setLoading(false);
+			} catch (error) {
+				console.error("Error fetching cart items:", error);
+				setLoading(false);
+			}
+		};
+
+		if (userData?._id) {
+			fetchCartItems();
+		}
+	}, [userData?._id]);
+
+	useEffect(() => {
+		const calculateTotalPrice = () => {
+			const total = cartItems.reduce(
+				(acc, item) => acc + item.price * item.quantity,
+				0
+			);
+			setTotalPrice(total);
+		};
+		calculateTotalPrice();
 	}, [cartItems]);
 
-	const totalPrice = filteredProducts?.reduce(
-		(acc, item) => acc + item.price * item.quantity,
-		0
-	);
-
-	const handleIncreaseQuantity = (itemId) => {
-		setCartItems((prevItems) =>
-			prevItems.map((item) =>
-				item.id === itemId ? { ...item, quantity: item.quantity + 1 } : item
-			)
-		);
+	const handleIncreaseQuantity = (productId) => {
+		const item = cartItems.find((item) => item.productId === productId);
+		if (item) {
+			handleQuantityChange(productId, item.quantity + 1);
+		}
 	};
 
-	const handleDecreaseQuantity = (itemId) => {
-		setCartItems((prevItems) =>
-			prevItems.map((item) =>
-				item.id === itemId && item.quantity > 1
-					? { ...item, quantity: item.quantity - 1 }
-					: item
-			)
-		);
+	const handleDecreaseQuantity = (productId) => {
+		const item = cartItems.find((item) => item.productId === productId);
+		if (item && item.quantity > 1) {
+			handleQuantityChange(productId, item.quantity - 1);
+		}
 	};
 
-	const handleRemoveItem = (itemId) => {
-		setCartItems((prevItems) => prevItems.filter((item) => item.id !== itemId));
+	const handleQuantityChange = async (productId, newQuantity) => {
+		if (newQuantity < 1) return; // Prevent setting negative quantities
+		try {
+			// Send a PATCH request to update the quantity on the server
+			const response = await axios.patch(
+				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				{ quantity: newQuantity },
+				{
+					headers: { "Content-Type": "application/json" },
+				}
+			);
 
-		// Update local storage to reflect changes
-		const updatedCartItems = cartItems.filter((item) => item.id !== itemId);
-		localStorage.setItem("cart", JSON.stringify(updatedCartItems));
+			if (response.status === 200) {
+				// Update the quantity locally
+				setCartItems((prevCartItems) =>
+					prevCartItems.map((item) =>
+						item.productId === productId
+							? { ...item, quantity: newQuantity }
+							: item
+					)
+				);
+			}
+		} catch (error) {
+			// Rollback the local changes if an error occurs
+			setError(
+				error.response?.data.message ||
+					"An error occurred while updating quantity."
+			);
+		}
+	};
 
-		// Reload the cart from local storage
-		const reloadedCart = JSON.parse(localStorage.getItem("cart"));
-		setCartItems(reloadedCart);
+	const handleRemoveItem = async (productId) => {
+		try {
+			// Optimistically remove the item from the cart locally
+			setCartItems((prevCartItems) =>
+				prevCartItems.filter((item) => item.productId !== productId)
+			);
+
+			// Send a DELETE request to remove the item from the server
+			await axios.delete(
+				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				{
+					headers: { "Content-Type": "application/json" },
+				}
+			);
+		} catch (error) {
+			// Rollback the local changes if an error occurs
+			setError(
+				error.response?.data.message ||
+					"An error occurred while removing from cart."
+			);
+		}
 	};
 
 	const totalSteps = () => {
@@ -155,31 +195,30 @@ const Cart = () => {
 						deliveryMethod={deliveryMethod}
 						deliveryFee={deliveryFee}
 						selectedLocation={selectedLocation}
+						products={cartItems} // Pass cart items to Pay component
 					/>
 				);
 			default:
 				return null;
 		}
 	};
-console.log(filteredProducts);
-	// Check if cart is empty
-	const isCartEmpty = filteredProducts?.length === 0;
-	// Assuming totalPrice is a number variable containing the total price
+
+	const isCartEmpty = cartItems?.length === 0;
 	const formattedPrice = totalPrice
 		.toFixed(2)
 		.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	const totalDisplay = `${formattedPrice}`;
+	const totalDisplay = `KSh. ${formattedPrice}`;
 
 	return (
 		<div className="Cart">
 			<div className="LeftCart">
 				<CartLeft
-					totalPrice={totalPrice}
-					cartItems={filteredProducts}
+					cartItems={cartItems}
 					handleIncreaseQuantity={handleIncreaseQuantity}
 					handleDecreaseQuantity={handleDecreaseQuantity}
+					handleQuantityChange={handleQuantityChange}
 					handleRemoveItem={handleRemoveItem}
-					setCartItems={setCartItems}
+					error={error}
 				/>
 			</div>
 			{isCartEmpty ? (
@@ -216,8 +255,7 @@ console.log(filteredProducts);
 									<Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
 										<Box sx={{ flex: "1 1 auto" }} />
 										<Button variant="contained" onClick={handleReset}>
-											<i className="fas fa-download"></i>
-											Receipt
+											<i className="fas fa-download"></i> Receipt
 										</Button>
 									</Box>
 								</React.Fragment>
@@ -231,13 +269,14 @@ console.log(filteredProducts);
 										{activeStep !== 2 && (
 											<strong>
 												<span>Total:</span>
-												<span>KSh. {totalDisplay}</span>
+												<span>{totalDisplay}</span>
 											</strong>
 										)}
 									</div>
 								</React.Fragment>
 							)}
 						</div>
+						{error && <div className="error">{error}</div>}
 					</Box>
 				</div>
 			)}

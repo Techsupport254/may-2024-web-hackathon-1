@@ -16,7 +16,7 @@ const ApiProvider = ({ children }) => {
 	const [events, setEvents] = useState([]);
 	const [pendingOrders, setPendingOrders] = useState([]);
 	const [cartItems, setCartItems] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
+	const [orderData, setOrderData] = useState([]);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -27,7 +27,7 @@ const ApiProvider = ({ children }) => {
 
 				try {
 					const response = await axios.get(
-						`https://agrisolve.vercel.app/auth/user/${user?.email}`,
+						`https://agrisolve.vercel.app/auth/users/${user.email}`,
 						{
 							headers: {
 								"x-auth-token": user.token,
@@ -96,7 +96,9 @@ const ApiProvider = ({ children }) => {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const response = await axios.get("https://agrisolve.vercel.app/products");
+				const response = await axios.get(
+					"https://agrisolve.vercel.app/products"
+				);
 				const filteredProducts = response.data.filter(
 					(product) => product.productStatus !== "Draft"
 				);
@@ -109,11 +111,24 @@ const ApiProvider = ({ children }) => {
 		fetchProducts();
 	}, []);
 
+	const fetchOrderItems = async (userId) => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/order/user/${userId}`
+			);
+			if (response.data) {
+				setOrderData(response.data);
+			}
+		} catch (error) {
+			console.error("Error fetching order items:", error);
+		}
+	};
 
 	useEffect(() => {
 		if (userData?.id) {
-			fetchCartItems(userData?.id);
-			fetchOrders(userData?.id);
+			fetchCartItems(userData.id);
+			fetchOrders(userData.id);
+			fetchOrderItems(userData.id);
 		}
 	}, [userData]);
 
@@ -121,7 +136,7 @@ const ApiProvider = ({ children }) => {
 		try {
 			if (userData) {
 				await axios.patch(
-					`https://agrisolve.vercel.app/auth/user/${userData?.email}`,
+					`https://agrisolve.vercel.app/auth/users/${userData.email}`,
 					{
 						isRemember: false,
 						loginStatus: "loggedOut",
@@ -130,7 +145,7 @@ const ApiProvider = ({ children }) => {
 					},
 					{
 						headers: {
-							"x-auth-token": userData?.token,
+							"x-auth-token": userData.token,
 						},
 					}
 				);
@@ -156,12 +171,11 @@ const ApiProvider = ({ children }) => {
 
 	const fetchCartItems = async (userId) => {
 		try {
-			const response = await axios.get(`https://agrisolve.vercel.app/cart/${userId}`);
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/cart/${userId}`
+			);
 			if (response.data) {
-				const cartItems = response.data.products;
-				if (cartItems) {
-					setCartItems(cartItems);
-				}
+				setCartItems(response.data.products);
 			}
 		} catch (error) {
 			console.error("Error fetching cart items:", error);
@@ -170,7 +184,9 @@ const ApiProvider = ({ children }) => {
 
 	const fetchOrders = async (userId) => {
 		try {
-			const response = await axios.get(`https://agrisolve.vercel.app/order/${userId}`);
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/order/user/${userId}`
+			);
 			setPendingOrders(response.data);
 		} catch (error) {
 			console.error("Error fetching orders:", error);
@@ -192,6 +208,7 @@ const ApiProvider = ({ children }) => {
 				events,
 				pendingOrders,
 				cartItems,
+				orderData,
 				handleLogin,
 				handleLogout,
 				fetchCartItems,

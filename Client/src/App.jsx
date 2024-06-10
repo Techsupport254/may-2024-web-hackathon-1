@@ -8,7 +8,7 @@ import Categories from "./Pages/Categories/Categories";
 import Consult from "./Pages/Consult/Consult";
 import Cart from "./Pages/Cart/Cart";
 import Profile from "./Components/Profile/Profile";
-import Orders from "./Components/Orders/Orders";
+import Orders from "./Pages/Orders/Orders";
 import Register from "./Pages/Register/Register";
 import Login from "./Pages/Login/Login";
 import Forgot from "./Pages/Forgot/Forgot";

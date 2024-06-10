@@ -1,31 +1,45 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./Pay.css";
 import { Modal } from "antd";
 import axios from "axios";
 import PropTypes from "prop-types";
+import { ApiContext } from "../../Context/ApiProvider";
 
 const Pay = ({
 	totalPrice,
 	handleNext,
-	userData,
 	products,
 	deliveryFee,
 	deliveryMethod,
 	selectedLocation,
-	billingAddress, // Assuming you have this data available in your context or props
-	shippingAddress, // Assuming you have this data available in your context or props
 }) => {
-	const [selectedAccount, setSelectedAccount] = useState(null);
+	const { userData } = useContext(ApiContext);
 	const [loading, setLoading] = useState(false);
 	const [paying, setPaying] = useState(false);
-	const [isPaid, setIsPaid] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [pendingPayment, setPendingPayment] = useState(false);
 	const [paymentMethod, setPaymentMethod] = useState("");
+	const [tax, setTax] = useState(0);
+	const [isPaid, setIsPaid] = useState(false); // Add isPaid state
+
+	const defaultBillingAddress = {
+		street: "123 Main St",
+		city: "Nairobi",
+		state: "Nairobi",
+		zipCode: "00100",
+		country: "Kenya",
+	};
+
+	const defaultShippingAddress = {
+		street: "123 Main St",
+		city: "Nairobi",
+		state: "Nairobi",
+		zipCode: "00100",
+		country: "Kenya",
+	};
 
 	const handleOpenModal = () => {
 		setOpenModal(true);
-
 		setLoading(true);
 		setTimeout(() => {
 			setLoading(false);
@@ -35,41 +49,41 @@ const Pay = ({
 
 	const handlePayment = async () => {
 		try {
-			setPaying(true); // Assuming you have a state setter for tracking payment status
+			setPaying(true);
 
-			const username = userData?.username; // Assuming userData is your user's data
+			if (!userData?._id) {
+				throw new Error("User ID is not available");
+			}
+			if (!products || products.length === 0) {
+				throw new Error("Products are not available");
+			}
+
+			const username = userData?.username;
 			const uid = Date.now();
 			const orderId = `${username}-${uid}`;
 
 			const paymentData = {
-				amount: parseFloat(totalAmount.toFixed(2)),
+				amount: parseFloat((totalPrice + deliveryFee + tax).toFixed(2)),
 				email: userData?.email,
 				orderId: orderId,
-				userId: userData.id,
-				paymentMethod: paymentMethod, // Assuming this is defined in your context
-				deliveryMethod: deliveryMethod, // Assuming this is defined in your context
-				products: products, // Assuming this is defined in your context
-				location: selectedLocation?.display_name, // Assuming this is defined in your context
+				userId: userData._id,
+				paymentMethod: paymentMethod,
+				deliveryMethod: deliveryMethod,
+				products: products,
+				location: selectedLocation?.display_name,
 				reason: "Payment for products",
-				number: userData?.phone || "", // Assuming userData has phone number
-				holder: userData?.name || "", // Assuming userData has full name
-				billingAddress: {
-					street: "123 Main St",
-					city: "Nairobi",
-					state: "Nairobi",
-					zipCode: "00100",
-					country: "Kenya",
-				},
-				shippingAddress: {
-					street: "123 Main St",
-					city: "Nairobi",
-					state: "Nairobi",
-					zipCode: "00100",
-					country: "Kenya",
-				},
+				number: userData?.phone || "",
+				holder: userData?.name || "",
+				billingAddress: defaultBillingAddress,
+				shippingAddress: defaultShippingAddress,
+				totalAmount: parseFloat((totalPrice + deliveryFee + tax).toFixed(2)),
+				tax: parseFloat(tax.toFixed(2)),
+				deliveryFee: parseFloat(deliveryFee.toFixed(2)),
+				discounts: [],
 			};
-			console.log(userData);
-			console.log(paymentData);
+
+			console.log("Payment Data:", paymentData);
+
 			const response = await axios.post(
 				"http://localhost:8000/payment/initiate-payment",
 				paymentData
@@ -88,7 +102,7 @@ const Pay = ({
 			setPaying(false);
 			Modal.error({
 				title: "Payment Error",
-				content: "There was an error initiating your payment.",
+				content: error.message || "There was an error initiating your payment.",
 			});
 		}
 	};
@@ -106,19 +120,16 @@ const Pay = ({
 				switch (paymentStatus) {
 					case "success":
 						console.log("Payment successful");
-						// Update your application state or UI as needed
+						setIsPaid(true); // Set isPaid to true on successful payment
 						break;
 					case "failed":
 						console.error("Payment failed");
-						// Handle failed payment case
 						break;
 					case "cancelled":
 						console.error("Payment was cancelled by the user");
-						// Handle cancelled payment case
 						break;
 					default:
 						console.error("Unknown payment status");
-					// Handle unknown status
 				}
 			} else {
 				throw new Error("Unable to check payment status");
@@ -148,7 +159,6 @@ const Pay = ({
 		});
 	};
 
-	const tax = 0.0;
 	const totalAmount = totalPrice + tax + deliveryFee;
 
 	return (
@@ -301,16 +311,13 @@ const Pay = ({
 	);
 };
 
-export default Pay;
-
-// validate props
-
 Pay.propTypes = {
 	totalPrice: PropTypes.number.isRequired,
+	handleNext: PropTypes.func.isRequired,
+	products: PropTypes.array.isRequired,
 	deliveryFee: PropTypes.number.isRequired,
 	deliveryMethod: PropTypes.string.isRequired,
-	products: PropTypes.array.isRequired,
-	selectedLocation: PropTypes.object.isRequired,
-	billingAddress: PropTypes.object.isRequired, // Add billing address prop validation
-	shippingAddress: PropTypes.object.isRequired, // Add shipping address prop validation
+	selectedLocation: PropTypes.object,
 };
+
+export default Pay;

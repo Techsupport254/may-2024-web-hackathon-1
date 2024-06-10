@@ -1,6 +1,6 @@
 import React from "react";
 import "./ProfileRight.css";
-import Orders from "../Orders/Orders";
+import Orders from "../../Pages/Orders/Orders";
 import ProfileAccount from "../ProfileAccount/ProfileAccount";
 import Notifications from "../Notifications/Notifications";
 import AccountConsults from "../AccountConsults/AccountConsults";

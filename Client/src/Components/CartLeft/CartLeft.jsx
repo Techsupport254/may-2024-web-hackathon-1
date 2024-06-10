@@ -1,96 +1,45 @@
-import React, { useState, useContext } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Badge } from "antd";
 import "./CartLeft.css";
 import { Input } from "@mui/material";
-import { ApiContext } from "../../Context/ApiProvider";
 
-const CartLeft = ({ cartItems, setCartItems }) => {
-	const { userData } = useContext(ApiContext);
-	const [error, setError] = useState(null);
+const CartLeft = ({
+	cartItems,
+	handleIncreaseQuantity,
+	handleDecreaseQuantity,
+	handleQuantityChange,
+	handleRemoveItem,
+	error,
+}) => {
+	const [detailedCartItems, setDetailedCartItems] = useState([]);
 
-	const handleAddToCart = async (productId, quantity) => {
-		try {
-			const response = await axios.post(
-				"https://agrisolve.vercel.app/cart",
-				{
-					userId: userData?.id,
-					productId: productId,
-					quantity: quantity,
-				},
-				{
-					headers: { "Content-Type": "application/json" },
-				}
-			);
-			if (response.status === 200) {
-				window.location.reload(); // Reload the page
+	useEffect(() => {
+		const fetchProductDetails = async (productId) => {
+			try {
+				const response = await fetch(
+					`http://localhost:8000/products/${productId}`
+				);
+				const data = await response.json();
+				return data;
+			} catch (err) {
+				console.log(err);
+				return null;
 			}
-		} catch (error) {
-			setError(
-				error.response?.data.message ||
-					"An error occurred while adding to cart."
-			);
-		}
-	};
+		};
 
-	const handleRemoveItem = async (productId) => {
-		try {
-			// Optimistically remove the item from the cart locally
-			setCartItems((prevCartItems) =>
-				prevCartItems.filter((item) => item._id !== productId)
+		const getDetailedCartItems = async () => {
+			const detailedItems = await Promise.all(
+				cartItems.map(async (item) => {
+					const productDetails = await fetchProductDetails(item.productId);
+					return { ...item, ...productDetails };
+				})
 			);
+			setDetailedCartItems(detailedItems);
+		};
 
-			// Send a DELETE request to remove the item from the server
-			await axios.delete(
-				`https://agrisolve.vercel.app/cart/${userData?.id}/${productId}`,
-				{
-					headers: { "Content-Type": "application/json" },
-				}
-			);
-
-			// Reload the page
-			window.location.reload();
-		} catch (error) {
-			// Rollback the local changes if an error occurs
-			setCartItems((prevCartItems) => [...prevCartItems]); // Reset to previous state
-			setError(
-				error.response?.data.message ||
-					"An error occurred while removing from cart."
-			);
-		}
-	};
-
-	const handleQuantityChange = async (productId, newQuantity) => {
-		if (newQuantity < 1) return; // Prevent setting negative quantities
-		try {
-			// Optimistically update the quantity locally
-			setCartItems((prevCartItems) =>
-				prevCartItems?.map((item) =>
-					item._id === productId ? { ...item, quantity: newQuantity } : item
-				)
-			);
-
-			// Send a PATCH request to update the quantity on the server
-			await axios.patch(
-				`https://agrisolve.vercel.app/cart/${userData?.id}/${productId}`,
-				{ quantity: newQuantity },
-				{
-					headers: { "Content-Type": "application/json" },
-				}
-			);
-
-			// Reload the page
-			window.location.reload();
-		} catch (error) {
-			// Rollback the local changes if an error occurs
-			setCartItems((prevCartItems) => [...prevCartItems]); // Reset to previous state
-			setError(
-				error.response?.data.message ||
-					"An error occurred while updating quantity."
-			);
-		}
-	};
+		getDetailedCartItems();
+	}, [cartItems]);
 
 	return (
 		<div className="CartLeft">
@@ -99,7 +48,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 				Items
 			</h2>
 			<div className="CartItems">
-				{cartItems?.length === 0 ? (
+				{detailedCartItems?.length === 0 ? (
 					<div className="EmptyCart">
 						<Badge count={0} showZero style={{ backgroundColor: "#52c41a" }}>
 							<i
@@ -116,8 +65,8 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 						</button>
 					</div>
 				) : (
-					cartItems?.map((item) => (
-						<div className="CartItem" key={item._id}>
+					detailedCartItems?.map((item) => (
+						<div className="CartItem" key={item.productId}>
 							<img
 								src={item.images[0]}
 								alt={item.productName}
@@ -134,7 +83,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 									</span>
 									<div className="Brand">
 										<span>Brand: </span>
-										<p>{item.productName}</p>
+										<p>{item.brandName}</p>
 									</div>
 									<div className="Categor">
 										<span>Category: </span>
@@ -147,9 +96,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 								<div className="QuantityBtns">
 									<button
 										className="QuantityBtn"
-										onClick={() =>
-											handleQuantityChange(item._id, item.quantity - 1)
-										}
+										onClick={() => handleDecreaseQuantity(item.productId)}
 									>
 										-
 									</button>
@@ -158,7 +105,10 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 										type="number"
 										value={item.quantity}
 										onChange={(e) =>
-											handleQuantityChange(item._id, e.target.value)
+											handleQuantityChange(
+												item.productId,
+												Number(e.target.value)
+											)
 										}
 										className="QuantityInput"
 										size="small"
@@ -167,16 +117,14 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 									/>
 									<button
 										className="QuantityBtn"
-										onClick={() =>
-											handleQuantityChange(item._id, item.quantity + 1)
-										}
+										onClick={() => handleIncreaseQuantity(item.productId)}
 									>
 										+
 									</button>
 								</div>
 								<button
 									className="RemoveCartItemBtn"
-									onClick={() => handleRemoveItem(item._id)}
+									onClick={() => handleRemoveItem(item.productId)}
 								>
 									<i className="fas fa-trash"></i>
 								</button>
@@ -192,8 +140,11 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 
 CartLeft.propTypes = {
 	cartItems: PropTypes.array.isRequired,
-	userData: PropTypes.object.isRequired,
-	setCartItems: PropTypes.func.isRequired, // Modified prop type name
+	handleIncreaseQuantity: PropTypes.func.isRequired,
+	handleDecreaseQuantity: PropTypes.func.isRequired,
+	handleQuantityChange: PropTypes.func.isRequired,
+	handleRemoveItem: PropTypes.func.isRequired,
+	error: PropTypes.string,
 };
 
 export default CartLeft;

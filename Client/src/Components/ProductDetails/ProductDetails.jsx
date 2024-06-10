@@ -1,9 +1,11 @@
 import { Button } from "@mui/material";
 import axios from "axios";
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const ProductDetails = ({ product, tags, cartItems, id, userData }) => {
+const ProductDetails = ({ product, tags, cartItems, id }) => {
+	const { userData } = useContext(ApiContext);
 	const [adding, setAdding] = useState(false);
 	const [isInCart, setIsInCart] = useState(false);
 	const [error, setError] = useState(null);
@@ -17,24 +19,40 @@ const ProductDetails = ({ product, tags, cartItems, id, userData }) => {
 		e.preventDefault();
 		setAdding(true);
 		try {
-			const response = await axios.post(
-				"https://agrisolve.vercel.app/cart",
-				{
-					userId: userData?._id,
-					productId: product?._id,
-					productName: product?.productName,
-					quantity: 1,
-				},
-				{
-					headers: { "Content-Type": "application/json" },
-				}
-			);
+			if (!userData?._id) {
+				throw new Error("User ID is not available");
+			}
+			if (!product?._id) {
+				throw new Error("Product ID is not available");
+			}
+			const payload = {
+				userId: userData._id,
+				products: [
+					{
+						productId: product._id,
+						productName: product.productName,
+						quantity: 1,
+					},
+				],
+			};
+			console.log("Payload for adding to cart:", payload);
+			const response = await axios.post("http://localhost:8000/cart", payload, {
+				headers: { "Content-Type": "application/json" },
+			});
+			console.log("Response from adding to cart:", response);
 			if (response.status === 200) {
 				setIsInCart(true);
 				return true; // Return true to indicate successful addition
 			}
 		} catch (error) {
-			setError(error.message || "An error occurred while adding to cart.");
+			console.error(
+				"Error adding to cart:",
+				error.response?.data || error.message
+			);
+			setError(
+				error.response?.data?.message ||
+					"An error occurred while adding to cart."
+			);
 		} finally {
 			setAdding(false);
 		}
@@ -154,5 +172,4 @@ ProductDetails.propTypes = {
 	tags: PropTypes.array.isRequired,
 	cartItems: PropTypes.object.isRequired,
 	id: PropTypes.string.isRequired,
-	userData: PropTypes.object,
 };

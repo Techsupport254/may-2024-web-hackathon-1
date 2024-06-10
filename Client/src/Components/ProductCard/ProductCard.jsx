@@ -17,12 +17,16 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 		setAdding(true);
 		try {
 			const response = await axios.post(
-				"https://agrisolve.vercel.app/cart",
+				"http://localhost:8000/cart",
 				{
-					userId: userData?.id,
-					productId: product?._id,
-					productName: product?.productName,
-					quantity: 1,
+					userId: userData?._id,
+					products: [
+						{
+							productId: product?._id,
+							productName: product?.productName,
+							quantity: 1,
+						},
+					],
 				},
 				{
 					headers: { "Content-Type": "application/json" },
@@ -34,7 +38,14 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 				return true; // Indicates successful addition
 			}
 		} catch (error) {
-			setError(error.message || "An error occurred while adding to cart.");
+			console.error(
+				"Error adding to cart:",
+				error.response?.data || error.message
+			);
+			setError(
+				error.response?.data?.message ||
+					"An error occurred while adding to cart."
+			);
 		} finally {
 			setAdding(false);
 		}

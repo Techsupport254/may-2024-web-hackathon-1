@@ -1,7 +1,5 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import "./Navbar.css";
-// import Logo from "../../assets/logo.png";
-import { Link } from "react-router-dom";
 import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
@@ -28,11 +26,21 @@ const Navbar = () => {
 	const personalItems = NavbarData?.filter((item) => item.type === "personal");
 	const commonItems = NavbarData?.filter((item) => !item.type);
 
+	const navigateTo = (path) => {
+		window.location.href = path;
+	};
+
 	return (
 		<div className="Navbar">
 			<div className="NavbarContainer">
 				<div className="NavbarLogo">
-					<Link to="/">
+					<a
+						href="/"
+						onClick={(e) => {
+							e.preventDefault();
+							navigateTo("/");
+						}}
+					>
 						<img
 							src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
 							alt="logo"
@@ -40,7 +48,7 @@ const Navbar = () => {
 						<span>
 							Agri<p>solve</p>
 						</span>
-					</Link>
+					</a>
 				</div>
 				<div className="NavLeft">
 					<div className="Searchbar">
@@ -91,8 +99,12 @@ const Navbar = () => {
 											<Menu>
 												{item.menu.map((subItem, index) => (
 													<Menu.Item key={index}>
-														<Link
-															to={subItem.path}
+														<a
+															href={subItem.path}
+															onClick={(e) => {
+																e.preventDefault();
+																navigateTo(subItem.path);
+															}}
 															style={{
 																display: "flex",
 																gap: "10px",
@@ -105,7 +117,7 @@ const Navbar = () => {
 																{subItem.icon}
 															</div>
 															{subItem.title}
-														</Link>
+														</a>
 													</Menu.Item>
 												))}
 											</Menu>
@@ -114,17 +126,23 @@ const Navbar = () => {
 										trigger={["click"]}
 										arrow
 									>
-										<Link to={item.path} onClick={handleMenuToggle}>
+										<a href={item.path} onClick={(e) => e.preventDefault()}>
 											{item.icon}
 											{item.title}
 											<i className="fas fa-caret-down"></i>
-										</Link>
+										</a>
 									</Dropdown>
 								) : (
-									<Link to={item.path}>
+									<a
+										href={item.path}
+										onClick={(e) => {
+											e.preventDefault();
+											navigateTo(item.path);
+										}}
+									>
 										{item.icon}
 										{item.title}
-									</Link>
+									</a>
 								)}
 							</div>
 						))}
@@ -162,8 +180,12 @@ const Navbar = () => {
 																		</div>
 																	</div>
 																) : (
-																	<Link
-																		to={subItem.path}
+																	<a
+																		href={subItem.path}
+																		onClick={(e) => {
+																			e.preventDefault();
+																			navigateTo(subItem.path);
+																		}}
 																		style={{
 																			display: "flex",
 																			gap: "10px",
@@ -190,7 +212,7 @@ const Navbar = () => {
 																			pendingOrders.length !== 0 && (
 																				<Badge variant="dot" color="success" />
 																			)}
-																	</Link>
+																	</a>
 																)}
 															</Menu.Item>
 														))}
@@ -200,13 +222,7 @@ const Navbar = () => {
 												trigger={["click"]}
 												arrow
 											>
-												<Link
-													to={item.path}
-													onClick={(e) => {
-														e.preventDefault();
-														handleMenuToggle(e);
-													}}
-												>
+												<a href={item.path} onClick={(e) => e.preventDefault()}>
 													{userData?.profilePicture ? (
 														<img
 															src={
@@ -232,20 +248,32 @@ const Navbar = () => {
 													)}
 													{userData?.username}
 													<i className="fas fa-caret-down"></i>
-												</Link>
+												</a>
 											</Dropdown>
 										) : (
-											<Link to={item.path}>
+											<a
+												href={item.path}
+												onClick={(e) => {
+													e.preventDefault();
+													navigateTo(item.path);
+												}}
+											>
 												{item.icon}
 												{item.title}
-											</Link>
+											</a>
 										)}
 									</div>
 								);
 							} else {
 								return (
 									<div className="NavItem" key={index}>
-										<Link to={item.path}>
+										<a
+											href={item.path}
+											onClick={(e) => {
+												e.preventDefault();
+												navigateTo(item.path);
+											}}
+										>
 											{item.icon}
 											{item.title === "Cart" && cartItems?.length !== 0 && (
 												<Badge
@@ -253,7 +281,7 @@ const Navbar = () => {
 													color="success"
 												/>
 											)}
-										</Link>
+										</a>
 									</div>
 								);
 							}
