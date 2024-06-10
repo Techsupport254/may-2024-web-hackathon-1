@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "googleapis": "^137.1.0",
-    "mailgen": "^2.0.28",
-    "nodemailer": "^6.9.13"
-  }
-}
