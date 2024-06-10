@@ -10,6 +10,7 @@ const addressSchema = new mongoose.Schema({
 
 const productSchema = new mongoose.Schema({
 	productId: { type: String, required: true },
+	productName: { type: String, required: true },
 	quantity: { type: Number, default: 1 },
 	status: { type: String, default: "Pending" },
 });

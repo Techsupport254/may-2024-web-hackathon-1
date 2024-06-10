@@ -27,22 +27,8 @@
     width: 50%;
     height: 100%;
     border-radius: 10px 0 0;
-    background: url(../../assets/drone.png);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
     overflow: hidden;
-}
-
-.LoginLeftCont {
-    width: 90%;
-    height: 75%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.5);
+    background: #f5f5f5;
 }
 
 .LoginRight {
@@ -63,7 +49,7 @@
     align-items: center;
     justify-content: center;
     width: 80%;
-    height: 80%;
+    gap: 1rem;
     padding: 10px;
 }
 
@@ -73,10 +59,17 @@
     color: #2f3542;
 }
 
+.LoginCont img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+}
+
 .LoginCont p {
     font-size: 0.8rem;
-    font-weight: 400;
-    color: #2f3542;
+    color: #666;
 }
 
 .LoginCont form {
@@ -86,35 +79,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 2px;
+    gap: 1rem;
 }
 
 .LoginInput {
     width: 100%;
-    height: 40px;
-    border-radius: 5px;
-    margin: 15px 0;
-    padding: 2px;
-    outline: none;
 }
 
-.LoginInput label {
-    font-size: 0.8rem;
-    font-weight: 400;
-    color: #2f3542;
-    font-weight: 600;
-}
-
-.LoginInput input {
-    width: 97%;
-    height: 90%;
-    border: 1px solid #2f3542;
-    border-radius: 5px;
-    padding-left: 1.9rem;
-    outline: none;
-    margin-top: .1rem;
-    font-size: medium;
-}
 
 .LoginRemember {
     display: flex;
@@ -139,7 +110,7 @@
 
 .LoginBtns button {
     width: 45%;
-    height: 40px;
+    height: 3rem;
     border-radius: 5px;
     outline: none;
     font-size: 1rem;
@@ -163,6 +134,7 @@
     background: transparent;
     color: #010000;
     border: 2px solid #151212;
+    gap: 1rem;
 }
 
 .LoginBtn2 i {
@@ -170,64 +142,11 @@
 }
 
 .LoginForgot {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 20px;
     margin: 10px 0;
 }
 
-.LoginForgot p {
-    font-size: .8rem;
-}
 
 .input-container {
     position: relative;
     display: inline-block;
-}
-
-.input-container i {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-}
-
-.eye-visibility {
-    position: absolute;
-    top: 50%;
-    right: 5%;
-    transform: translateY(-50%);
-}
-
-.eye-visibility i {
-    cursor: pointer;
-}
-
-.LoginBtn2Google {
-    width: 100%;
-    height: 40px;
-    border-radius: 5px;
-    outline: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background: #fff;
-    border: 2px solid #151212;
-    color: #010000;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: .5rem;
-
-    & i {
-        font-size: 1.5rem;
-    }
-
-    &:hover {
-        transform: scale(1.05);
-    }
 }

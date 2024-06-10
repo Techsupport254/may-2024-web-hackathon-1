@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import PropTypes from "prop-types";
 import "./Home.css";
 import Products from "../../Pages/Products/Products";
@@ -11,23 +12,52 @@ import { Button, TextField } from "@mui/material";
 import deliveryImg from "../../assets/delivery.png";
 import noProductImage from "../../assets/nochat.png";
 import subscribeImg from "../../assets/subscribe.png";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const Home = ({ products, userData }) => {
+const Home = () => {
+	const { products, userData, isLoading } = useContext(ApiContext);
 	const advertProducts = products.slice(3, 5);
+
+	const renderProductsSection = (title, products) => (
+		<div className="Products FlexDisplay">
+			<div className="Header">
+				<h3>{title}</h3>
+				<span>
+					View All <i className="fas fa-arrow-right"></i>
+				</span>
+			</div>
+			{products.length > 0 ? (
+				<Products products={products} userData={userData} />
+			) : (
+				<div className="NoProduct FlexDisplay">
+					<img src={noProductImage} alt="no product" />
+					<h3>No Products for this category</h3>
+				</div>
+			)}
+		</div>
+	);
+
+	const renderSectionHeader = (title) => (
+		<div className="Header">
+			<h3>{title}</h3>
+		</div>
+	);
 
 	return (
 		<div className="Home FlexDisplay">
 			<div className="Landing FlexDisplay">
-				<Landing product={products[3]} userData={userData} />
+				<Landing
+					product={products[3]}
+					userData={userData}
+					isLoading={isLoading}
+				/>
 			</div>
 			<div className="Banner FlexDisplay">
 				<Banner products={products} userData={userData} />
 			</div>
 			<ShopByCategories products={products} userData={userData} />
 			<div className="Adverts FlexDisplay">
-				<div className="Header">
-					<h3>Best Sales</h3>
-				</div>
+				{renderSectionHeader("Best Sales")}
 				{advertProducts.length > 0 ? (
 					<BestSales products={advertProducts} userData={userData} />
 				) : (
@@ -37,38 +67,8 @@ const Home = ({ products, userData }) => {
 					</div>
 				)}
 			</div>
-			<div className="Products FlexDisplay">
-				<div className="Header">
-					<h3>Latest Products</h3>
-					<span>
-						View All <i className="fas fa-arrow-right"></i>
-					</span>
-				</div>
-				{products.length > 0 ? (
-					<Products products={products} userData={userData} />
-				) : (
-					<div className="NoProduct FlexDisplay">
-						<img src={noProductImage} alt="no product" />
-						<h3>No Products for this category</h3>
-					</div>
-				)}
-			</div>
-			<div className="Products FlexDisplay">
-				<div className="Header">
-					<h3>Recently Viewed</h3>
-					<span>
-						View All <i className="fas fa-arrow-right"></i>
-					</span>
-				</div>
-				{products.length > 0 ? (
-					<Products products={products} userData={userData} />
-				) : (
-					<div className="NoProduct FlexDisplay">
-						<img src={noProductImage} alt="no product" />
-						<h3>No Products for this category</h3>
-					</div>
-				)}
-			</div>
+			{renderProductsSection("Latest Products", products)}
+			{renderProductsSection("Recently Viewed", products)}
 			<div className="Delivery FlexDisplay">
 				<div className="DeliveryContainer FlexDisplay">
 					<div className="DeliveryLeft FlexDisplay">
@@ -97,26 +97,9 @@ const Home = ({ products, userData }) => {
 					</div>
 				</div>
 			</div>
-			<div className="Products FlexDisplay">
-				<div className="Header">
-					<h3>Agrisolve Top Sales</h3>
-					<span>
-						View All <i className="fas fa-arrow-right"></i>
-					</span>
-				</div>
-				{products.length > 0 ? (
-					<Products products={products} userData={userData} />
-				) : (
-					<div className="NoProduct FlexDisplay">
-						<img src={noProductImage} alt="no product" />
-						<h3>No Products for this category</h3>
-					</div>
-				)}
-			</div>
+			{renderProductsSection("Agrisolve Top Sales", products)}
 			<div className="Discount FlexDisplay">
-				<div className="Header">
-					<h3>Discounted Products</h3>
-				</div>
+				{renderSectionHeader("Discounted Products")}
 				{products.length > 0 ? (
 					<Discount product={products[1]} userData={userData} />
 				) : (
@@ -127,9 +110,7 @@ const Home = ({ products, userData }) => {
 				)}
 			</div>
 			<div className="Popular FlexDisplay">
-				<div className="Header">
-					<h3>Popular Products</h3>
-				</div>
+				{renderSectionHeader("Popular Products")}
 				{products.length > 0 ? (
 					<Popular products={products} userData={userData} />
 				) : (
@@ -180,6 +161,7 @@ const Home = ({ products, userData }) => {
 Home.propTypes = {
 	products: PropTypes.array.isRequired,
 	userData: PropTypes.object.isRequired,
+	isLoading: PropTypes.bool.isRequired,
 };
 
 export default Home;

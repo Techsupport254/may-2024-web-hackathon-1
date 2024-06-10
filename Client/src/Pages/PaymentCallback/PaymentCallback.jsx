@@ -105,6 +105,12 @@ const PaymentCallback = ({ userData }) => {
 							onClick={() => {
 								window.location.href = "/orders";
 							}}
+							style={{
+								backgroundColor: "var(--success-dark)",
+								"&:hover": {
+									backgroundColor: "var(--success-darker)",
+								},
+							}}
 						>
 							Continue
 						</Button>

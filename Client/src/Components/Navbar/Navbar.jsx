@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import "./Navbar.css";
 import Logo from "../../Assets/Logo.png";
 import { Link } from "react-router-dom";
@@ -6,16 +6,14 @@ import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
 import { InputAdornment, TextField } from "@mui/material";
-import PropTypes from "prop-types";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
-	const [user, setUser] = useState(null);
+const Navbar = () => {
+	const { userData, handleLogout, cartItems, pendingOrders } =
+		useContext(ApiContext);
+
 	const [searching, setSearching] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
-
-	useEffect(() => {
-		setUser(userData);
-	}, [userData]);
 
 	const handleMenuToggle = (e) => {
 		e.preventDefault();
@@ -28,8 +26,8 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 	};
 
 	const personalItems = NavbarData?.filter((item) => item.type === "personal");
-	// common items don't have type
 	const commonItems = NavbarData?.filter((item) => !item.type);
+
 	return (
 		<div className="Navbar">
 			<div className="NavbarContainer">
@@ -82,54 +80,51 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 						/>
 					</div>
 					<div className="NavbarLinks">
-						{commonItems?.map((item, index) => {
-							return (
-								<div className="NavItem" key={index}>
-									{item.menu ? (
-										<Dropdown
-											overlay={
-												<Menu>
-													{item.menu.map((subItem, index) => (
-														<Menu.Item key={index}>
-															<Link
-																to={subItem.path}
-																style={{
-																	display: "flex",
-																	gap: "10px",
-																}}
+						{commonItems?.map((item, index) => (
+							<div className="NavItem" key={index}>
+								{item.menu ? (
+									<Dropdown
+										overlay={
+											<Menu>
+												{item.menu.map((subItem, index) => (
+													<Menu.Item key={index}>
+														<Link
+															to={subItem.path}
+															style={{
+																display: "flex",
+																gap: "10px",
+															}}
+														>
+															<div
+																className="subItemIcon"
+																style={{ color: "green" }}
 															>
-																<div
-																	className="subItemIcon"
-																	style={{ color: "green" }}
-																>
-																	{subItem.icon}
-																</div>
-
-																{subItem.title}
-															</Link>
-														</Menu.Item>
-													))}
-												</Menu>
-											}
-											placement="bottomCenter"
-											trigger={["click"]}
-											arrow
-										>
-											<Link to={item.path} onClick={handleMenuToggle}>
-												{item.icon}
-												{item.title}
-												<i className="fas fa-caret-down"></i>
-											</Link>
-										</Dropdown>
-									) : (
-										<Link to={item.path}>
+																{subItem.icon}
+															</div>
+															{subItem.title}
+														</Link>
+													</Menu.Item>
+												))}
+											</Menu>
+										}
+										placement="bottomCenter"
+										trigger={["click"]}
+										arrow
+									>
+										<Link to={item.path} onClick={handleMenuToggle}>
 											{item.icon}
 											{item.title}
+											<i className="fas fa-caret-down"></i>
 										</Link>
-									)}
-								</div>
-							);
-						})}
+									</Dropdown>
+								) : (
+									<Link to={item.path}>
+										{item.icon}
+										{item.title}
+									</Link>
+								)}
+							</div>
+						))}
 					</div>
 				</div>
 				<div className="NavRight">
@@ -138,7 +133,7 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 							if (item.title === "Account") {
 								return (
 									<div className="NavItem" key={index}>
-										{user && user?.loginStatus === "loggedIn" ? (
+										{userData ? (
 											<Dropdown
 												overlay={
 													<Menu>
@@ -148,7 +143,6 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 																	<div
 																		style={{
 																			display: "flex",
-
 																			gap: "10px",
 																			borderTop: "1px solid #777",
 																		}}
@@ -210,11 +204,11 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 														handleMenuToggle(e);
 													}}
 												>
-													{user.profilePicture ? (
+													{userData?.profilePicture ? (
 														<img
 															src={
-																user.profilePicture
-																	? user.profilePicture
+																userData?.profilePicture
+																	? userData?.profilePicture
 																	: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 															}
 															style={{
@@ -223,7 +217,7 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 																borderRadius: "50%",
 																objectFit: "cover",
 															}}
-															alt={user.name}
+															alt={userData?.name}
 														/>
 													) : (
 														<i
@@ -233,8 +227,7 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 															}}
 														></i>
 													)}
-
-													{user.username}
+													{userData?.username}
 													<i className="fas fa-caret-down"></i>
 												</Link>
 											</Dropdown>
@@ -251,7 +244,7 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 									<div className="NavItem" key={index}>
 										<Link to={item.path}>
 											{item.icon}
-											{item.title == "Cart" && cartItems?.length !== 0 && (
+											{item.title === "Cart" && cartItems?.length !== 0 && (
 												<Badge
 													badgeContent={cartItems?.length}
 													color="success"
@@ -270,20 +263,3 @@ const Navbar = ({ userData, handleLogout, cartItems, pendingOrders }) => {
 };
 
 export default Navbar;
-
-// prop types
-
-Navbar.propTypes = {
-	NavbarData: PropTypes.array.isRequired,
-	userData: PropTypes.object,
-	handleLogout: PropTypes.func.isRequired,
-	cartItems: PropTypes.array.isRequired,
-	pendingOrders: PropTypes.array.isRequired,
-	handleMenuToggle: PropTypes.func.isRequired,
-	handleSearchToggle: PropTypes.func.isRequired,
-	searchInput: PropTypes.string.isRequired,
-	setSearchInput: PropTypes.func.isRequired,
-	searching: PropTypes.bool.isRequired,
-	setSearching: PropTypes.func.isRequired,
-	user: PropTypes.object.isRequired,
-};

@@ -2,7 +2,6 @@ import { useState } from "react";
 import "./Pay.css";
 import { Modal } from "antd";
 import axios from "axios";
-// props
 import PropTypes from "prop-types";
 
 const Pay = ({
@@ -13,6 +12,8 @@ const Pay = ({
 	deliveryFee,
 	deliveryMethod,
 	selectedLocation,
+	billingAddress, // Assuming you have this data available in your context or props
+	shippingAddress, // Assuming you have this data available in your context or props
 }) => {
 	const [selectedAccount, setSelectedAccount] = useState(null);
 	const [loading, setLoading] = useState(false);
@@ -31,6 +32,7 @@ const Pay = ({
 			setPendingPayment(true);
 		}, 2000);
 	};
+
 	const handlePayment = async () => {
 		try {
 			setPaying(true); // Assuming you have a state setter for tracking payment status
@@ -43,14 +45,31 @@ const Pay = ({
 				amount: parseFloat(totalAmount.toFixed(2)),
 				email: userData?.email,
 				orderId: orderId,
-				userId: userData._id,
+				userId: userData.id,
 				paymentMethod: paymentMethod, // Assuming this is defined in your context
 				deliveryMethod: deliveryMethod, // Assuming this is defined in your context
 				products: products, // Assuming this is defined in your context
 				location: selectedLocation?.display_name, // Assuming this is defined in your context
 				reason: "Payment for products",
+				number: userData?.phone || "", // Assuming userData has phone number
+				holder: userData?.name || "", // Assuming userData has full name
+				billingAddress: {
+					street: "123 Main St",
+					city: "Nairobi",
+					state: "Nairobi",
+					zipCode: "00100",
+					country: "Kenya",
+				},
+				shippingAddress: {
+					street: "123 Main St",
+					city: "Nairobi",
+					state: "Nairobi",
+					zipCode: "00100",
+					country: "Kenya",
+				},
 			};
-
+			console.log(userData);
+			console.log(paymentData);
 			const response = await axios.post(
 				"http://localhost:8000/payment/initiate-payment",
 				paymentData
@@ -292,4 +311,6 @@ Pay.propTypes = {
 	deliveryMethod: PropTypes.string.isRequired,
 	products: PropTypes.array.isRequired,
 	selectedLocation: PropTypes.object.isRequired,
+	billingAddress: PropTypes.object.isRequired, // Add billing address prop validation
+	shippingAddress: PropTypes.object.isRequired, // Add shipping address prop validation
 };

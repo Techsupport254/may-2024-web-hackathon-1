@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./Cart.css";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
@@ -11,10 +11,16 @@ import Pay from "../../Components/Pay/Pay";
 import Payment from "../../Components/Payment/Payment";
 import CartLeft from "../../Components/CartLeft/CartLeft";
 import { Skeleton } from "antd";
+import { ApiContext } from "../../Context/ApiProvider";
 
 const steps = ["Payment and Delivery Methods", "Fill Information", "Payment"];
 
-const Cart = ({ userData, cartItemsData, products }) => {
+const Cart = () => {
+	const {
+		userData,
+		cartItems: cartItemsData,
+		products,
+	} = useContext(ApiContext);
 	const [activeStep, setActiveStep] = useState(0);
 	const [completed, setCompleted] = useState({});
 	const [deliveryMethod, setDeliveryMethod] = useState(null);
@@ -23,7 +29,9 @@ const Cart = ({ userData, cartItemsData, products }) => {
 
 	const filteredProductsMap = new Map();
 
+
 	cartItemsData?.forEach((cartItem) => {
+		console.log(cartItem);
 		const product = products.find(
 			(product) => product._id === cartItem.productId
 		);
@@ -130,9 +138,9 @@ const Cart = ({ userData, cartItemsData, products }) => {
 			case 1:
 				return (
 					<Payment
-						handleNext={handleNext} // Add this line to pass handleNext as prop
-						handleBack={handleBack} // Add this line to pass handleBack as prop
-						deliveryMethod={deliveryMethod} // Pass the deliveryMethod prop if needed
+						handleNext={handleNext}
+						handleBack={handleBack}
+						deliveryMethod={deliveryMethod}
 						setDeliveryFee={setDeliveryFee}
 						deliveryFee={deliveryFee}
 						setSelectedLocation={setSelectedLocation}
@@ -153,9 +161,9 @@ const Cart = ({ userData, cartItemsData, products }) => {
 				return null;
 		}
 	};
-	console.log(cartItems);
-	// check if cart is empty
-	const isCartEmpty = cartItems?.length === 0;
+console.log(filteredProducts);
+	// Check if cart is empty
+	const isCartEmpty = filteredProducts?.length === 0;
 	// Assuming totalPrice is a number variable containing the total price
 	const formattedPrice = totalPrice
 		.toFixed(2)
@@ -171,17 +179,13 @@ const Cart = ({ userData, cartItemsData, products }) => {
 					handleIncreaseQuantity={handleIncreaseQuantity}
 					handleDecreaseQuantity={handleDecreaseQuantity}
 					handleRemoveItem={handleRemoveItem}
-					userData={userData}
 					setCartItems={setCartItems}
 				/>
 			</div>
 			{isCartEmpty ? (
-				(console.log(isCartEmpty),
-				(
-					<div className="RightCart">
-						<Skeleton active paragraph={{ rows: 10 }} />
-					</div>
-				))
+				<div className="RightCart">
+					<Skeleton active paragraph={{ rows: 10 }} />
+				</div>
 			) : (
 				<div className="RightCart">
 					<Box

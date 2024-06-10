@@ -30,6 +30,7 @@ router.post("/", async (req, res) => {
 	try {
 		const productObjects = products.map((product) => ({
 			productId: product.productId,
+			productName: product.productName,
 			quantity: product.quantity,
 			status: product.status,
 		}));
@@ -65,6 +66,20 @@ router.get("/", async (req, res) => {
 	try {
 		const orders = await Order.find();
 		res.json(orders);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// GET: Retrieve order by orderId
+router.get("/:orderId", async (req, res) => {
+	const { orderId } = req.params;
+	try {
+		const order = await Order.findOne({ orderId });
+		if (!order) {
+			return res.status(404).json({ message: "Order not found." });
+		}
+		res.json(order);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}
@@ -125,6 +140,16 @@ router.delete("/:orderId", async (req, res) => {
 	try {
 		const removedOrder = await Order.deleteOne({ orderId });
 		res.json(removedOrder);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// DELETE: Delete all orders
+router.delete("/", async (req, res) => {
+	try {
+		const removedOrders = await Order.deleteMany();
+		res.json(removedOrders);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

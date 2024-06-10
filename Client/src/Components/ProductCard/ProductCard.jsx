@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import "./ProductCard.css";
 import Skeleton from "../Skeleton/Skeleton";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
+const ProductCard = ({ product, isLoading, onProductClick }) => {
+	const { userData } = useContext(ApiContext);
 	const [adding, setAdding] = useState(false);
 	const [added, setAdded] = useState(false);
 	const [error, setError] = useState(null);
@@ -17,14 +19,16 @@ const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 			const response = await axios.post(
 				"http://localhost:8000/cart",
 				{
-					userId: userData?._id,
+					userId: userData?.id,
 					productId: product?._id,
+					productName: product?.productName,
 					quantity: 1,
 				},
 				{
 					headers: { "Content-Type": "application/json" },
 				}
 			);
+			console.log(response);
 			if (response.status === 200) {
 				setAdded(true);
 				return true; // Indicates successful addition
@@ -70,7 +74,6 @@ const ProductCard = ({ product, isLoading, onProductClick, userData }) => {
 	if (isLoading) {
 		return <Skeleton />;
 	}
-
 	return (
 		<div className="Product-Card">
 			<Link
@@ -121,5 +124,4 @@ ProductCard.propTypes = {
 	product: PropTypes.object,
 	isLoading: PropTypes.bool,
 	onProductClick: PropTypes.func,
-	userData: PropTypes.object,
 };

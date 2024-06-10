@@ -1,8 +1,15 @@
-const router = require("express").Router();
+const express = require("express");
 const mongoose = require("mongoose");
 const User = require("../Models/UserModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+const router = express.Router();
 
 // Handler for GET request to /api/users/:value
 // Fetches user data by id, email, or username
@@ -20,32 +27,32 @@ router.get("/users/:value", async (req, res) => {
 		}
 
 		if (!user) {
-			return res.status(404).json({
-				message: "User not found.",
-			});
+			return res.status(404).json({ message: "User not found." });
 		}
 
 		res.status(200).json(user);
 	} catch (err) {
 		console.error("Error fetching user data:", err);
-		res.status(400).json({
-			message: "Error fetching user data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error fetching user data", error: err });
 	}
 });
 
-// Existing routes
 router.get("/user/:id", async (req, res) => {
 	try {
-		const user = await User.findById(req.params.id);
+		const userId = req.params.id;
+		if (!mongoose.Types.ObjectId.isValid(userId)) {
+			return res.status(400).json({ message: "Invalid user ID" });
+		}
+
+		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
 		res.status(200).json(user);
 	} catch (err) {
 		console.error("Error fetching user data by ID:", err);
-		res.status(400).json({
-			message: "Error fetching user data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error fetching user data", error: err });
 	}
 });
 
@@ -55,10 +62,7 @@ router.get("/users", async (req, res) => {
 		res.status(200).json(users);
 	} catch (err) {
 		console.error("Error fetching users data:", err);
-		res.status(400).json({
-			message: "Error fetching users data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error fetching users data", error: err });
 	}
 });
 
@@ -71,10 +75,7 @@ router.patch("/users", async (req, res) => {
 		res.status(200).json(users);
 	} catch (err) {
 		console.error("Error updating user data:", err);
-		res.status(400).json({
-			message: "Error updating user data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error updating user data", error: err });
 	}
 });
 
@@ -88,10 +89,7 @@ router.patch("/user/:email", async (req, res) => {
 		res.status(200).json(updatedUser);
 	} catch (err) {
 		console.error("Error updating user data by email:", err);
-		res.status(400).json({
-			message: "Error updating user data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error updating user data", error: err });
 	}
 });
 
@@ -101,10 +99,7 @@ router.get("/user/:email", async (req, res) => {
 		res.status(200).json(user);
 	} catch (err) {
 		console.error("Error fetching user data by email:", err);
-		res.status(400).json({
-			message: "Error fetching user data",
-			error: err,
-		});
+		res.status(400).json({ message: "Error fetching user data", error: err });
 	}
 });
 
@@ -170,12 +165,7 @@ router.post("/", async (req, res) => {
 		});
 		await newUser.save();
 
-		const token = jwt.sign(
-			{
-				user: newUser._id,
-			},
-			process.env.JWT_SECRET
-		);
+		const token = jwt.sign({ user: newUser._id }, process.env.JWT_SECRET);
 
 		res.cookie("token", token, {
 			httpOnly: true,
@@ -186,10 +176,7 @@ router.post("/", async (req, res) => {
 		res.status(200).json({ message: "User created successfully" });
 	} catch (err) {
 		console.error("Error creating user:", err);
-		res.status(400).json({
-			message: "Error creating user",
-			error: err,
-		});
+		res.status(400).json({ message: "Error creating user", error: err });
 	}
 });
 
@@ -214,12 +201,7 @@ router.post("/login", async (req, res) => {
 			return res.status(400).json({ message: "Invalid password" });
 		}
 
-		const token = jwt.sign(
-			{
-				user: existingUser._id,
-			},
-			process.env.JWT_SECRET
-		);
+		const token = jwt.sign({ user: existingUser._id }, process.env.JWT_SECRET);
 
 		res.cookie("token", token, {
 			httpOnly: true,
@@ -227,13 +209,31 @@ router.post("/login", async (req, res) => {
 			sameSite: "none",
 		});
 
-		res.status(200).json({ message: "Logged in successfully", token, email });
+		const userData = {
+			id: existingUser._id,
+			name: existingUser.name,
+			username: existingUser.username,
+			email: existingUser.email,
+			phone: existingUser.phone,
+			profilePicture: existingUser.profilePicture,
+			userType: existingUser.userType,
+			location: existingUser.location,
+			farmingType: existingUser.farmingType,
+			businessName: existingUser.businessName,
+			businessType: existingUser.businessType,
+			businessLocation: existingUser.businessLocation,
+			professionalType: existingUser.professionalType,
+			businessDescription: existingUser.businessDescription,
+		};
+
+		res.status(200).json({
+			message: "Logged in successfully",
+			token,
+			...userData,
+		});
 	} catch (err) {
 		console.error("Error logging in:", err);
-		res.status(400).json({
-			message: "Error logging in",
-			error: err,
-		});
+		res.status(500).json({ message: "Server error", error: err });
 	}
 });
 
@@ -278,10 +278,7 @@ router.get("/verify", async (req, res) => {
 		res.status(200).json(updatedUser);
 	} catch (err) {
 		console.error("Error verifying user:", err);
-		res.status(400).json({
-			message: "Error verifying user",
-			error: err,
-		});
+		res.status(400).json({ message: "Error verifying user", error: err });
 	}
 });
 
@@ -290,10 +287,9 @@ router.post("/forgotPassword", async (req, res) => {
 		// TODO: Send password reset email
 	} catch (err) {
 		console.error("Error sending password reset email:", err);
-		res.status(400).json({
-			message: "Error sending password reset email",
-			error: err,
-		});
+		res
+			.status(400)
+			.json({ message: "Error sending password reset email", error: err });
 	}
 });
 
@@ -302,10 +298,7 @@ router.post("/resetPassword", async (req, res) => {
 		// TODO: Reset user password
 	} catch (err) {
 		console.error("Error resetting password:", err);
-		res.status(400).json({
-			message: "Error resetting password",
-			error: err,
-		});
+		res.status(400).json({ message: "Error resetting password", error: err });
 	}
 });
 

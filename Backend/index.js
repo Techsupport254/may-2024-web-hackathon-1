@@ -44,7 +44,7 @@ mongoose
 		app.use("/cart", require("./Routers/cartRouter"));
 		app.use("/order", require("./Routers/OrderRouter"));
 		app.use("/earnings", require("./Routers/EarningsRouter"));
-		app.use("/email", require("./Routers/MailRouter"));
+		// app.use("/email", require("./Routers/MailRouter"));
 
 		// Start the server
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

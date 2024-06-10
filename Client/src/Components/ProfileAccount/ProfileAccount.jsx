@@ -1,10 +1,15 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import "./ProfileAccount.css";
 import { Badge, MenuItem, Switch, TextField } from "@mui/material";
 import axios from "axios";
 import { Image } from "cloudinary-react";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const ProfileAccount = ({ userData }) => {
+const ProfileAccount = () => {
+	const { userData } = useContext(ApiContext);
+
+	console.log(userData);
+
 	const [edit, setEdit] = useState(false);
 	const [uploading, setUploading] = useState(false);
 
@@ -73,13 +78,13 @@ const ProfileAccount = ({ userData }) => {
 			setProfilePicture(uploadResponse.data.secure_url);
 
 			const updateResponse = await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData?.email}`,
 				{
 					profilePicture: uploadResponse.data.secure_url,
 				},
 				{
 					headers: {
-						"x-auth-token": userData.token,
+						"x-auth-token": userData?.token,
 					},
 				}
 			);
@@ -96,7 +101,7 @@ const ProfileAccount = ({ userData }) => {
 	const handleUpdateAccountInfo = async () => {
 		try {
 			const res = await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`,
+				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData?.email}`,
 				{
 					name: accountInfo.name,
 					email: accountInfo.email,
@@ -105,7 +110,7 @@ const ProfileAccount = ({ userData }) => {
 				},
 				{
 					headers: {
-						"x-auth-token": userData.token,
+						"x-auth-token": userData?.token,
 					},
 				}
 			);
@@ -164,12 +169,12 @@ const ProfileAccount = ({ userData }) => {
 
 						<p>
 							{userData?.name}
-							<span>({userData.username})</span>
+							<span>({userData?.username})</span>
 							<br />
 							<span>
 								Joined on <i className="fas fa-calendar-alt"></i>{" "}
-								{userData.created_at
-									? new Date(userData.created_at).toDateString()
+								{userData?.created_at
+									? new Date(userData?.created_at).toDateString()
 									: "N/A"}
 							</span>
 						</p>

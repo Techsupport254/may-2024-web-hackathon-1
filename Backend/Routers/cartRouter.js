@@ -5,19 +5,20 @@ const Cart = require("../Models/cartModel");
 // Add or update product in cart
 router.post("/", async (req, res) => {
 	try {
-		const { userId, productId, quantity } = req.body;
+		const { userId, productId, productName, quantity } = req.body;
 
 		// Validation
 		if (
 			!userId ||
 			!productId ||
+			!productName ||
 			quantity === undefined ||
 			isNaN(quantity) ||
 			quantity < 1
 		) {
 			return res.status(400).json({
 				message:
-					"Invalid request: Provide valid userId, productId, and non-negative quantity",
+					"Invalid request: Provide valid userId, productId, productName, and non-negative quantity",
 			});
 		}
 
@@ -25,7 +26,10 @@ router.post("/", async (req, res) => {
 
 		if (!userCart) {
 			// Create a new cart if none exists
-			userCart = new Cart({ userId, products: [{ productId, quantity }] });
+			userCart = new Cart({
+				userId,
+				products: [{ productId, productName, quantity }],
+			});
 		} else {
 			// Check if the product is already in the cart
 			const existingProduct = userCart.products.find(
@@ -36,7 +40,7 @@ router.post("/", async (req, res) => {
 				existingProduct.quantity += quantity;
 			} else {
 				// If product does not exist, add it to the cart
-				userCart.products.push({ productId, quantity });
+				userCart.products.push({ productId, productName, quantity });
 			}
 		}
 
@@ -147,6 +151,18 @@ router.patch("/:userId/:productId", async (req, res) => {
 		await userCart.save();
 
 		res.json({ message: "Quantity updated successfully", cart: userCart });
+	} catch (err) {
+		res
+			.status(500)
+			.json({ error: "Internal Server Error", details: err.message });
+	}
+});
+
+// DELETE endpoint to clear all the carts
+router.delete("/", async (req, res) => {
+	try {
+		await Cart.deleteMany({});
+		res.json({ message: "All carts have been cleared" });
 	} catch (err) {
 		res
 			.status(500)

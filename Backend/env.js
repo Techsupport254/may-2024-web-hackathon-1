@@ -1,4 +1,4 @@
 module.exports = {
 	EMAIL: "agrisolvekenya@gmail.com",
-	PASSWORD: "konw cwwn uebe tdea",
+	EMAIL_PASSWORD: "konw cwwn uebe tdea",
 };

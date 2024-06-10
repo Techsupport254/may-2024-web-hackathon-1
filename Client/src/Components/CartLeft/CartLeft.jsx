@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import PropTypes from "prop-types";
 import { Badge } from "antd";
 import "./CartLeft.css";
 import { Input } from "@mui/material";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const CartLeft = ({ cartItems, userData, setCartItems }) => {
+const CartLeft = ({ cartItems, setCartItems }) => {
+	const { userData } = useContext(ApiContext);
 	const [error, setError] = useState(null);
 
 	const handleAddToCart = async (productId, quantity) => {
@@ -13,7 +15,7 @@ const CartLeft = ({ cartItems, userData, setCartItems }) => {
 			const response = await axios.post(
 				"http://localhost:8000/cart",
 				{
-					userId: userData?._id,
+					userId: userData?.id,
 					productId: productId,
 					quantity: quantity,
 				},
@@ -41,7 +43,7 @@ const CartLeft = ({ cartItems, userData, setCartItems }) => {
 
 			// Send a DELETE request to remove the item from the server
 			await axios.delete(
-				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				`http://localhost:8000/cart/${userData?.id}/${productId}`,
 				{
 					headers: { "Content-Type": "application/json" },
 				}
@@ -71,7 +73,7 @@ const CartLeft = ({ cartItems, userData, setCartItems }) => {
 
 			// Send a PATCH request to update the quantity on the server
 			await axios.patch(
-				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				`http://localhost:8000/cart/${userData?.id}/${productId}`,
 				{ quantity: newQuantity },
 				{
 					headers: { "Content-Type": "application/json" },

@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import "./ProductModal.css";
-import { Button } from "@mui/material";
 import {
 	fetchRandomUserData,
 	generateRandomRating,
@@ -9,6 +8,8 @@ import { Link, useParams } from "react-router-dom";
 import { faqData } from "../../Data";
 import PropTypes from "prop-types";
 import ProductDetails from "../../Components/ProductDetails/ProductDetails";
+import ReviewsContainer from "../../Components/ReviewsContainer/ReviewsContainer";
+import ProductFaq from "../../Components/ProductFaq/ProductFaq";
 
 const ProductModal = ({ products, cartItems, userData }) => {
 	const id = useParams().id;
@@ -83,52 +84,13 @@ const ProductModal = ({ products, cartItems, userData }) => {
 			id: 2,
 			title: "Reviews",
 			content: (
-				<div className="ReviewsContainer">
-					<h3>Average Ratings</h3>
-					<div className="RatingItems FlexDisplay">
-						{Array.from({ length: averageRating }, (_, index) => (
-							<i key={index} className="fas fa-star"></i>
-						))}
-						{Array.from({ length: 5 - averageRating }, (_, index) => (
-							<i key={index + averageRating} className="far fa-star"></i>
-						))}
-
-						<span>{productReviews?.length} customer reviews</span>
-					</div>
-					<div className="ReviewContainer FlexDisplay">
-						{productReviews.map((review, index) => (
-							<div className="ReviewItem FlexDisplay" key={index}>
-								<div className="ReviewLeft">
-									<img src={review?.image} alt={review?.name} />
-								</div>
-								<div className="ReviewRight FlexDisplay">
-									<span>{review?.name}</span>
-									<p>{product?.productDescription}</p>{" "}
-									{/* Use review.review instead of product?.productDescription */}
-									<div className="ReviewItems FlexDisplay">
-										<div className="RatingsItems FlexDisplay">
-											{Array.from({ length: review?.rating }, (_, index) => (
-												<i key={index} className="fas fa-star"></i>
-											))}
-											{Array.from(
-												{ length: 5 - review?.rating },
-												(_, index) => (
-													<i
-														key={index + review?.rating}
-														className="far fa-star"
-													></i>
-												)
-											)}
-										</div>
-										<div className="ReviewDate">
-											<small>{review?.date}</small>
-										</div>
-									</div>
-								</div>
-							</div>
-						))}
-					</div>
-				</div>
+				<ReviewsContainer
+					productReviews={productReviews}
+					averageRating={averageRating}
+					setAdding={setAdding}
+					setAdded={setAdded}
+					setError={setError}
+				/>
 			),
 		},
 		{
@@ -151,47 +113,10 @@ const ProductModal = ({ products, cartItems, userData }) => {
 			id: 4,
 			title: "FAQs",
 			content: (
-				<div className="FAQs">
-					{faqData?.faqs.map(
-						(faq) => (
-							console.log(faq),
-							(
-								<div className="FaqItem" key={faq.id}>
-									<h3>
-										{faq.question}
-										<small>
-											{new Date(faq.timestamp).toLocaleDateString()}
-										</small>
-										<small>
-											<i className="fas fa-tag"></i> {faq.category}
-										</small>
-										<small className="faqStatus">
-											<i className="fas fa-comments"></i>
-											{faq.status}
-											{faq.responses.length}
-										</small>
-									</h3>
-
-									<div className="Responses">
-										<h3>Responses:</h3>
-										{faq.responses.map((response) => (
-											<div className="FaqResponses" key={response.id}>
-												<p>{response.response}</p>
-												<p>
-													{response.user}
-													<small>
-														{new Date(response.timestamp).toLocaleDateString()}
-													</small>
-													<small>{response.status}</small>
-												</p>
-											</div>
-										))}
-									</div>
-								</div>
-							)
-						)
-					)}
-				</div>
+				<ProductFaq
+					faqData={faqData}
+					productCategory={product?.productCategory}
+				/>
 			),
 		},
 	];
@@ -273,5 +198,4 @@ ProductModal.propTypes = {
 	products: PropTypes.array.isRequired,
 	cartItems: PropTypes.array.isRequired,
 	userData: PropTypes.object.isRequired,
-	faqData: PropTypes.object.isRequired,
 };

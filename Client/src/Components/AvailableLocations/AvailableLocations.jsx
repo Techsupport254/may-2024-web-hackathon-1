@@ -3,6 +3,7 @@ import axios from "axios";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
 import PropTypes from "prop-types";
+import "./AvailableLocations.css";
 
 const AvailableLocations = ({
 	setSelectedLocation,
@@ -93,8 +94,6 @@ const AvailableLocations = ({
 		setDeliveryFee(amount);
 		console.log("Rounded Delivery Fee:", amount);
 	};
-
-	console.log(selected);
 
 	return (
 		<div className="AvailableLocations">

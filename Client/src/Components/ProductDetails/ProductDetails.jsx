@@ -22,6 +22,7 @@ const ProductDetails = ({ product, tags, cartItems, id, userData }) => {
 				{
 					userId: userData?._id,
 					productId: product?._id,
+					productName: product?.productName,
 					quantity: 1,
 				},
 				{

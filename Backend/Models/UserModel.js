@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
 	email: {
 		type: String,
 		required: true,
-		unqiue: true,
+		unique: true,
 	},
 	passwordHash: {
 		type: String,
@@ -23,11 +23,9 @@ const UserSchema = new mongoose.Schema({
 	userType: {
 		type: String,
 	},
-	// if farmer, farmerType is required and approximate quantity for crop farming or quantity for livestock and poultry farming
 	farmingType: {
 		type: String,
 	},
-	// if agribusiness, businessName is required and businessType is required
 	businessName: {
 		type: String,
 	},
@@ -37,15 +35,12 @@ const UserSchema = new mongoose.Schema({
 	businessLocation: {
 		type: String,
 	},
-	// if agriprofessional, professionalType is required
 	professionalType: {
 		type: String,
 	},
-	// businessDescription is required for agribusiness and agriprofessional
 	businessDescription: {
 		type: String,
 	},
-
 	location: {
 		type: String,
 	},
@@ -83,6 +78,6 @@ const UserSchema = new mongoose.Schema({
 	},
 });
 
-const User = mongoose.model("user", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
