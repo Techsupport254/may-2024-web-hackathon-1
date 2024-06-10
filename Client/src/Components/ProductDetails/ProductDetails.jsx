@@ -18,7 +18,7 @@ const ProductDetails = ({ product, tags, cartItems, id, userData }) => {
 		setAdding(true);
 		try {
 			const response = await axios.post(
-				"http://localhost:8000/cart",
+				"https://agrisolve.vercel.app/cart",
 				{
 					userId: userData?._id,
 					productId: product?._id,
