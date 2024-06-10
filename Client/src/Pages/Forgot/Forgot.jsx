@@ -104,7 +104,7 @@ const Login = () => {
 
 		try {
 			const response = await fetch(
-				"https://agrisolve-techsupport254.vercel.app/auth/login",
+				"https://agrisolve.vercel.app/auth/login",
 				{
 					method: "POST",
 					headers: {

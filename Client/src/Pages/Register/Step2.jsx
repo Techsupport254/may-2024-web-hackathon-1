@@ -65,7 +65,7 @@ const Step2 = ({ onNextStep }) => {
 
 			// Make an HTTP request to your backend API to register the user
 			await axios.post(
-				"https://agrisolve-techsupport254.vercel.app/auth",
+				"https://agrisolve.vercel.app/auth",
 				registerData
 			);
 

@@ -23,7 +23,7 @@ const ConsultLeft = ({ userData }) => {
 	const fetchUsers = async () => {
 		try {
 			const response = await axios.get(
-				"https://agrisolve-techsupport254.vercel.app/auth/users"
+				"https://agrisolve.vercel.app/auth/users"
 			);
 			const filteredUsers = response.data.filter(
 				(user) => user.userType === "agriprofessional"

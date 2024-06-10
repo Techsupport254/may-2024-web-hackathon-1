@@ -19,7 +19,7 @@ const Step3 = () => {
 			try {
 				// Make an HTTP request to fetch user data from the database
 				const response = await axios.get(
-					`https://agrisolve-techsupport254.vercel.app/auth/user/${email}`
+					`https://agrisolve.vercel.app/auth/user/${email}`
 				);
 
 				// Update the user state with the fetched data
@@ -45,7 +45,7 @@ const Step3 = () => {
 			// Update the verification status in the database
 			axios
 				.patch(
-					`https://agrisolve-techsupport254.vercel.app/auth/user/${user.email}`,
+					`https://agrisolve.vercel.app/auth/user/${user.email}`,
 					{
 						verificationStatus: "verified",
 					}
@@ -86,7 +86,7 @@ const Step3 = () => {
 		// Update the verification code in the database
 		axios
 			.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${user.email}`,
+				`https://agrisolve.vercel.app/auth/user/${user.email}`,
 				{
 					verificationCode: newVerificationCode,
 				}

@@ -13,7 +13,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 	const handleAddToCart = async (productId, quantity) => {
 		try {
 			const response = await axios.post(
-				"http://localhost:8000/cart",
+				"https://agrisolve.vercel.app/cart",
 				{
 					userId: userData?.id,
 					productId: productId,
@@ -43,7 +43,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 
 			// Send a DELETE request to remove the item from the server
 			await axios.delete(
-				`http://localhost:8000/cart/${userData?.id}/${productId}`,
+				`https://agrisolve.vercel.app/cart/${userData?.id}/${productId}`,
 				{
 					headers: { "Content-Type": "application/json" },
 				}
@@ -73,7 +73,7 @@ const CartLeft = ({ cartItems, setCartItems }) => {
 
 			// Send a PATCH request to update the quantity on the server
 			await axios.patch(
-				`http://localhost:8000/cart/${userData?.id}/${productId}`,
+				`https://agrisolve.vercel.app/cart/${userData?.id}/${productId}`,
 				{ quantity: newQuantity },
 				{
 					headers: { "Content-Type": "application/json" },

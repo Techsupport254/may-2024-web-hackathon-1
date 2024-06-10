@@ -41,7 +41,7 @@ const ProfileAccount = () => {
 		// Fetch the updated user data from the server and set it to the state
 		try {
 			const res = await axios.get(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData.email}`
+				`https://agrisolve.vercel.app/auth/user/${userData.email}`
 			);
 			setAccountInfo({
 				name: res.data.name,
@@ -78,7 +78,7 @@ const ProfileAccount = () => {
 			setProfilePicture(uploadResponse.data.secure_url);
 
 			const updateResponse = await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData?.email}`,
+				`https://agrisolve.vercel.app/auth/user/${userData?.email}`,
 				{
 					profilePicture: uploadResponse.data.secure_url,
 				},
@@ -101,7 +101,7 @@ const ProfileAccount = () => {
 	const handleUpdateAccountInfo = async () => {
 		try {
 			const res = await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/auth/user/${userData?.email}`,
+				`https://agrisolve.vercel.app/auth/user/${userData?.email}`,
 				{
 					name: accountInfo.name,
 					email: accountInfo.email,

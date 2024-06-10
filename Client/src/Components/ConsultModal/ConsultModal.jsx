@@ -52,7 +52,7 @@ const ConsultModal = ({ modalClose, userData }) => {
 			setSubmittingConsult(true);
 
 			await axios.post(
-				"https://agrisolve-techsupport254.vercel.app/consults/consults",
+				"https://agrisolve.vercel.app/consults/consults",
 				consultInfo
 			);
 

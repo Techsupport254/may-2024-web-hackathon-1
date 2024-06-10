@@ -27,7 +27,7 @@ const AccountConsults = ({ userData }) => {
 		const fetchConsults = async () => {
 			try {
 				const response = await axios.get(
-					"https://agrisolve-techsupport254.vercel.app/consults/consults"
+					"https://agrisolve.vercel.app/consults/consults"
 				);
 				const data = response.data;
 				setConsults(data);
@@ -46,7 +46,7 @@ const AccountConsults = ({ userData }) => {
 	const fetchChats = async () => {
 		try {
 			const response = await axios.get(
-				"https://agrisolve-techsupport254.vercel.app/chats/chats"
+				"https://agrisolve.vercel.app/chats/chats"
 			);
 			const data = response.data;
 			setUnfilteredChats(data);
@@ -151,7 +151,7 @@ const AccountConsults = ({ userData }) => {
 		try {
 			const conversationId = selectedChat.conversations[0].id;
 			await axios.patch(
-				`https://agrisolve-techsupport254.vercel.app/chats/chats/${conversationId}`,
+				`https://agrisolve.vercel.app/chats/chats/${conversationId}`,
 				{
 					id: conversationId,
 					status: "read",
