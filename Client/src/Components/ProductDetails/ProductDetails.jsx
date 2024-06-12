@@ -37,9 +37,13 @@ const ProductDetails = ({ product, tags, cartItems, id }) => {
 				],
 			};
 			console.log("Payload for adding to cart:", payload);
-			const response = await axios.post("http://localhost:8000/cart", payload, {
-				headers: { "Content-Type": "application/json" },
-			});
+			const response = await axios.post(
+				"https://agrisolve.vercel.app/cart",
+				payload,
+				{
+					headers: { "Content-Type": "application/json" },
+				}
+			);
 			console.log("Response from adding to cart:", response);
 			if (response.status === 200) {
 				setIsInCart(true);

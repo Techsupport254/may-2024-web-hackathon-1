@@ -28,7 +28,9 @@ const Order = () => {
 	useEffect(() => {
 		const fetchOrderDetails = async (id) => {
 			try {
-				const response = await axios.get(`http://localhost:8000/order/${id}`);
+				const response = await axios.get(
+					`https://agrisolve.vercel.app/order/${id}`
+				);
 				const productsWithDetails = await Promise.all(
 					response.data.products.map(async (product) => {
 						const productDetails = await fetchProductDetails(product.productId);
@@ -49,7 +51,7 @@ const Order = () => {
 	const fetchProductDetails = async (productId) => {
 		try {
 			const response = await axios.get(
-				`http://localhost:8000/products/${productId}`
+				`https://agrisolve.vercel.app/products/${productId}`
 			);
 			return response.data;
 		} catch (error) {

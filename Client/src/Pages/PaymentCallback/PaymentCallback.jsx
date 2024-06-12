@@ -20,7 +20,7 @@ const PaymentCallback = ({ userData }) => {
 	const verifyTransaction = async () => {
 		try {
 			const response = await axios.get(
-				`http://localhost:8000/payment/status/${trxref}`
+				`https://agrisolve.vercel.app/payment/status/${trxref}`
 			);
 			if (response.status === 200) {
 				setPaymentData(response.data);

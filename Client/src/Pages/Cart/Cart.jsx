@@ -33,12 +33,12 @@ const Cart = () => {
 		const fetchCartItems = async () => {
 			try {
 				const response = await axios.get(
-					`http://localhost:8000/cart/${userData?._id}`
+					`https://agrisolve.vercel.app/cart/${userData?._id}`
 				);
 				const itemsWithPrices = await Promise.all(
 					response.data.products.map(async (item) => {
 						const productResponse = await axios.get(
-							`http://localhost:8000/products/${item.productId}`
+							`https://agrisolve.vercel.app/products/${item.productId}`
 						);
 						return { ...item, price: productResponse.data.price };
 					})
@@ -86,7 +86,7 @@ const Cart = () => {
 		try {
 			// Send a PATCH request to update the quantity on the server
 			const response = await axios.patch(
-				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				`https://agrisolve.vercel.app/cart/${userData?._id}/${productId}`,
 				{ quantity: newQuantity },
 				{
 					headers: { "Content-Type": "application/json" },
@@ -121,7 +121,7 @@ const Cart = () => {
 
 			// Send a DELETE request to remove the item from the server
 			await axios.delete(
-				`http://localhost:8000/cart/${userData?._id}/${productId}`,
+				`https://agrisolve.vercel.app/cart/${userData?._id}/${productId}`,
 				{
 					headers: { "Content-Type": "application/json" },
 				}
