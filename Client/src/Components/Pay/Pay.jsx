@@ -22,6 +22,8 @@ const Pay = ({
 	const [tax, setTax] = useState(0);
 	const [isPaid, setIsPaid] = useState(false); // Add isPaid state
 
+	console.log(products);
+
 	const defaultBillingAddress = {
 		street: "123 Main St",
 		city: "Nairobi",
@@ -31,6 +33,7 @@ const Pay = ({
 	};
 
 	const defaultShippingAddress = {
+		location: selectedLocation?.display_name,
 		street: "123 Main St",
 		city: "Nairobi",
 		state: "Nairobi",
@@ -69,7 +72,13 @@ const Pay = ({
 				userId: userData._id,
 				paymentMethod: paymentMethod,
 				deliveryMethod: deliveryMethod,
-				products: products,
+				products: products.map((product) => ({
+					productId: product.productId,
+					productName: product.productName,
+					quantity: product.quantity,
+					price: product.price,
+					status: product.status || "Pending",
+				})),
 				location: selectedLocation?.display_name,
 				reason: "Payment for products",
 				number: userData?.phone || "",
@@ -105,58 +114,6 @@ const Pay = ({
 				content: error.message || "There was an error initiating your payment.",
 			});
 		}
-	};
-
-	const checkPaymentStatus = async (orderId) => {
-		try {
-			const response = await axios.get(
-				`http://localhost:8000/payment/status/${orderId}`
-			);
-
-			if (response.status === 200) {
-				const paymentStatus = response.data.status;
-				setPaying(false);
-
-				switch (paymentStatus) {
-					case "success":
-						console.log("Payment successful");
-						setIsPaid(true); // Set isPaid to true on successful payment
-						break;
-					case "failed":
-						console.error("Payment failed");
-						break;
-					case "cancelled":
-						console.error("Payment was cancelled by the user");
-						break;
-					default:
-						console.error("Unknown payment status");
-				}
-			} else {
-				throw new Error("Unable to check payment status");
-			}
-		} catch (error) {
-			console.error("Error checking payment status:", error);
-			setPaying(false);
-			Modal.error({
-				title: "Payment Error",
-				content: "There was an error checking the payment status.",
-			});
-		}
-	};
-
-	const handleDownload = () => {
-		Modal.success({
-			title: "Download Successful",
-			content: "Your receipt has been downloaded",
-			onOk: () => {
-				window.open(
-					"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf"
-				);
-				setTimeout(() => {
-					window.location.href = "/orders";
-				}, 2000);
-			},
-		});
 	};
 
 	const totalAmount = totalPrice + tax + deliveryFee;
@@ -264,13 +221,6 @@ const Pay = ({
 				<div className="PayBtn">
 					<button className="PayButton" onClick={handlePayment}>
 						Confirm Payment
-					</button>
-				</div>
-			)}
-			{isPaid && (
-				<div className="">
-					<button className="PayButton" onClick={handleDownload}>
-						<i className="fas fa-download"></i> Download Receipt
 					</button>
 				</div>
 			)}

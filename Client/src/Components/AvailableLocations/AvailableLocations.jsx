@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
+import CircularProgress from "@mui/material/CircularProgress";
 import PropTypes from "prop-types";
 import "./AvailableLocations.css";
 
@@ -14,6 +15,7 @@ const AvailableLocations = ({
 	const [locations, setLocations] = useState([]);
 	const [selected, setSelected] = useState(null);
 	const [nearestBranch, setNearestBranch] = useState(null);
+	const [searching, setSearching] = useState(false);
 
 	// Branches data
 	const branches = [
@@ -27,6 +29,7 @@ const AvailableLocations = ({
 		const value = event.target.value;
 		setSearchTerm(value);
 		if (value.length > 2) {
+			setSearching(true);
 			try {
 				const response = await axios.get(
 					`https://nominatim.openstreetmap.org/search?format=json&q=${value}`
@@ -36,6 +39,8 @@ const AvailableLocations = ({
 			} catch (error) {
 				console.error("Error fetching data: ", error);
 				setLocations([]);
+			} finally {
+				setSearching(false);
 			}
 		} else {
 			setLocations([]);
@@ -56,28 +61,29 @@ const AvailableLocations = ({
 				Math.sin(dLon / 2) *
 				Math.sin(dLon / 2);
 		const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-		const distance = R * c;
-		return distance.toFixed(2);
+		return (R * c).toFixed(2);
 	};
 
 	// Handle location selection
 	const selectLocation = (location) => {
+		const selectedLat = parseFloat(location.lat);
+		const selectedLon = parseFloat(location.lon);
 		setSelectedLocation({
 			...location,
-			lat: parseFloat(location.lat),
-			lon: parseFloat(location.lon),
+			lat: selectedLat,
+			lon: selectedLon,
 		});
 		setIsLocationSelected(true);
 
 		let nearest = branches[0];
 		let minDistance = calculateDistance(
-			[parseFloat(location.lat), parseFloat(location.lon)],
+			[selectedLat, selectedLon],
 			branches[0].coordinates
 		);
 
 		branches.forEach((branch) => {
 			const distance = calculateDistance(
-				[parseFloat(location.lat), parseFloat(location.lon)],
+				[selectedLat, selectedLon],
 				branch.coordinates
 			);
 			if (distance < minDistance) {
@@ -88,11 +94,9 @@ const AvailableLocations = ({
 
 		setNearestBranch(nearest);
 		setSelected(location);
-		console.log("Nearest Branch:", nearest.name, "Distance:", minDistance);
 
 		const amount = Math.round((minDistance / 30) * 100);
 		setDeliveryFee(amount);
-		console.log("Rounded Delivery Fee:", amount);
 	};
 
 	return (
@@ -113,6 +117,23 @@ const AvailableLocations = ({
 									color: " var(--success)",
 								}}
 							></i>
+						</InputAdornment>
+					),
+					endAdornment: (
+						<InputAdornment position="end">
+							{searching ? (
+								<CircularProgress size={20} 
+									style={{color: "var(--success-dark)"}}
+								 />
+							) : (
+								<i
+									className="fa-solid fa-search"
+									style={{
+										fontSize: "1.5rem",
+										color: " var(--success)",
+									}}
+								></i>
+							)}
 						</InputAdornment>
 					),
 				}}
@@ -159,12 +180,10 @@ const AvailableLocations = ({
 	);
 };
 
-export default AvailableLocations;
-
-// validate props
-
 AvailableLocations.propTypes = {
 	setSelectedLocation: PropTypes.func.isRequired,
 	setIsLocationSelected: PropTypes.func.isRequired,
 	setDeliveryFee: PropTypes.func.isRequired,
 };
+
+export default AvailableLocations;

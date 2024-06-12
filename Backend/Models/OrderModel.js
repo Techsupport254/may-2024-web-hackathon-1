@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema({
+	location: { type: String },
 	street: { type: String, required: true },
 	city: { type: String, required: true },
 	state: { type: String, required: true },
@@ -13,12 +14,18 @@ const productSchema = new mongoose.Schema({
 	productName: { type: String, required: true },
 	quantity: { type: Number, default: 1 },
 	status: { type: String, default: "Pending" },
+	price: { type: Number, required: true }, // Add price to the schema
+});
+
+const timelineSchema = new mongoose.Schema({
+	type: { type: String, required: true },
+	date: { type: Date, default: Date.now },
 });
 
 const orderSchema = new mongoose.Schema({
 	userId: { type: String, required: true },
 	orderId: { type: String, required: true },
-	status: { type: String, default: "Pending" },
+	timeline: [timelineSchema],
 	payment: {
 		method: { type: String, required: true },
 		transactionId: { type: String, required: true },
@@ -31,7 +38,7 @@ const orderSchema = new mongoose.Schema({
 	products: [productSchema],
 	shipping: {
 		method: { type: String, required: true },
-		trackingNumber: { type: String, required: true },
+		trackingNumber: { type: String, required: true, default: "N/A" },
 		estimatedDelivery: { type: Date },
 	},
 	billingAddress: addressSchema,
@@ -49,6 +56,13 @@ const orderSchema = new mongoose.Schema({
 		rate: { type: Number },
 		amount: { type: Number },
 		status: { type: Boolean, default: false },
+	},
+	amounts: {
+		tax: { type: Number, default: 0 },
+		discounts: { type: Number, default: 0 },
+		deliveryFee: { type: Number, default: 0 },
+		productsAmount: { type: Number, default: 0 },
+		totalAmount: { type: Number, default: 0 },
 	},
 });
 

@@ -24,6 +24,7 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 						{
 							productId: product?._id,
 							productName: product?.productName,
+							price: product?.price,
 							quantity: 1,
 						},
 					],
@@ -117,10 +118,7 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 				>
 					{renderActionButton()}
 				</button>
-				<button
-					className="ProductButton"
-					onClick={buyNow} // Implementing the buyNow functionality
-				>
+				<button className="ProductButton" onClick={buyNow}>
 					Buy Now <i className="fas fa-arrow-right"></i>
 				</button>
 			</div>

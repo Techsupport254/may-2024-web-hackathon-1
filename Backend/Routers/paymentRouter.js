@@ -3,19 +3,17 @@ const axios = require("axios");
 require("dotenv").config();
 
 const Payment = require("../Models/PaymentModel");
-const config = require("../Middleware/Config");
 const logger = require("../Middleware/Logger");
-const helmet = require("helmet");
 const { sendOrderConfirmationEmail } = require("./MailRouter");
 const router = express.Router();
 
 const CartModel = require("../Models/cartModel");
 const OrderModel = require("../Models/OrderModel");
+const Product = require("../Models/ProductModel");
 
 const { PAYSTACK_SECRET_KEY, CALLBACK_URL } = process.env;
 
 router.use(express.json());
-router.use(helmet());
 
 // POST: Initiate a payment transaction
 router.post("/initiate-payment", async (req, res, next) => {
@@ -28,6 +26,9 @@ router.post("/initiate-payment", async (req, res, next) => {
 		shippingMethod,
 		billingAddress,
 		shippingAddress,
+		deliveryFee,
+		tax,
+		discounts,
 	} = req.body;
 
 	if (!email || amount <= 0 || !userId || !billingAddress || !shippingAddress) {
@@ -54,6 +55,9 @@ router.post("/initiate-payment", async (req, res, next) => {
 					shippingMethod: shippingMethod || "Standard",
 					billingAddress,
 					shippingAddress,
+					deliveryFee: Number(deliveryFee) || 0,
+					tax: Number(tax) || 0,
+					discounts: discounts || [],
 				},
 			},
 			{
@@ -113,36 +117,85 @@ router.get("/status/:reference", async (req, res, next) => {
 				}).populate("products.productId");
 
 				if (cart) {
+					// Calculate total amount
+					let calculatedTotalAmount = 0;
+					let productsAmount = 0;
+					const populatedProducts = [];
+
+					for (const product of cart.products) {
+						const productDetails = await Product.findById(product.productId);
+						if (!productDetails) {
+							return res
+								.status(400)
+								.json({ message: `Product ${product.productId} not found` });
+						}
+						calculatedTotalAmount += productDetails.price * product.quantity;
+						productsAmount += productDetails.price * product.quantity;
+
+						populatedProducts.push({
+							productId: productDetails._id,
+							productName: productDetails.productName,
+							quantity: product.quantity,
+							status: "Pending",
+							price: productDetails.price,
+						});
+					}
+
+					// Apply discounts
+					const discounts = paymentData.metadata.discounts || [];
+					let discountAmount = 0;
+					if (discounts.length > 0) {
+						discounts.forEach((discount) => {
+							calculatedTotalAmount -= discount.amount;
+							discountAmount += discount.amount;
+						});
+					}
+
+					// Apply tax
+					const tax = paymentData.metadata.tax || {};
+					let taxAmount = 0;
+					if (tax.status) {
+						taxAmount = (tax.rate / 100) * calculatedTotalAmount;
+						calculatedTotalAmount += taxAmount;
+						tax.amount = taxAmount; // Update tax amount in the order
+					}
+
+					// Add delivery fee
+					const deliveryFee = Number(paymentData.metadata.deliveryFee) || 0;
+					calculatedTotalAmount += deliveryFee;
+
 					const order = new OrderModel({
 						userId: paymentData.metadata.userId,
 						orderId: reference,
-						status: "Completed",
+						timeline: [{ type: "Confirmed", date: new Date() }],
 						payment: {
 							method: "Paystack",
 							transactionId: paymentData.id,
-							status: "Completed",
+							status: "Paid",
 							number: paymentData.metadata.number,
 							holder: paymentData.metadata.holder,
 							date: new Date(paymentData.paidAt),
 						},
-						products: cart.products,
+						products: populatedProducts,
 						shipping: {
 							method: paymentData.metadata.shippingMethod,
-							trackingNumber: "N/A",
 							estimatedDelivery: new Date(),
 						},
 						billingAddress: paymentData.metadata.billingAddress,
 						shippingAddress: paymentData.metadata.shippingAddress,
+						amounts: {
+							tax: Number(tax.amount) || 0,
+							discounts: discountAmount,
+							deliveryFee: deliveryFee,
+							productsAmount: productsAmount,
+							totalAmount: calculatedTotalAmount,
+						},
 					});
 
 					await order.save();
 					await CartModel.deleteOne({ userId: paymentData.metadata.userId });
 
-					await sendOrderConfirmationEmail(
-						paymentData.metadata.email,
-						cart.products,
-						order
-					);
+					await sendOrderConfirmationEmail(paymentData.metadata.email, order);
 				}
 			}
 

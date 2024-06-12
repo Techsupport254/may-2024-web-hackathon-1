@@ -2,24 +2,59 @@ const express = require("express");
 const router = express.Router();
 const Cart = require("../Models/cartModel");
 
-// Add or update product in cart
+// Add or update products in cart
 router.post("/", async (req, res) => {
 	try {
-		const { userId, productId, productName, quantity } = req.body;
+		const { userId, products } = req.body;
 
 		// Validation
-		if (
-			!userId ||
-			!productId ||
-			!productName ||
-			quantity === undefined ||
-			isNaN(quantity) ||
-			quantity < 1
-		) {
+		if (!userId) {
+			console.log("Validation Error: 'userId' is missing");
 			return res.status(400).json({
-				message:
-					"Invalid request: Provide valid userId, productId, productName, and non-negative quantity",
+				message: "Invalid request: 'userId' is required and cannot be empty.",
 			});
+		}
+		if (!Array.isArray(products) || products.length === 0) {
+			console.log("Validation Error: 'products' array is missing or empty");
+			return res.status(400).json({
+				message: "Invalid request: 'products' must be a non-empty array.",
+			});
+		}
+
+		for (const product of products) {
+			if (!product.productId) {
+				console.log(
+					"Validation Error: 'productId' is missing for product",
+					product
+				);
+				return res.status(400).json({
+					message:
+						"Invalid request: 'productId' is required and cannot be empty.",
+				});
+			}
+			if (!product.productName) {
+				console.log(
+					"Validation Error: 'productName' is missing for product",
+					product
+				);
+				return res.status(400).json({
+					message:
+						"Invalid request: 'productName' is required and cannot be empty.",
+				});
+			}
+			if (
+				product.quantity === undefined ||
+				isNaN(product.quantity) ||
+				product.quantity < 1
+			) {
+				console.log(
+					"Validation Error: 'quantity' is invalid for product",
+					product
+				);
+				return res.status(400).json({
+					message: "Invalid request: 'quantity' must be a positive number.",
+				});
+			}
 		}
 
 		let userCart = await Cart.findOne({ userId });
@@ -28,19 +63,19 @@ router.post("/", async (req, res) => {
 			// Create a new cart if none exists
 			userCart = new Cart({
 				userId,
-				products: [{ productId, productName, quantity }],
+				products,
 			});
 		} else {
-			// Check if the product is already in the cart
-			const existingProduct = userCart.products.find(
-				(p) => p.productId === productId
-			);
-			if (existingProduct) {
-				// If product exists, update its quantity
-				existingProduct.quantity += quantity;
-			} else {
-				// If product does not exist, add it to the cart
-				userCart.products.push({ productId, productName, quantity });
+			// Update quantities or add new products
+			for (const product of products) {
+				const existingProduct = userCart.products.find(
+					(p) => p.productId === product.productId
+				);
+				if (existingProduct) {
+					existingProduct.quantity += product.quantity;
+				} else {
+					userCart.products.push(product);
+				}
 			}
 		}
 

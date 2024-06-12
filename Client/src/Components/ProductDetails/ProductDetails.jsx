@@ -31,6 +31,7 @@ const ProductDetails = ({ product, tags, cartItems, id }) => {
 					{
 						productId: product._id,
 						productName: product.productName,
+						price: product.price,
 						quantity: 1,
 					},
 				],

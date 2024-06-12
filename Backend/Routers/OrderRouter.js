@@ -2,23 +2,23 @@ const express = require("express");
 const router = express.Router();
 const Order = require("../Models/OrderModel");
 const Cart = require("../Models/cartModel");
-const Product = require("../Models/ProductModel"); // Assuming this is correctly set up now
+const Product = require("../Models/ProductModel");
 
 // POST: Create a new order and clear the cart
 router.post("/", async (req, res) => {
 	const {
 		userId,
 		orderId,
-		status,
+		timeline,
 		payment,
 		products,
 		shipping,
 		billingAddress,
 		shippingAddress,
-		totalAmount,
 		notes,
 		discounts,
 		tax,
+		deliveryFee,
 	} = req.body;
 
 	if (!userId || !products || products.length === 0 || !orderId || !payment) {
@@ -28,26 +28,71 @@ router.post("/", async (req, res) => {
 	}
 
 	try {
-		const productObjects = products.map((product) => ({
-			productId: product.productId,
-			productName: product.productName,
-			quantity: product.quantity,
-			status: product.status,
-		}));
+		// Calculate total amount
+		let calculatedTotalAmount = 0;
+		let productsAmount = 0;
+		const productObjects = [];
+
+		for (const product of products) {
+			const productDetails = await Product.findById(product.productId);
+			if (!productDetails) {
+				return res
+					.status(400)
+					.json({ message: `Product ${product.productId} not found` });
+			}
+			calculatedTotalAmount += productDetails.price * product.quantity;
+			productsAmount += productDetails.price * product.quantity;
+
+			productObjects.push({
+				productId: productDetails._id,
+				productName: productDetails.name,
+				quantity: product.quantity,
+				status: product.status,
+				price: productDetails.price,
+			});
+		}
+
+		// Apply discounts
+		let discountAmount = 0;
+		if (discounts && discounts.length > 0) {
+			discounts.forEach((discount) => {
+				calculatedTotalAmount -= discount.amount;
+				discountAmount += discount.amount;
+			});
+		}
+
+		// Apply tax
+		let taxAmount = 0;
+		if (tax && tax.status) {
+			taxAmount = (tax.rate / 100) * calculatedTotalAmount;
+			calculatedTotalAmount += taxAmount;
+			tax.amount = taxAmount; // Update tax amount in the order
+		}
+
+		// Add delivery fee
+		calculatedTotalAmount += Number(deliveryFee) || 0;
 
 		const newOrder = new Order({
 			userId,
 			orderId,
-			status,
+			timeline,
 			payment,
 			products: productObjects,
 			shipping,
 			billingAddress,
 			shippingAddress,
-			totalAmount,
+			totalAmount: calculatedTotalAmount,
 			notes,
 			discounts,
 			tax,
+			deliveryFee,
+			amounts: {
+				tax: Number(taxAmount) || 0,
+				discounts: Number(discountAmount) || 0,
+				deliveryFee: Number(deliveryFee) || 0,
+				productsAmount: Number(productsAmount) || 0,
+				totalAmount: calculatedTotalAmount,
+			},
 		});
 
 		const savedOrder = await newOrder.save();
@@ -107,7 +152,7 @@ router.get("/owner/:ownerId", async (req, res) => {
 	try {
 		const orders = await Order.find().populate({
 			path: "products.productId",
-			model: "agrisolveProduct", // Ensure this matches your Product model registration
+			model: "Product", // Ensure this matches your Product model registration
 		});
 
 		const filteredOrders = orders
@@ -129,6 +174,27 @@ router.get("/owner/:ownerId", async (req, res) => {
 			});
 		}
 		res.json(filteredOrders);
+	} catch (err) {
+		res.status(500).json({ error: err.message });
+	}
+});
+
+// PUT: Update order status by orderId
+router.put("/:orderId/status", async (req, res) => {
+	const { orderId } = req.params;
+	const { status } = req.body;
+
+	try {
+		const order = await Order.findOne({ orderId });
+		if (!order) {
+			return res.status(404).json({ message: "Order not found." });
+		}
+
+		order.timeline.push({ type: status, date: new Date() });
+		order.updatedAt = new Date();
+
+		const updatedOrder = await order.save();
+		res.json(updatedOrder);
 	} catch (err) {
 		res.status(500).json({ error: err.message });
 	}

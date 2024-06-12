@@ -76,7 +76,7 @@ const Orders = () => {
 			render: (text, record) => (
 				<a
 					style={{ color: "var(--success-dark)" }}
-					onClick={() => history.push(`/order/${record._id}`)}
+					onClick={() => history.push(`/order/${record.orderId}`)}
 				>
 					{text}
 				</a>
