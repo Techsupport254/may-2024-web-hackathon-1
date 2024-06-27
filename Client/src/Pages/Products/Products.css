@@ -8,3 +8,10 @@
     transition: 0.3s ease-in-out;
     gap: 1rem;
 }
+
+/* media queries */
+@media screen and (max-width: 768px) {
+    .Products {
+        padding: 0;
+    }
+}

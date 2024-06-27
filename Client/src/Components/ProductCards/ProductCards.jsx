@@ -10,19 +10,7 @@ const SkeletonProduct = () => <Skeleton />;
 const LazyProductCard = React.lazy(() => import("../ProductCard/ProductCard"));
 
 const ProductCards = ({ products, isLoading, userData }) => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [selectedProduct, setSelectedProduct] = useState(null);
-
-	const handleModalClose = () => {
-		setIsModalOpen(false);
-	};
-
-	const handleModalContentClick = (productId) => {
-		// Handle modal content click event
-	};
-
 	if (isLoading) {
-		// Show skeleton loading effect
 		return (
 			<div className="ProductCards">
 				<SkeletonProduct />
@@ -39,23 +27,9 @@ const ProductCards = ({ products, isLoading, userData }) => {
 						product={product}
 						isLoading={isLoading}
 						userData={userData}
-						onProductClick={() => {
-							setIsModalOpen(true);
-							setSelectedProduct(product);
-						}}
 					/>
 				))}
 			</Suspense>
-			<AnimatePresence>
-				{isModalOpen && (
-					<ProductModal
-						isOpen={isModalOpen}
-						selectedProduct={selectedProduct}
-						onClose={handleModalClose}
-						onContentClick={handleModalContentClick}
-					/>
-				)}
-			</AnimatePresence>
 		</div>
 	);
 };

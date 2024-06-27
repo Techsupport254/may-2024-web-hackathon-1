@@ -125,6 +125,11 @@ const Home = () => {
 					<div className="DeliveryLeft FlexDisplay">
 						<small>Discover Agrisolve</small>
 						<span>SUBSCRIBE TO THE NEWS</span>
+						{window.innerWidth < 768 && (
+							<div className="DeliveryRight FlexDisplay">
+								<img src={subscribeImg} alt="delivery" />
+							</div>
+						)}
 						<p>
 							Be aware of all our discounts and offers!
 							<br />
@@ -132,7 +137,8 @@ const Home = () => {
 						</p>
 						<TextField
 							id="outlined"
-							label="Subscribe to our newsletter"
+							label="Email"
+							placeholder="Subscribe to our newsletter"
 							variant="outlined"
 							size="small"
 							color="success"
@@ -149,9 +155,11 @@ const Home = () => {
 							}}
 						/>
 					</div>
-					<div className="DeliveryRight FlexDisplay">
-						<img src={subscribeImg} alt="delivery" />
-					</div>
+					{window.innerWidth > 768 && (
+						<div className="DeliveryRight FlexDisplay">
+							<img src={subscribeImg} alt="delivery" />
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

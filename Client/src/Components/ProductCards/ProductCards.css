@@ -9,7 +9,7 @@
     box-sizing: border-box;
     box-shadow: var(--boxShadow);
     border-radius: .5rem;
-    
+
 
     @media (max-width: 768px) {
         justify-content: center;
@@ -72,5 +72,17 @@
                 color: #000;
             }
         }
+    }
+}
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    .ProductCards {
+        padding: 0;
+        display: grid;
+        grid-gap: .2rem;
+        grid-template-columns: 1fr 1fr;
+
     }
 }

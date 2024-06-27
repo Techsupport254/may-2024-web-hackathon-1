@@ -119,6 +119,18 @@ export const NavbarData = [
 			},
 			{
 				id: 5,
+				title: "Notifications",
+				path: "/notifications",
+				icon: <i className="fas fa-bell"></i>,
+			},
+			{
+				id: 6,
+				title: "Favorites",
+				path: "/favorites",
+				icon: <i className="fas fa-heart"></i>,
+			},
+			{
+				id: 7,
 				title: "Logout",
 				path: "/logout",
 				icon: <i className="fas fa-sign-out-alt"></i>,
@@ -128,13 +140,6 @@ export const NavbarData = [
 	},
 	{
 		id: 7,
-		title: "favorites",
-		path: "/favorite",
-		icon: <i className="fa-regular fa-heart"></i>,
-		type: "personal",
-	},
-	{
-		id: 8,
 		title: "Cart",
 		path: "/cart",
 		icon: <i className="fas fa-shopping-cart"></i>,
@@ -505,15 +510,15 @@ export const orderCategory = [
 	},
 	{
 		id: 2,
-		title: "Pending",
+		title: "Confirmed",
 	},
 	{
 		id: 3,
-		title: "Delivered",
+		title: "Out for Delivery",
 	},
 	{
 		id: 4,
-		title: "Cancelled",
+		title: "delivered",
 	},
 ];
 
@@ -533,7 +538,6 @@ export const fetchRandomUserData = async (numberOfResults) => {
 
 // Function to generate random rating between 1 and 5
 export const generateRandomRating = () => Math.floor(Math.random() * 5) + 1;
-
 
 // faq data
 export const faqData = {

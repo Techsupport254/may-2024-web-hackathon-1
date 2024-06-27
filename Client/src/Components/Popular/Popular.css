@@ -23,3 +23,13 @@
         scale: 1.01;
     }
 }
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    .PopularContainer {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        padding: 0;
+    }
+}

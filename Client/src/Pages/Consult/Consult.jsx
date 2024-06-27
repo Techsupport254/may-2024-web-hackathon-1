@@ -1,17 +1,35 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import "./Consult.css";
 import ConsultRight from "../../Components/ConsultRight/ConsultRight";
 import ConsultLeft from "../../Components/ConsultLeft/ConsultLeft";
+import { ApiContext } from "../../Context/ApiProvider";
+import { motion } from "framer-motion";
 
-const Consult = ({ userData }) => {
+const Consult = () => {
+	const { userData } = useContext(ApiContext);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+	const toggleSidebar = () => {
+		setIsSidebarOpen(!isSidebarOpen);
+	};
+
 	return (
 		<div className="Consult">
-			<div className="ConsultContainer">
-				<div className="ConsultLeft">
+			<div
+				className={`ConsultContainer ${
+					isSidebarOpen ? "sidebar-open" : "sidebar-closed"
+				}`}
+			>
+				<motion.div
+					className="ConsultLeft"
+					initial={{ x: -400 }}
+					animate={{ x: isSidebarOpen ? 0 : -400 }}
+					transition={{ type: "spring", stiffness: 100 }}
+				>
 					<ConsultLeft userData={userData} />
-				</div>
+				</motion.div>
 				<div className="ConsultRight">
-					<ConsultRight userData={userData} />
+					<ConsultRight userData={userData} toggleSidebar={toggleSidebar} />
 				</div>
 			</div>
 		</div>

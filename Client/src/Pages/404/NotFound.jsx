@@ -1,5 +1,5 @@
 import "./NotFound.css";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/logo.png";
 import { Button } from "@mui/material";
 import PropTypes from "prop-types";
 

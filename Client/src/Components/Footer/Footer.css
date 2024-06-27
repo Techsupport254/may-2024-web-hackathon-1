@@ -36,8 +36,13 @@ footer {
     }
 
     & span {
-        font-size: 0.8rem;
+        font-size: 1.5rem;
+        font-weight: 600;
 
+
+        & span {
+            color: var(--primary-dark);
+        }
     }
 }
 
@@ -157,4 +162,138 @@ footer {
         text-decoration: none;
         transition: all 0.2s ease-in-out;
     }
+}
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    footer {
+        padding: 0;
+        gap: .5rem;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .FooterContainer {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        padding: .5rem;
+    }
+
+    .FooterLogo {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+
+        & img {
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+        }
+
+        & span {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    }
+
+    .FooterContent {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: .5rem;
+    }
+
+    .FooterItems {
+        width: 48%;
+        gap: 0.5rem;
+        padding: 0;
+
+        & h3 {
+            font-size: 1rem;
+        }
+
+        & a {
+            font-size: .8rem;
+        }
+    }
+
+    .Developer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .DeveloperContainer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        background: #E5E5E5;
+        padding: .5rem;
+        border-radius: 5px;
+    }
+
+    .DeveloperLogo {
+        width: 100%;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+
+        & img {
+            width: 2rem;
+            height: 2rem;
+            object-fit: cover;
+        }
+    }
+
+    .RightsReserved {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 0.5rem;
+
+        & p {
+            font-size: .8rem;
+        }
+
+        & a {
+            font-size: .8rem;
+        }
+
+    }
+
+    .DeveloperContent {
+        width: 100%;
+        gap: 0.5rem;
+
+        & p {
+            font-size: 1rem;
+        }
+
+        & a {
+            font-size: 1rem;
+        }
+    }
+
 }

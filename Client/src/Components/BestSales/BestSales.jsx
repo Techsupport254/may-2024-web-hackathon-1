@@ -13,7 +13,14 @@ const BestSales = ({ products, userData }) => {
 						<div className="BestDetails">
 							<span>{product.productName}</span>
 							<p>{product.productDescription}</p>
-							<h3>KSh.{product.price}</h3>
+							<h3>
+								KSh.{product.price}
+								<small>
+									{product.wholesale
+										? ` - KSh.${product.wholesalePrice} (Wholesale)`
+										: ""}
+								</small>
+							</h3>
 							<button>SHOP NOW</button>
 						</div>
 					</div>

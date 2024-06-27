@@ -9,7 +9,7 @@ import {
 	styled,
 } from "@mui/material";
 import "./Login.css";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/logo.png";
 import { ApiContext } from "../../Context/ApiProvider";
 
 const IOSSwitch = styled((props) => (

@@ -17,6 +17,8 @@ const ApiProvider = ({ children }) => {
 	const [pendingOrders, setPendingOrders] = useState([]);
 	const [cartItems, setCartItems] = useState([]);
 	const [orderData, setOrderData] = useState([]);
+	const [consults, setConsults] = useState([]);
+	const [chats, setChats] = useState([]);
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -193,6 +195,28 @@ const ApiProvider = ({ children }) => {
 		}
 	};
 
+	const fetchConsults = async (userId) => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/consult/user/${userId}`
+			);
+			setConsults(response.data);
+		} catch (error) {
+			console.error("Error fetching consults:", error);
+		}
+	};
+
+	const fetchChats = async (userId) => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/chats/chats`
+			);
+			setChats(response.data);
+		} catch (error) {
+			console.error("Error fetching chats:", error);
+		}
+	}
+
 	return (
 		<ApiContext.Provider
 			value={{
@@ -213,6 +237,9 @@ const ApiProvider = ({ children }) => {
 				handleLogout,
 				fetchCartItems,
 				fetchOrders,
+				fetchOrderItems,
+				consults,
+				fetchConsults,
 			}}
 		>
 			{children}

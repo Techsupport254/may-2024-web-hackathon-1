@@ -12,7 +12,6 @@
     align-items: center;
     z-index: 1;
     width: 100%;
-
 }
 
 .NavbarLogo {
@@ -159,5 +158,84 @@
 
     & .EventsHighlight {
         width: 40%;
+    }
+}
+
+.MenuToggler {
+    display: none;
+}
+
+/* media queries */
+@media screen and (max-width: 768px) {
+    .Navbar {
+        padding: .3rem;
+    }
+
+    .NavbarLogo {
+        width: auto;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+
+        & a span {
+            display: none;
+        }
+
+        & img {
+            width: 3rem !important;
+        }
+
+        & i {
+            font-size: 1.5rem !important;
+        }
+    }
+
+    .NavbarLogo img {
+        width: 30%;
+    }
+
+    .Searchbar {
+        width: 30%;
+    }
+
+    .NavLeft {
+        display: none;
+    }
+
+    .NavLeft.active {
+        width: 60%;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 60px;
+        right: 0;
+        background-color: #f5f5f5;
+        height: auto;
+        z-index: 1000;
+        box-shadow: var(--boxShadow);
+
+    }
+
+    .NavMobile {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .NavRight {
+        width: 30%;
+    }
+
+    .NavBottom {
+        gap: .5rem;
+    }
+
+    .MenuToggler {
+        display: block;
+        margin-left: 1rem;
     }
 }

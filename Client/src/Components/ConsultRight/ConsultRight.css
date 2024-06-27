@@ -11,12 +11,40 @@
     overflow: auto;
 }
 
+.CRightTop {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+
+    & i {
+        font-size: 1.5rem;
+        color: #333;
+        cursor: pointer;
+    }
+}
+
 .CRight h3 {
     font-size: 1rem;
     font-weight: 600;
-    margin-bottom: 1rem;
 }
 
 .CRightContainer {
     width: 98%;
+}
+
+/* media queries */
+@media (max-width: 768px) {
+    .CRight {
+        padding: 0;
+    }
+
+    .CRightTop {
+        padding: 0;
+    }
+
+    .CRightContainer {
+        padding: 0;
+    }
 }

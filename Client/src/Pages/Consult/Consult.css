@@ -1,15 +1,26 @@
 .Consult {
     width: 100%;
     height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .ConsultContainer {
     width: 100%;
     height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}
+
+.ConsultContainer.sidebar-open .ConsultRight {
+    margin-left: 25%;
+
+}
+
+.ConsultContainer.sidebar-closed .ConsultRight {
+    margin-left: 0;
 }
 
 .ConsultLeft {
@@ -19,13 +30,31 @@
     align-items: flex-start;
     justify-content: center;
     overflow-y: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: white;
+    z-index: 5;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .ConsultRight {
-    width: 75%;
+    flex-grow: 1;
     height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
     overflow-y: auto;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+    .ConsultLeft {
+        width: 70%;
+    }
+
+    .ConsultContainer.sidebar-open .ConsultRight {
+        margin-left: 70%;
+
+    }
 }

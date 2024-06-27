@@ -3,14 +3,14 @@ import "./ConsultRight.css";
 import ConsultTable from "../ConsultTable/ConsultTable";
 import AccountConsults from "../AccountConsults/AccountConsults";
 
-const ConsultRight = ({ userData }) => {
+const ConsultRight = ({ userData, toggleSidebar }) => {
 	const [title, setTitle] = useState("");
 	const [farmType, setFarmType] = useState("");
 	const [urgency, setUrgency] = useState("");
 	const [professional, setProfessional] = useState("");
 	const [specificProfessional, setSpecificProfessional] = useState("");
 	const [description, setDescription] = useState("");
-	
+
 	const [selectedConsult, setSelectedConsult] = useState(null);
 
 	const handleFormSubmit = (e) => {
@@ -53,7 +53,10 @@ const ConsultRight = ({ userData }) => {
 
 	return (
 		<div className="CRight">
-			<h3>Consults</h3>
+			<div className="CRightTop">
+				<i className="fas fa-bars" onClick={toggleSidebar}></i>
+				<h3>Consults</h3>
+			</div>
 			<div className="CRightContainer">
 				<AccountConsults userData={userData} />
 			</div>

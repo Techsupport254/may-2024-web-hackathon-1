@@ -41,6 +41,79 @@ const CartLeft = ({
 		getDetailedCartItems();
 	}, [cartItems]);
 
+	const renderCartItem = (item) => (
+		<div className="CartItem" key={item.productId}>
+			{window.innerWidth > 768 && (
+				<img
+					src={item.images[0]}
+					alt={item.productName}
+					className="CartItemImg"
+				/>
+			)}
+			<div className="CartItemDetails">
+				<div className="CartInfo">
+					{window.innerWidth < 768 && (
+						<img
+							src={item.images[0]}
+							alt={item.productName}
+							className="CartItemImg"
+						/>
+					)}
+					<div className="CartItemTitle">
+						<h3>{item.productName}</h3>
+					</div>
+					<span className="CartItemPrice">
+						KSh.{(item.price * item.quantity).toFixed(2)} ( KSh.
+						{item.price} each, {item.quantity}pcs)
+					</span>
+					<div className="Brand">
+						<span>Brand: </span>
+						<p>{item.brandName}</p>
+					</div>
+					<div className="Categor">
+						<span>Category: </span>
+						<p>{item.productCategory}</p>
+					</div>
+				</div>
+			</div>
+
+			<div className="CartButtons">
+				<div className="QuantityBtns">
+					<button
+						className="QuantityBtn"
+						onClick={() => handleDecreaseQuantity(item.productId)}
+					>
+						-
+					</button>
+					<Input
+						variant="outlined"
+						type="number"
+						value={item.quantity}
+						onChange={(e) =>
+							handleQuantityChange(item.productId, Number(e.target.value))
+						}
+						className="QuantityInput"
+						size="small"
+						name="quantity"
+						id="quantity"
+					/>
+					<button
+						className="QuantityBtn"
+						onClick={() => handleIncreaseQuantity(item.productId)}
+					>
+						+
+					</button>
+				</div>
+				<button
+					className="RemoveCartItemBtn"
+					onClick={() => handleRemoveItem(item.productId)}
+				>
+					<i className="fas fa-trash"></i>
+				</button>
+			</div>
+		</div>
+	);
+
 	return (
 		<div className="CartLeft">
 			<h2 className="CartTitle">
@@ -65,72 +138,7 @@ const CartLeft = ({
 						</button>
 					</div>
 				) : (
-					detailedCartItems?.map((item) => (
-						<div className="CartItem" key={item.productId}>
-							<img
-								src={item.images[0]}
-								alt={item.productName}
-								className="CartItemImg"
-							/>
-							<div className="CartItemDetails">
-								<div className="CartInfo">
-									<div className="CartItemTitle">
-										<h3>{item.productName}</h3>
-									</div>
-									<span className="CartItemPrice">
-										KSh.{(item.price * item.quantity).toFixed(2)} ( KSh.
-										{item.price} each, {item.quantity}pcs)
-									</span>
-									<div className="Brand">
-										<span>Brand: </span>
-										<p>{item.brandName}</p>
-									</div>
-									<div className="Categor">
-										<span>Category: </span>
-										<p>{item.productCategory}</p>
-									</div>
-								</div>
-							</div>
-
-							<div className="CartButtons">
-								<div className="QuantityBtns">
-									<button
-										className="QuantityBtn"
-										onClick={() => handleDecreaseQuantity(item.productId)}
-									>
-										-
-									</button>
-									<Input
-										variant="outlined"
-										type="number"
-										value={item.quantity}
-										onChange={(e) =>
-											handleQuantityChange(
-												item.productId,
-												Number(e.target.value)
-											)
-										}
-										className="QuantityInput"
-										size="small"
-										name="quantity"
-										id="quantity"
-									/>
-									<button
-										className="QuantityBtn"
-										onClick={() => handleIncreaseQuantity(item.productId)}
-									>
-										+
-									</button>
-								</div>
-								<button
-									className="RemoveCartItemBtn"
-									onClick={() => handleRemoveItem(item.productId)}
-								>
-									<i className="fas fa-trash"></i>
-								</button>
-							</div>
-						</div>
-					))
+					detailedCartItems.map((item) => renderCartItem(item))
 				)}
 			</div>
 			{error && <div className="error">{error}</div>}

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Profile.css";
 import ProfileLeft from "../profileLeft/ProfileLeft";
 import ProfileRight from "../ProfileRight/ProfileRight";
+import { ApiContext } from "../../Context/ApiProvider";
 
-const Profile = ({ userData, isLoggedin, shippingData, paymentData }) => {
-	const [activeMenu, setActiveMenu] = useState(""); // State to keep track of active menu item
+const Profile = ({ isLoggedin, shippingData, paymentData }) => {
+	const { userData } = useContext(ApiContext);
+	const [activeMenu, setActiveMenu] = useState("");
 
 	const handleMenuClick = (item) => {
 		setActiveMenu(item);

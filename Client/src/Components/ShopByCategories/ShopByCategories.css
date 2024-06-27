@@ -65,3 +65,15 @@
         }
     }
 }
+
+/* media queries */
+@media screen and (max-width: 768px) {
+    .ShopByCategories {
+        & .CategoriesShop {
+            & .CategoryItem {
+                width: 48%;
+                flex-direction: column;
+            }
+        }
+    }
+}

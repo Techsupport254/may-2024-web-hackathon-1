@@ -1,3 +1,7 @@
+.AccountConsults {
+    width: 100%;
+}
+
 .AddConsult {
     padding: 10px 1rem;
     margin-top: 10px;
@@ -6,6 +10,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+
 }
 
 .AccountConsultsTop {
@@ -13,6 +18,10 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    white-space: nowrap;
+    overflow: auto;
+
+
 }
 
 .Accepted {
@@ -20,6 +29,8 @@
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    white-space: nowrap;
+
 
     .SolvedConsults {
         display: flex;
@@ -30,6 +41,7 @@
         margin: 0 5px;
         cursor: pointer;
         gap: 5px;
+        white-space: nowrap;
     }
 
     .AcceptedConsults {
@@ -41,6 +53,8 @@
         margin: 0 5px;
         cursor: pointer;
         gap: 5px;
+        white-space: nowrap;
+
     }
 
     .Incoming {
@@ -52,5 +66,26 @@
         margin: 0 5px;
         cursor: pointer;
         gap: 5px;
+        white-space: nowrap;
+
+    }
+}
+
+/* media queries */
+@media (max-width: 768px) {
+    .AccountConsults {
+        padding: 0;
+    }
+
+    .AddConsult {
+        padding: 0.5rem;
+    }
+
+    .AccountConsultsTop {
+        padding: 0;
+    }
+
+    .Accepted {
+        padding: 0;
     }
 }

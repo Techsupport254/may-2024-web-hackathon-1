@@ -12,9 +12,9 @@ const Navbar = () => {
 
 	const [searching, setSearching] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
+	const [menuVisible, setMenuVisible] = useState(false);
 
-	const handleMenuToggle = (e) => {
-		e.preventDefault();
+	const handleMenuToggle = () => {
 		setMenuVisible((prevVisible) => !prevVisible);
 	};
 
@@ -49,48 +49,61 @@ const Navbar = () => {
 							Agri<p>solve</p>
 						</span>
 					</a>
-				</div>
-				<div className="NavLeft">
-					<div className="Searchbar">
-						<TextField
-							placeholder="Search for products ..."
-							size="small"
-							color="success"
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position="end">
-										{searching ? (
-											<i
-												className="fas fa-circle-notch fa-spin"
-												style={{
-													color: "var(--success-darker)",
-													fontSize: "1.2rem",
-													cursor: "pointer",
-												}}
-											></i>
-										) : (
-											<i
-												className="fa fa-search"
-												style={{
-													color: "var(--success-darker)",
-													fontSize: "1.2rem",
-													cursor: "pointer",
-												}}
-											></i>
-										)}
-									</InputAdornment>
-								),
-							}}
-							value={searchInput}
-							onChange={(e) => setSearchInput(e.target.value)}
+					{window.innerWidth < 768 && (
+						<i
+							className="fa fa-search"
 							style={{
+								color: "var(--success-darker)",
+								fontSize: "1.2rem",
 								cursor: "pointer",
-								padding: "0",
-								margin: "0",
 							}}
-						/>
+							onClick={handleSearchToggle}
+						></i>
+					)}
+				</div>
+				<div className={`NavLeft ${menuVisible ? "active" : ""}`}>
+					<div className="Searchbar">
+						{window.innerWidth > 768 && (
+							<TextField
+								placeholder="Search for products ..."
+								size="small"
+								color="success"
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">
+											{searching ? (
+												<i
+													className="fas fa-circle-notch fa-spin"
+													style={{
+														color: "var(--success-darker)",
+														fontSize: "1.2rem",
+														cursor: "pointer",
+													}}
+												></i>
+											) : (
+												<i
+													className="fa fa-search"
+													style={{
+														color: "var(--success-darker)",
+														fontSize: "1.2rem",
+														cursor: "pointer",
+													}}
+												></i>
+											)}
+										</InputAdornment>
+									),
+								}}
+								value={searchInput}
+								onChange={(e) => setSearchInput(e.target.value)}
+								style={{
+									cursor: "pointer",
+									padding: "0",
+									margin: "0",
+								}}
+							/>
+						)}
 					</div>
-					<div className="NavbarLinks">
+					<div className="NavbarLinks NavMobile">
 						{commonItems?.map((item, index) => (
 							<div className="NavItem" key={index}>
 								{item.menu ? (
@@ -241,9 +254,7 @@ const Navbar = () => {
 													) : (
 														<i
 															className="fas fa-user-circle"
-															style={{
-																fontSize: "30px",
-															}}
+															style={{ fontSize: "30px" }}
 														></i>
 													)}
 													{userData?.username}
@@ -286,6 +297,16 @@ const Navbar = () => {
 								);
 							}
 						})}
+					</div>
+					<div className="MenuToggler">
+						<i
+							className={menuVisible ? "fas fa-times" : "fas fa-bars"}
+							onClick={handleMenuToggle}
+							style={{
+								fontSize: "1.5rem",
+								cursor: "pointer",
+							}}
+						></i>
 					</div>
 				</div>
 			</div>

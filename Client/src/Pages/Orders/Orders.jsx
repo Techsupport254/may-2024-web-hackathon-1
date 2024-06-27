@@ -24,7 +24,9 @@ const Orders = () => {
 		if (selectedCategory === "All") {
 			return orderData;
 		} else {
-			return orderData?.filter((order) => order.status === selectedCategory);
+			return orderData?.filter(
+				(order) => order.timeline[0].type === selectedCategory
+			);
 		}
 	}, [orderData, selectedCategory]);
 
@@ -56,6 +58,8 @@ const Orders = () => {
 			});
 		}
 	}, [filteredOrders, fetchProductDetails]);
+
+	console.log("Orders", orderData);
 
 	const handleRowClick = (record) => {
 		const newExpandedKeys = [...expandedKeys];
@@ -155,10 +159,10 @@ const Orders = () => {
 		},
 		{
 			title: "Amount",
-			dataIndex: "totalAmount",
+			dataIndex: "amounts",
 			key: "amount",
-			render: (amount) =>
-				`ksh. ${amount
+			render: (amounts) =>
+				`ksh. ${amounts.totalAmount
 					.toFixed(2)
 					.toString()
 					.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
@@ -247,7 +251,20 @@ const Orders = () => {
 							key={index}
 							onClick={() => setSelectedCategory(item.title)}
 						>
-							{item.title}
+							<span
+								style={{
+									color:
+										item.title === "Delivered"
+											? "var(--success-dark)"
+											: item.title === "Out for Delivery"
+											? "var(--warning-dark)"
+											: item.title === "Confirmed"
+											? "var(--info-dark)"
+											: "var(--gray)",
+								}}
+							>
+								{item.title}
+							</span>
 						</div>
 					))}
 				</div>

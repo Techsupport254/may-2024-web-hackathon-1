@@ -35,3 +35,24 @@
   align-items: center;
   justify-content: space-between;
 }
+
+/* media queries */
+@media screen and (max-width: 768px) {
+  .Cart {
+    flex-direction: column-reverse;
+    margin: 0;
+    padding: .2rem;
+  }
+
+  .LeftCart {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .RightCart {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+}

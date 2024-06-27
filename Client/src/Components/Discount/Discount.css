@@ -122,3 +122,45 @@
         }
     }
 }
+
+/* media queries */
+
+@media (max-width: 768px) {
+    .DiscountContainer {
+        flex-direction: column-reverse;
+    }
+
+    .DiscountLeft {
+        width: 100%;
+    }
+
+    .DiscountRight {
+        width: 100%;
+    }
+
+    .DiscountRight .DiscountImage {
+        width: 15rem;
+    }
+
+    .ShopNow {
+        width: 100%;
+    }
+
+    .ShopNow button {
+        width: 100%;
+    }
+
+    .DiscountLeft .Counter {
+        width: 100%;
+        gap: .5rem;
+    }
+
+    .DiscountLeft .Counter .CounterButton {
+        width: 100%;
+    }
+
+    .DiscountLeft .Counter .CounterButton {
+        padding: .5rem;
+        grid-area: .3rem;
+    }
+}

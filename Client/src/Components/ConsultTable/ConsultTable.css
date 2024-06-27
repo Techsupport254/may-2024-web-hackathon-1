@@ -1,7 +1,17 @@
 .ConsultsTable {
-    width: 73.5vw;
+    width: 100%;
     height: 88vh;
+    overflow: auto;
 
+
+    table {
+
+        th,
+        td {
+            white-space: nowrap;
+        }
+
+    }
 }
 
 .EmptyTable {

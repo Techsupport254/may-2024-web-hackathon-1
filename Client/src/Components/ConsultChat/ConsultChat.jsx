@@ -1,52 +1,71 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import "./ConsultChat.css";
 import { Badge, Modal } from "antd";
 import axios from "axios";
 import SettleConsultation from "../SettleConsultation/SettleConsultation";
+import { ApiContext } from "../../Context/ApiProvider";
+import { useLocation } from "react-router-dom";
 
-const ConsultChat = ({ consult, userData }) => {
+const ConsultChat = () => {
+	const { userData } = useContext(ApiContext);
+	const location = useLocation();
+	const query = new URLSearchParams(location.search);
+	const refId = query.get("refId");
+	const recipientId = query.get("recipientId");
+	const consultId = query.get("consultId");
+
 	const [status, setStatus] = useState("");
 	const [settledAt, setSettledAt] = useState(null);
 	const [amountCharged, setAmountCharged] = useState(null);
 	const [messages, setMessages] = useState([]);
 	const [message, setMessage] = useState("");
 	const [currentMessages, setCurrentMessages] = useState([]);
-	const [sender, setSender] = useState("");
-	const [recipient, setRecipient] = useState("");
 	const [groupedMessages, setGroupedMessages] = useState({});
 	const [isMoreOpen, setIsMoreOpen] = useState(false);
 	const [loading, setLoading] = useState(true); // Add loading state
+	const [consult, setConsult] = useState(null); // Add state for consult data
+	const [acceptedBy, setAcceptedBy] = useState(null);
 
-	const fetchChatMessages = () => {
-		axios
-			.get("https://agrisolve.vercel.app/chats/chats")
-			.then((response) => {
-				const data = response.data;
-				setMessages(data);
-				setLoading(false); // Mark loading as false when messages are fetched
-			})
-			.catch((error) => {
-				throw new Error("Failed to fetch chat messages");
-			});
-	};
+	const fetchConsult = useCallback(async () => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/consults/consults/${consultId}`
+			);
+			setConsult(response.data);
+		} catch (error) {
+			console.error("Error fetching consult data:", error);
+		}
+	}, [consultId]);
+
+	const fetchChatMessages = useCallback(async () => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/chats/chats?refId=${refId}&recipient=${recipientId}&consultId=${consultId}`
+			);
+			const conversations = response.data;
+			setMessages(conversations);
+			setLoading(false); // Mark loading as false when messages are fetched
+		} catch (error) {
+			throw new Error("Failed to fetch chat messages");
+		}
+	}, [refId, recipientId, consultId]);
+
+	useEffect(() => {
+		fetchConsult();
+	}, [fetchConsult]);
 
 	useEffect(() => {
 		fetchChatMessages();
-	}, [consult]);
+	}, [fetchChatMessages]);
+
+	console.log(messages);
 
 	useEffect(() => {
-		if (messages && messages.length > 0 && consult) {
-			let consultId = consult._id;
-
-			let filteredMessages = messages.filter(
-				(message) => message.conversations[0]?.id === consultId
-			);
-
-			if (filteredMessages.length > 0) {
-				setCurrentMessages(filteredMessages[0]?.conversations[0]?.messages);
-			}
+		if (messages && messages.length > 0) {
+			const filteredMessages = messages.flatMap((conv) => conv.messages || []);
+			setCurrentMessages(filteredMessages);
 		}
-	}, [messages, consult]);
+	}, [messages]);
 
 	useEffect(() => {
 		if (currentMessages && currentMessages.length > 0) {
@@ -72,10 +91,10 @@ const ConsultChat = ({ consult, userData }) => {
 		e.preventDefault();
 
 		const newMessage = {
-			id: consult?._id,
+			id: consultId,
 			refId: userData?._id,
-			recipient: consult?.acceptedById,
-			recipientName: consult?.acceptedBy,
+			recipient: recipientId,
+			recipientName: recipientId, // This needs to be modified as per your data
 			sender: userData?._id,
 			senderName: userData?.username,
 			message: message,
@@ -98,20 +117,42 @@ const ConsultChat = ({ consult, userData }) => {
 		setIsMoreOpen(!isMoreOpen);
 	};
 
+	console.log(consult);
+
+	// fetch acceptedBy
+	const fetchAcceptedBy = async () => {
+		try {
+			const response = await axios.get(
+				`https://agrisolve.vercel.app/auth/users/${recipientId}`
+			);
+			setAcceptedBy(response.data);
+		} catch (error) {
+			console.error("Error fetching acceptedBy:", error);
+		}
+	};
+
+	useEffect(() => {
+		if (consult) {
+			fetchAcceptedBy();
+		}
+	}, [consult]);
+
+	console.log(acceptedBy);
+
 	return (
 		<div className="ConsultChat">
 			<div className="ChatContainer">
 				<div className="ChatHeader">
-					<i className="fas fa-arrow-left"></i>
 					<div className="ChatHeaderLeft">
+						<i className="fas fa-arrow-left"></i>
 						<div className="ProfilePicture">
 							<img
 								src={
-									consult?.profilePicture
-										? consult?.profilePicture
+									acceptedBy?.profilePicture
+										? acceptedBy?.profilePicture
 										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 								}
-								alt={consult?.name}
+								alt={acceptedBy?.name}
 							/>
 						</div>
 						<div className="ProfileDetails">
@@ -120,49 +161,13 @@ const ConsultChat = ({ consult, userData }) => {
 						</div>
 					</div>
 					<div className="ChatHeaderRight">
-						<div className="HeaderInfo">
-							<span>
-								Subject : &nbsp;
-								<i className="fas fa-info-circle"></i> &nbsp;
-								{consult?.subject}
-							</span>
-							<p>
-								Posted on : &nbsp;
-								<i className="fas fa-calendar-alt"></i> &nbsp;
-								{new Date(consult?.date).toDateString()}
-							</p>
-						</div>
-						<div className="HeaderMore">
-							<p>
-								{status === "pending" ? (
-									<span className="Pending">Pending</span>
-								) : (
-									<span className="Settled">
-										Accepted on : {new Date(consult?.accepedAt).toDateString()}
-									</span>
-								)}
-							</p>
-							<p>
-								Amount: &nbsp;
-								{status === "Solved" ? (
-									<span>
-										<i className="fas fa-money-bill-wave"></i>
-										&nbsp;KSh.
-										{amountCharged}
-									</span>
-								) : null}
-							</p>
-						</div>
-						<i
-							className="fas fa-ellipsis-v"
-							onClick={() => {
-								handleMoreClick();
-							}}
-							style={{ cursor: "pointer" }}
-						></i>
+						<SettleConsultation
+							consult={consult}
+							setIsMoreOpen={setIsMoreOpen}
+						/>
 					</div>
 				</div>
-				<div className="ChatMessages">
+				<div>
 					<div className="ChatMessages">
 						{loading ? (
 							<div
@@ -273,39 +278,28 @@ const ConsultChat = ({ consult, userData }) => {
 							</div>
 						) : null}
 					</div>
-				</div>
-				<div className="ChatInput">
-					<form onSubmit={handleFormSubmit}>
-						<input
-							type="text"
-							placeholder="Type your message..."
-							value={message}
-							onChange={(e) => setMessage(e.target.value)}
-						/>
-						<div className="Media">
-							<i
-								className="fas fa-paperclip"
-								onClick={handleAttachmentClick}
-							></i>
-							<i className="fas fa-camera" onClick={handleMediaClick}></i>
-						</div>
-						<button type="submit" className="SendButton">
-							Send &nbsp; <i className="fas fa-paper-plane"></i>
-						</button>
-					</form>
+					<div className="ChatInput">
+						<form onSubmit={handleFormSubmit}>
+							<input
+								type="text"
+								placeholder="Type your message..."
+								value={message}
+								onChange={(e) => setMessage(e.target.value)}
+							/>
+							<div className="Media">
+								<i
+									className="fas fa-paperclip"
+									onClick={handleAttachmentClick}
+								></i>
+								<i className="fas fa-camera" onClick={handleMediaClick}></i>
+							</div>
+							<button type="submit" className="SendButton">
+								Send &nbsp; <i className="fas fa-paper-plane"></i>
+							</button>
+						</form>
+					</div>
 				</div>
 			</div>
-			{isMoreOpen && (
-				<Modal
-					open={isMoreOpen}
-					onClose={() => setIsMoreOpen(false)}
-					footer={null}
-					centered={true}
-					width={400}
-				>
-					<SettleConsultation consult={consult} setIsMoreOpen={setIsMoreOpen} />
-				</Modal>
-			)}
 		</div>
 	);
 };

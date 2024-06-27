@@ -9,52 +9,89 @@
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     overflow: hidden;
-    gap: .3rem;
+    gap: 0.5rem;
+    box-shadow: var(--boxShadow);
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
 
-    &:hover {
-        transform: scale(.95);
-    }
+.BannerCardContainer:hover {
+    transform: scale(0.95);
+}
 
-    & .BannerCardImage {
-        width: 100px;
-        height: 100px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-        overflow: hidden;
-        border-radius: 5px;
+.BannerCardImage {
+    width: 100%;
+    height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 2px solid #ddd;
+}
 
-        & img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-    }
+.BannerCardImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
 }
 
 .BannerCardDetails {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     overflow: hidden;
+    padding: 0.5rem;
+}
 
-    & h3 {
-        font-size: .7rem;
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+.BannerCardDetails h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.BannerCardDetails p {
+    font-size: 0.9rem;
+}
+
+.BannerButtons {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem;
+    gap: 1rem;
+}
+
+/* media queries */
+@media screen and (max-width: 768px) {
+
+    .BannerCardImage {
+        height: 200px;
     }
 
-    & p {
-        font-size: .7rem;
+    .BannerCardDetails {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.2rem;
+    }
+
+    .BannerCardDetails h3 {
+        font-size: 0.9rem;
+    }
+
+    .BannerCardDetails p {
+        font-size: 0.8rem;
+        text-align: center;
     }
 }

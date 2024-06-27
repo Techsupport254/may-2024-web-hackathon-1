@@ -12,7 +12,9 @@ const Footer = () => {
 						src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
 						alt="logo"
 					/>
-					<span>Agrisolve</span>
+					<span>
+						Agri<span>solve</span>
+					</span>
 				</div>
 				<div className="FooterContent">
 					<div className="FooterItems">

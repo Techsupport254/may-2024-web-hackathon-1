@@ -2,7 +2,11 @@
     width: 100%;
     height: 100%;
     padding: .5rem;
-    gap: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
 }
 
 .Landing {
@@ -11,7 +15,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-
+    justify-content: center;
 }
 
 
@@ -192,4 +196,81 @@
     height: auto;
     gap: .5rem;
     border-radius: 5px;
+}
+
+
+/* media queries */
+@media screen and (max-width: 768px) {
+    .Home {
+        padding: 0;
+        justify-content: flex-start;
+        align-items: flex-start;
+
+    }
+
+    .Landing {
+        height: 80vh;
+        padding: 0;
+    }
+
+    .Banner {
+        padding: .3rem;
+    }
+
+    .NoProduct {
+        padding: .5rem;
+    }
+
+    .Adverts {
+        padding: .3rem;
+    }
+
+    .Header {
+        padding: .3rem;
+    }
+
+    .Products {
+        padding: .3rem;
+    }
+
+    .Discount {
+        width: 100%;
+        padding: .3rem;
+    }
+
+    .Delivery,
+    .SubscribeNews {
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+
+        & .DeliveryContainer,
+        .SubscribeNewsContainer {
+            display: flex;
+            flex-direction: column;
+            padding: .3rem;
+            justify-content: center;
+            align-items: center;
+
+            & .DeliveryLeft {
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: center !important;
+                align-items: center !important;
+                padding: .3rem;
+            }
+        }
+    }
+
+    .DeliveryContainer {
+        padding: .3rem;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+
+
+    .Popular {
+        padding: 0;
+    }
 }

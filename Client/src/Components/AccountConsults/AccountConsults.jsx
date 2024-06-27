@@ -183,7 +183,10 @@ const AccountConsults = ({ userData }) => {
 	const handleChatClick = (chat) => {
 		setSelectedChat(chat);
 		updateChat(chat);
-		console.log("chat:", setSelectedChat);
+		const refId = chat.refId;
+		const recipientId = chat.recipient;
+		const consultId = chat.conversations[0].id;
+		window.location.href = `/consult-chats?refId=${refId}&recipientId=${recipientId}&consultId=${consultId}`;
 	};
 
 	useEffect(() => {
@@ -308,23 +311,6 @@ const AccountConsults = ({ userData }) => {
 							handleChatClick={handleChatClick}
 						/>
 					</div>
-				</Modal>
-			)}
-			{selectedChat && (
-				<Modal
-					open={selectedChat !== null}
-					onCancel={() => setSelectedChat(null)}
-					footer={null}
-					width={800}
-					centered
-				>
-					<ConsultChat
-						userData={userData}
-						consult={getSelectedConsult()}
-						selectedChat={selectedChat}
-						consults={consults}
-						selectedChatId={selectedChatId}
-					/>
 				</Modal>
 			)}
 		</div>

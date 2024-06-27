@@ -9,6 +9,11 @@ const Landing = ({ product, userData }) => {
 			<div className="LandingLeft">
 				<h1>Agrisolve</h1>
 				<span>Sales upto 25% off</span>
+				{window.innerWidth < 768 && (
+					<div className="LandingImage">
+						<img src={Farm} alt="Farm" />
+					</div>
+				)}
 				<p>
 					Agrisolve is a platform that connects farmers to buyers and sellers of
 					agricultural products and services. It also provides a platform for
@@ -42,11 +47,13 @@ const Landing = ({ product, userData }) => {
 					</Button>
 				</div>
 			</div>
-			<div className="LandingRight">
-				<div className="LandingImage">
-					<img src={Farm} alt="Farm" />
+			{window.innerWidth > 768 && (
+				<div className="LandingRight">
+					<div className="LandingImage">
+						<img src={Farm} alt="Farm" />
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 };

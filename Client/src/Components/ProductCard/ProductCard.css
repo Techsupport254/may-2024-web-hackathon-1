@@ -11,7 +11,10 @@
     cursor: pointer;
     text-decoration: none;
     color: var(--black);
-
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .Product-Card:hover {
@@ -30,6 +33,10 @@
 .ProductContent {
     width: 100%;
     height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .Product-Card h3 {
@@ -98,4 +105,80 @@
 
 .ErrorMessage {
     color: var(--danger) !important;
+}
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    .Product-Card {
+        width: 100%;
+        min-height: 250px;
+        color: var(--black);
+        gap: 0;
+    }
+
+    .Product-Card img {
+        max-width: 100%;
+        width: auto;
+        min-height: 5rem;
+    }
+
+    .ProductContent {
+        width: 100%;
+        height: 80%;
+        gap: 0;
+    }
+
+    .Product-Card h3 {
+        font-size: .8rem;
+    }
+
+    .Product-Card p {
+        font-size: .8rem;
+        color: var(--primary-darker);
+    }
+
+    .ProductButtons {
+        display: flex;
+        justify-content: flex-start;
+        gap: .3rem;
+    }
+
+    .ProductButton {
+        display: inline-block;
+        padding: .3rem .4rem;
+
+        &:hover {
+            background-color: var(--success-light);
+            transition: all 0.3s ease-in-out;
+        }
+    }
+
+    .ProductButton:nth-child(2) {
+        border: 1px solid var(--success-darker);
+        background-color: transparent;
+        color: var(--success-darker);
+    }
+
+    .ProductButton i {
+        margin-right: .5rem;
+    }
+
+    .Ratings {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: .5rem;
+        margin-bottom: .5rem;
+
+        & i {
+            color: var(--warning);
+            font-size: .8rem;
+        }
+    }
+
+    .ErrorMessage {
+        color: var(--danger) !important;
+    }
+
 }

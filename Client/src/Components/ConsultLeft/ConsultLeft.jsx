@@ -147,30 +147,21 @@ const ConsultLeft = ({ userData }) => {
 									</div>
 								</CardContent>
 								<div className="CLeftCardStatus">
-									<Badge
-										className={`CLeftCardBadge ${
-											item.loginStatus === "loggedIn"
-												? "CLeftCardBadgeActive"
-												: ""
-										}`}
-										variant="dot"
-										color={
-											item.loginStatus === "loggedIn" ? "success" : "error"
-										}
-										anchorOrigin={{
-											vertical: "top",
-											horizontal: "center",
-										}}
-									/>
-									{!item.active && (
+									{item.loginStatus === "loggedIn" ? (
 										<Typography
 											variant="body2"
 											component="p"
-											className="CLeftCardBadgeText"
+											className="CLeftCardBadgeText Online"
 										>
-											{item.loginStatus === "loggedIn"
-												? "Online"
-												: getTimeLabel(item.lastLogin)}
+											Online
+										</Typography>
+									) : (
+										<Typography
+											variant="body2"
+											component="p"
+											className="CLeftCardBadgeText Offline"
+										>
+											{getTimeLabel(item.lastLogin)}
 										</Typography>
 									)}
 								</div>

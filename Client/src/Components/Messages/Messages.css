@@ -101,3 +101,24 @@
         }
     }
 }
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    .MessageRow {
+        padding: .5rem 0;
+    }
+
+    .MessageProfile {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .MessageDetails {
+        width: 70%;
+    }
+
+    .MessageRight {
+        width: 15%;
+    }
+}

@@ -22,23 +22,20 @@ const PaymentCallback = lazy(() =>
 	import("./Pages/PaymentCallback/PaymentCallback")
 );
 const Order = lazy(() => import("./Pages/Order/Order"));
+const ConsultChat = lazy(() => import("./Components/ConsultChat/ConsultChat"));
 
 const Loading = () => (
-	<div
-		style={{
-			position: "fixed",
-			top: "50%",
-			left: "50%",
-			transform: "translate(-50%, -50%)",
-		}}
-	>
-		<i
-			className="fas fa-spinner fa-spin"
-			style={{
-				fontSize: "50px",
-				color: "green",
-			}}
-		></i>
+	<div className="Loading">
+		<div className="loader">
+			<div className="inner one"></div>
+			<div className="inner two"></div>
+			<div className="inner three"></div>
+		</div>
+		<div className="loader">
+			<div className="inner one"></div>
+			<div className="inner two"></div>
+			<div className="inner three"></div>
+		</div>
 	</div>
 );
 
@@ -104,7 +101,11 @@ const App = () => {
 								/>
 								<Route path="/orders" element={<Orders />} />
 								<Route path="/order/:id" element={<Order />} />
-								<Route path="/login" element={<Navigate to="/" replace />} />
+								<Route
+									path="/consult-chats"
+									element={<ConsultChat />}
+								/>
+								<Route path="/login" element={<Login />} />
 							</>
 						) : (
 							<>

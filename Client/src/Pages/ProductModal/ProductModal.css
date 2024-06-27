@@ -534,3 +534,272 @@
         gap: 1rem;
     }
 }
+
+/* media queries */
+
+@media screen and (max-width: 768px) {
+    .ProductModal {
+        padding: 0;
+        
+
+        & .ProductTop {
+            height: auto;
+            display: grid !important;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: .5rem;
+        }
+
+        & .ProductBottom {
+            height: 100%;
+        }
+
+        & .ProductTop,
+        .ProductBottom {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .ProductRight,
+        .ProductLeft {
+            width: 100%;
+            height: auto;
+
+            & .ProductImages {
+                height: 50%;
+
+                & img {
+                    height: 10rem;
+                }
+            }
+
+            & .ImagePreview {
+                height: 20%;
+                overflow-x: auto;
+
+                & img {
+                    width: 3rem;
+                    height: 3rem;
+                }
+            }
+
+            & .ProductDetails {
+                width: 100%;
+                
+
+                & p {
+                    font-size: .8rem;
+                }
+
+                & .ProductTitle {
+                    & p {
+                        font-size: .8rem;
+                    }
+                }
+
+                & .Tags {
+                    & i {
+                        font-size: 1rem;
+                    }
+
+                    & span {
+                        font-size: .8rem;
+                    }
+                }
+
+                & .PriceTag {
+                    gap: 1rem;
+                    
+
+                    & span {
+                        font-size: 1.5rem;
+
+                        & small {
+                            font-size: .8rem;
+                        }
+                    }
+                }
+
+                & .ProductBtns {
+                    gap: .5rem;
+
+                    & button {
+                        font-size: .8rem;
+                    }
+                }
+
+
+            }
+        }
+
+        .ProductBottom {
+            padding: 0 !important;
+            
+
+            .ProductBottomContainer {
+                display: flex;
+                justify-content: flex-start;
+                align-items: flex-start;
+                flex-direction: row;
+                gap: .5rem;
+                width: 100%;
+                padding: .5rem;
+                
+
+
+                & .ProductCard {
+                    width: 10rem;
+                    height: 200px !important;
+
+                    &:hover {
+                        transform: scale(1.05);
+                        transition: all .3s ease-in-out;
+                    }
+
+                    & img {
+                        width: 7rem;
+                        height: 7rem;
+                        max-height: 8.5rem;
+                        object-fit: cover;
+                        border-radius: 5px;
+                    }
+
+                    & h3 {
+                        font-size: .8rem;
+                        font-weight: 600;
+                        color: var(--primary-darker);
+                    }
+
+                    & p {
+                        font-size: .7rem;
+                        font-weight: 500;
+                        color: var(--primary-darker);
+                    }
+                }
+
+
+
+            }
+
+
+        }
+
+        .ReviewsContainer {
+            width: 96vw;
+            gap: .3rem;
+            
+        }
+
+        & .ReviewContainer {
+            width: 100%;
+            gap: .3rem;
+            
+        }
+
+        & .ReviewItem {
+            width: 100%;
+            flex-direction: row;
+            gap: .5rem;
+            background: #f5f5f5;
+            border-radius: 5px;
+            padding: .2rem;
+
+            & .ReviewLeft {
+                height: 100%;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 1rem;
+
+                & img {
+                    width: 3rem;
+                    height: 3rem;
+                    object-fit: cover;
+                    cursor: pointer;
+                    border-radius: 50%;
+                }
+            }
+
+            & .ReviewRight {
+                width: 100%;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: .3rem;
+            }
+
+        }
+
+        .Others {
+            width: 96vw;
+            gap: 1rem;
+            
+
+            & .OthersItem {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+                
+
+                & h3 {
+                    font-size: .8rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all .3s ease-in-out;
+                }
+
+                & p {
+                    font-size: .8rem;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all .3s ease-in-out;
+                }
+            }
+        }
+
+        .FAQs {
+            width: 96vw;
+            gap: 1rem;
+            
+
+            & .FaqItem {
+                width: 100%;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start;
+                gap: 1rem;
+                background: #f5f5f5;
+                border-radius: 5px;
+                padding: .3rem;
+                border: 1px solid #e5e5e5;
+
+                & h3 {
+                    display: flex;
+                    align-items: center;
+                    justify-content: flex-start;
+                    flex-wrap: wrap;
+
+                }
+
+                & small {
+                    align-self: flex-end;
+                    font-size: .8rem;
+                    font-weight: 500;
+                    color: var(--primary-darker);
+                    background: var(--primary-lighter);
+                    padding: .1rem .2rem;
+                    border-radius: 5px;
+                }
+
+                & .faqStatus {
+                    gap: .1rem;
+                    background: #e5e5e5;
+                }
+            }
+        }
+    }
+}
