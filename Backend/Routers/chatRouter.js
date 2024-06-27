@@ -1,15 +1,35 @@
 const express = require("express");
 const router = express.Router();
-const Chat = require("../Models/chatModel");
-const User = require("../Models/UserModel");
+const Chat = require("../models/chatModel"); // Adjust the path as needed
 
 // Handler for GET request to /api/chats
-// Fetches chats data
+// Fetches chats data based on query parameters
 router.get("/chats", async (req, res) => {
+	const { refId, recipient, consultId } = req.query;
+
 	try {
+		let query = {};
+
+		if (refId) query.refId = refId;
+		if (recipient) query.recipient = recipient;
+
 		// Fetch the chats data from the database
-		const chats = await Chat.find();
-		res.status(200).json(chats);
+		const chats = await Chat.find(query).lean();
+
+		let conversations = [];
+
+		// If filtering by consultId, extract only the matching conversations
+		if (consultId) {
+			chats.forEach((chat) => {
+				chat.conversations.forEach((conv) => {
+					if (conv.id === consultId) {
+						conversations.push(conv);
+					}
+				});
+			});
+		}
+
+		res.status(200).json(conversations);
 	} catch (err) {
 		res.status(400).json({
 			message: "Error fetching chats data",
@@ -35,7 +55,7 @@ router.get("/chats/:id", async (req, res) => {
 
 // Handler for POST request to /api/chats/add
 // Adds a new chat
-router.post("/add", async (req, res) => {
+router.post("/chats/add", async (req, res) => {
 	try {
 		const { id, sender, recipient, message, refId, senderName, recipientName } =
 			req.body;
@@ -93,7 +113,8 @@ router.post("/add", async (req, res) => {
 		});
 	}
 });
-// Handler for patch request to /api/chats/:id
+
+// Handler for PATCH request to /api/chats/:id
 // Updates a chat
 router.patch("/chats/:id", async (req, res) => {
 	try {
@@ -127,12 +148,15 @@ router.patch("/chats/:id", async (req, res) => {
 	}
 });
 
-// search for chat by word
+// Search for chat by word
 router.get("/search/:word", async (req, res) => {
 	try {
 		// Fetch the chats data from the database
 		const chats = await Chat.find({
-			messages: { $regex: req.params.word, $options: "i" },
+			"conversations.messages.message": {
+				$regex: req.params.word,
+				$options: "i",
+			},
 		});
 		res.status(200).json(chats);
 	} catch (err) {

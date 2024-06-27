@@ -33,6 +33,8 @@ router.get("/consults/:id", async (req, res) => {
 	}
 });
 
+
+
 // Handler for GET request to /api/consults/user/:username
 // Fetches consults data by username
 router.get("/consults/user/:username", async (req, res) => {
