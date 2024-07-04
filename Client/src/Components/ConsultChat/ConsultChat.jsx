@@ -29,7 +29,7 @@ const ConsultChat = () => {
 	const fetchConsult = useCallback(async () => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/consults/consults/${consultId}`
+				`http://localhost:8000/consults/consults/${consultId}`
 			);
 			setConsult(response.data);
 		} catch (error) {
@@ -40,7 +40,7 @@ const ConsultChat = () => {
 	const fetchChatMessages = useCallback(async () => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/chats/chats?refId=${refId}&recipient=${recipientId}&consultId=${consultId}`
+				`http://localhost:8000/chats/chats?refId=${refId}&recipient=${recipientId}&consultId=${consultId}`
 			);
 			const conversations = response.data;
 			setMessages(conversations);
@@ -101,7 +101,7 @@ const ConsultChat = () => {
 		};
 
 		axios
-			.post("https://agrisolve.vercel.app/chats/add", newMessage)
+			.post("http://localhost:8000/chats/add", newMessage)
 			.then((response) => {
 				console.log(response.data);
 				fetchChatMessages();
@@ -123,7 +123,7 @@ const ConsultChat = () => {
 	const fetchAcceptedBy = async () => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/auth/users/${recipientId}`
+				`http://localhost:8000/auth/users/${recipientId}`
 			);
 			setAcceptedBy(response.data);
 		} catch (error) {

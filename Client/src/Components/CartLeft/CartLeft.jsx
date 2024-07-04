@@ -18,7 +18,7 @@ const CartLeft = ({
 		const fetchProductDetails = async (productId) => {
 			try {
 				const response = await fetch(
-					`https://agrisolve.vercel.app/products/${productId}`
+					`http://localhost:8000/products/${productId}`
 				);
 				const data = await response.json();
 				return data;

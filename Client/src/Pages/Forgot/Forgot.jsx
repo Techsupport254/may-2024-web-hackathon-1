@@ -103,16 +103,13 @@ const Login = () => {
 		setLoading(true);
 
 		try {
-			const response = await fetch(
-				"https://agrisolve.vercel.app/auth/login",
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify({ email, phone }),
-				}
-			);
+			const response = await fetch("http://localhost:8000/auth/login", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, phone }),
+			});
 
 			if (response.ok) {
 				const data = await response.json();

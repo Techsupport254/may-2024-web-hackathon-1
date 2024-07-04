@@ -17,7 +17,7 @@ const BannerCard = ({ product, isLoading, onProductClick }) => {
 		setAdding(true);
 		try {
 			const response = await axios.post(
-				"https://agrisolve.vercel.app/cart",
+				"http://localhost:8000/cart",
 				{
 					userId: userData?._id,
 					products: [

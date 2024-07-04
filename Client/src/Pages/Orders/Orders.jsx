@@ -35,7 +35,7 @@ const Orders = () => {
 			if (!productsDetails[productId]) {
 				try {
 					const response = await axios.get(
-						`https://agrisolve.vercel.app/products/${productId}`
+						`http://localhost:8000/products/${productId}`
 					);
 					setProductsDetails((prevDetails) => ({
 						...prevDetails,

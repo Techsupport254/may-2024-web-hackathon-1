@@ -23,12 +23,9 @@ const AcceptedTable = ({ consults, userData }) => {
 			setSelectedConsult(consult);
 			let selectedId = consult._id;
 
-			await axios.put(
-				`https://agrisolve.vercel.app/consults/consults/${selectedId}`,
-				{
-					newConsult: false,
-				}
-			);
+			await axios.put(`http://localhost:8000/consults/consults/${selectedId}`, {
+				newConsult: false,
+			});
 		} catch (error) {
 			console.error("Error updating consult:", error);
 		}

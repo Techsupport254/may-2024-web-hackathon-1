@@ -29,7 +29,7 @@ const ApiProvider = ({ children }) => {
 
 				try {
 					const response = await axios.get(
-						`https://agrisolve.vercel.app/auth/users/${user.email}`,
+						`http://localhost:8000/auth/users/${user.email}`,
 						{
 							headers: {
 								"x-auth-token": user.token,
@@ -82,7 +82,7 @@ const ApiProvider = ({ children }) => {
 	useEffect(() => {
 		const fetchEvents = async () => {
 			try {
-				const response = await axios.get("https://agrisolve.vercel.app/news");
+				const response = await axios.get("http://localhost:8000/news");
 				const filteredEvents = response.data.filter(
 					(event) => event.event === "true"
 				);
@@ -98,9 +98,7 @@ const ApiProvider = ({ children }) => {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			try {
-				const response = await axios.get(
-					"https://agrisolve.vercel.app/products"
-				);
+				const response = await axios.get("http://localhost:8000/products");
 				const filteredProducts = response.data.filter(
 					(product) => product.productStatus !== "Draft"
 				);
@@ -116,7 +114,7 @@ const ApiProvider = ({ children }) => {
 	const fetchOrderItems = async (userId) => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/order/user/${userId}`
+				`http://localhost:8000/order/user/${userId}`
 			);
 			if (response.data) {
 				setOrderData(response.data);
@@ -138,7 +136,7 @@ const ApiProvider = ({ children }) => {
 		try {
 			if (userData) {
 				await axios.patch(
-					`https://agrisolve.vercel.app/auth/users/${userData.email}`,
+					`http://localhost:8000/auth/users/${userData.email}`,
 					{
 						isRemember: false,
 						loginStatus: "loggedOut",
@@ -173,9 +171,7 @@ const ApiProvider = ({ children }) => {
 
 	const fetchCartItems = async (userId) => {
 		try {
-			const response = await axios.get(
-				`https://agrisolve.vercel.app/cart/${userId}`
-			);
+			const response = await axios.get(`http://localhost:8000/cart/${userId}`);
 			if (response.data) {
 				setCartItems(response.data.products);
 			}
@@ -187,7 +183,7 @@ const ApiProvider = ({ children }) => {
 	const fetchOrders = async (userId) => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/order/user/${userId}`
+				`http://localhost:8000/order/user/${userId}`
 			);
 			setPendingOrders(response.data);
 		} catch (error) {
@@ -198,7 +194,7 @@ const ApiProvider = ({ children }) => {
 	const fetchConsults = async (userId) => {
 		try {
 			const response = await axios.get(
-				`https://agrisolve.vercel.app/consult/user/${userId}`
+				`http://localhost:8000/consult/user/${userId}`
 			);
 			setConsults(response.data);
 		} catch (error) {
@@ -208,14 +204,12 @@ const ApiProvider = ({ children }) => {
 
 	const fetchChats = async (userId) => {
 		try {
-			const response = await axios.get(
-				`https://agrisolve.vercel.app/chats/chats`
-			);
+			const response = await axios.get(`http://localhost:8000/chats/chats`);
 			setChats(response.data);
 		} catch (error) {
 			console.error("Error fetching chats:", error);
 		}
-	}
+	};
 
 	return (
 		<ApiContext.Provider

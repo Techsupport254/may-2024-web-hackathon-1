@@ -94,7 +94,7 @@ const Pay = ({
 			console.log("Payment Data:", paymentData);
 
 			const response = await axios.post(
-				"https://agrisolve.vercel.app/payment/initiate-payment",
+				"http://localhost:8000/payment/initiate-payment",
 				paymentData
 			);
 

@@ -27,7 +27,7 @@ const AccountConsults = ({ userData }) => {
 		const fetchConsults = async () => {
 			try {
 				const response = await axios.get(
-					"https://agrisolve.vercel.app/consults/consults"
+					"http://localhost:8000/consults/consults"
 				);
 				const data = response.data;
 				setConsults(data);
@@ -45,9 +45,7 @@ const AccountConsults = ({ userData }) => {
 
 	const fetchChats = async () => {
 		try {
-			const response = await axios.get(
-				"https://agrisolve.vercel.app/chats/chats"
-			);
+			const response = await axios.get("http://localhost:8000/chats/chats");
 			const data = response.data;
 			setUnfilteredChats(data);
 
@@ -150,13 +148,10 @@ const AccountConsults = ({ userData }) => {
 	const updateChat = async (selectedChat) => {
 		try {
 			const conversationId = selectedChat.conversations[0].id;
-			await axios.patch(
-				`https://agrisolve.vercel.app/chats/chats/${conversationId}`,
-				{
-					id: conversationId,
-					status: "read",
-				}
-			);
+			await axios.patch(`http://localhost:8000/chats/chats/${conversationId}`, {
+				id: conversationId,
+				status: "read",
+			});
 
 			setChats((prevChats) =>
 				prevChats.map((prevChat) => {
