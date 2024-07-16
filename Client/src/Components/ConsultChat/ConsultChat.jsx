@@ -5,6 +5,7 @@ import axios from "axios";
 import SettleConsultation from "../SettleConsultation/SettleConsultation";
 import { ApiContext } from "../../Context/ApiProvider";
 import { useLocation } from "react-router-dom";
+import { Avatar } from "@mui/material";
 
 const ConsultChat = () => {
 	const { userData } = useContext(ApiContext);
@@ -22,9 +23,24 @@ const ConsultChat = () => {
 	const [currentMessages, setCurrentMessages] = useState([]);
 	const [groupedMessages, setGroupedMessages] = useState({});
 	const [isMoreOpen, setIsMoreOpen] = useState(false);
-	const [loading, setLoading] = useState(true); // Add loading state
-	const [consult, setConsult] = useState(null); // Add state for consult data
+	const [loading, setLoading] = useState(true);
+	const [consult, setConsult] = useState(null);
 	const [acceptedBy, setAcceptedBy] = useState(null);
+	const [recipient, setRecipient] = useState(null);
+	const [ChatMessages, setChatMessages] = useState([]);
+	const [chatLastMessage, setChatLastMessage] = useState(null);
+	const [searchInput, setSearchInput] = useState("");
+
+	const fetchRecipient = async () => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8000/auth/users/${recipientId}`
+			);
+			setRecipient(response.data);
+		} catch (error) {
+			console.error("Error fetching recipient:", error);
+		}
+	};
 
 	const fetchConsult = useCallback(async () => {
 		try {
@@ -42,33 +58,30 @@ const ConsultChat = () => {
 			const response = await axios.get(
 				`http://localhost:8000/chats/chats?refId=${refId}&recipient=${recipientId}&consultId=${consultId}`
 			);
-			const conversations = response.data;
-			setMessages(conversations);
-			setLoading(false); // Mark loading as false when messages are fetched
+			setMessages(response.data);
+			setLoading(false);
 		} catch (error) {
-			throw new Error("Failed to fetch chat messages");
+			console.error("Failed to fetch chat messages", error);
 		}
 	}, [refId, recipientId, consultId]);
 
 	useEffect(() => {
 		fetchConsult();
-	}, [fetchConsult]);
+		fetchRecipient();
+	}, [fetchConsult, recipientId]);
 
 	useEffect(() => {
 		fetchChatMessages();
 	}, [fetchChatMessages]);
 
-	console.log(messages);
-
 	useEffect(() => {
-		if (messages && messages.length > 0) {
-			const filteredMessages = messages.flatMap((conv) => conv.messages || []);
-			setCurrentMessages(filteredMessages);
+		if (messages.length > 0) {
+			setCurrentMessages(messages.flatMap((conv) => conv.messages || []));
 		}
 	}, [messages]);
 
 	useEffect(() => {
-		if (currentMessages && currentMessages.length > 0) {
+		if (currentMessages.length > 0) {
 			const grouped = currentMessages.reduce((acc, message) => {
 				const date = new Date(message.timestamp).toLocaleDateString();
 				if (acc[date]) {
@@ -78,48 +91,55 @@ const ConsultChat = () => {
 				}
 				return acc;
 			}, {});
-
 			setGroupedMessages(grouped);
 		}
 	}, [currentMessages]);
 
-	const handleMediaClick = () => {};
+	const updateMessageStatus = async (chatId, messageId) => {
+		try {
+			await axios.patch(`http://localhost:8000/chats/chats/${chatId}`, {
+				id: chatId,
+				status: "read",
+			});
+		} catch (error) {
+			console.error("Error updating message status:", error);
+		}
+	};
 
-	const handleAttachmentClick = () => {};
+	useEffect(() => {
+		if (currentMessages.length > 0) {
+			const lastMessage = currentMessages[currentMessages.length - 1];
+			if (
+				lastMessage.sender !== userData._id &&
+				lastMessage.status !== "read"
+			) {
+				updateMessageStatus(consultId, lastMessage._id);
+			}
+		}
+	}, [currentMessages, userData._id, consultId]);
 
-	const handleFormSubmit = (e) => {
+	const handleFormSubmit = async (e) => {
 		e.preventDefault();
 
 		const newMessage = {
 			id: consultId,
 			refId: userData?._id,
 			recipient: recipientId,
-			recipientName: recipientId, // This needs to be modified as per your data
+			recipientName: recipient?.name,
 			sender: userData?._id,
-			senderName: userData?.username,
-			message: message,
+			senderName: userData?.name,
+			message,
 		};
 
-		axios
-			.post("http://localhost:8000/chats/add", newMessage)
-			.then((response) => {
-				console.log(response.data);
-				fetchChatMessages();
-			})
-			.catch((error) => {
-				console.error("Error sending message:", error);
-			});
-
-		setMessage("");
+		try {
+			await axios.post("http://localhost:8000/chats/chats/add", newMessage);
+			fetchChatMessages();
+			setMessage("");
+		} catch (error) {
+			console.error("Error sending message:", error);
+		}
 	};
 
-	const handleMoreClick = () => {
-		setIsMoreOpen(!isMoreOpen);
-	};
-
-	console.log(consult);
-
-	// fetch acceptedBy
 	const fetchAcceptedBy = async () => {
 		try {
 			const response = await axios.get(
@@ -135,22 +155,233 @@ const ConsultChat = () => {
 		if (consult) {
 			fetchAcceptedBy();
 		}
-	}, [consult]);
+	}, [consult, recipientId]);
 
-	console.log(acceptedBy);
+	// fetch chat messages http://localhost:8000/chats/chats/user/:userId
+	const fetchChatsMessages = async () => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8000/chats/chats/user/${userData._id}`
+			);
+			setChatMessages(response.data);
+		} catch (error) {
+			console.error("Error fetching chat messages:", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchChatsMessages();
+	}, []);
+
+	// Get the last message for a chat
+	const getLastMessage = (chat) => {
+		const lastMessage = chat?.conversations[0]?.messages.slice(-1)[0];
+		return lastMessage?.message;
+	};
 
 	return (
 		<div className="ConsultChat">
 			<div className="ChatContainer">
+				<div className="ChatsMessages">
+					<div className="ChatMessagesTop">
+						<div className="UserProfile">
+							<i
+								className="fas fa-arrow-left"
+								onClick={() => {
+									window.history.back();
+								}}
+							></i>
+							<i
+								className="fas fa-home"
+								onClick={() => {
+									window.location.href = "/consult";
+								}}
+							></i>
+
+							<img src={userData?.profilePicture} alt={userData?.name} />
+							<div className="UserDetails">
+								<span className="UserName">{userData?.username}</span>
+								<p className="UserName">{userData?.name}</p>
+							</div>
+						</div>
+						<div className="ChatMessagesTopSearch">
+							<input
+								type="text"
+								placeholder="Search"
+								value={searchInput}
+								onChange={(e) => setSearchInput(e.target.value)}
+							/>
+							<i className="fas fa-search"></i>
+						</div>
+					</div>
+					<div className="ChatMessagesBottom">
+						{ChatMessages.map((chat, index) => (
+							<div
+								className={`ChatMessage ${
+									chatLastMessage === getLastMessage(chat) ? "Active" : ""
+								}`}
+								key={index}
+								onClick={() => {
+									window.location.href = `/consult-chats?refId=${chat.refId}&recipientId=${chat.recipient}&consultId=${chat?.conversations?.[0].id}`;
+								}}
+							>
+								<div className="ChatMessageProfile">
+									<Avatar
+										src={acceptedBy?.profilePicture}
+										alt={acceptedBy?.name}
+									/>
+								</div>
+								<div className="ChatMessageDetails">
+									<div className="ChatMessageDetailsTop">
+										<span className="ChatMessageName">
+											{acceptedBy?.username}
+										</span>
+										<small className="ChatMessageTime">
+											{new Date(
+												chat?.conversations[0]?.messages.slice(-1)[0]?.timestamp
+											).toLocaleTimeString
+												? "Today"
+												: date ===
+												  new Date(Date.now() - 86400000).toLocaleDateString()
+												? "Yesterday"
+												: date}{" "}
+											{new Date(
+												chat?.conversations[0]?.messages.slice(-1)[0]?.timestamp
+											).toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</small>
+									</div>
+									<div className="ChatMessageDetailsBottom">
+										<p
+											className="ChatMessageContent"
+											style={{
+												whiteSpace: "nowrap",
+												overflow: "hidden",
+												textOverflow: "ellipsis",
+
+												color:
+													chat?.conversations[0]?.messages.filter(
+														(message) =>
+															message.sender === acceptedBy?._id &&
+															message.status !== "read"
+													).length > 0
+														? "black"
+														: "grey",
+											}}
+										>
+											{getLastMessage(chat)
+												? getLastMessage(chat).length > 30
+													? getLastMessage(chat).substring(0, 30) + "..."
+													: getLastMessage(chat)
+												: "No messages yet"}
+										</p>
+										<Badge
+											style={{
+												backgroundColor:
+													chat?.conversations[0]?.messages.filter(
+														(message) =>
+															message.sender === acceptedBy?._id &&
+															message.status !== "read"
+													).length > 0
+														? "#1890ff"
+														: "transparent",
+												position: "relative",
+												top: "0",
+												left: "300%",
+												transform: "translate(300%, 0)",
+											}}
+											count={
+												chat?.conversations[0]?.messages.filter(
+													(message) =>
+														message.sender === acceptedBy?._id &&
+														message.status !== "read"
+												).length
+											}
+										/>
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				</div>
+				<div>
+					<div className="ChatMessages">
+						{loading ? (
+							<div className="Loading">
+								<i className="fas fa-spinner fa-spin"></i>
+							</div>
+						) : (
+							Object.entries(groupedMessages).map(([date, messages]) => (
+								<div key={date}>
+									<div className="GroupDateContainer">
+										<div className="GroupDate">
+											{date === new Date().toLocaleDateString()
+												? "Today"
+												: date ===
+												  new Date(Date.now() - 86400000).toLocaleDateString()
+												? "Yesterday"
+												: date}
+										</div>
+									</div>
+									{messages.map((message, index) => (
+										<div
+											className={`Message ${
+												message.sender === userData._id
+													? "SenderMessage"
+													: "ReceiverMessage"
+											}`}
+											key={index}
+										>
+											<p className="MessageContent">{message.message}</p>
+											<div className="MessageTime">
+												{new Date(message.timestamp).toLocaleTimeString([], {
+													hour: "2-digit",
+													minute: "2-digit",
+												})}
+												{message.sender === userData?._id ? (
+													message.status === "read" ? (
+														<i className="fas fa-check-double"></i>
+													) : (
+														<i className="fas fa-check"></i>
+													)
+												) : null}
+											</div>
+										</div>
+									))}
+								</div>
+							))
+						)}
+
+						{!loading && currentMessages.length === 0 && (
+							<div className="NoMessages">No messages yet</div>
+						)}
+					</div>
+					<div className="ChatInput">
+						<form onSubmit={handleFormSubmit}>
+							<input
+								placeholder="Type your message..."
+								value={message}
+								onChange={(e) => setMessage(e.target.value)}
+							/>
+							<div className="Media">
+								<i className="fas fa-paperclip" onClick={() => {}}></i>
+								<i className="fas fa-camera" onClick={() => {}}></i>
+							</div>
+							<button type="submit" className="SendButton">
+								Send &nbsp; <i className="fas fa-paper-plane"></i>
+							</button>
+						</form>
+					</div>
+				</div>
 				<div className="ChatHeader">
-					<div className="ChatHeaderLeft">
-						<i className="fas fa-arrow-left"></i>
+					{/* <div className="ChatHeaderLeft">
 						<div className="ProfilePicture">
 							<img
 								src={
-									acceptedBy?.profilePicture
-										? acceptedBy?.profilePicture
-										: "https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
+									acceptedBy?.profilePicture ||
+									"https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
 								}
 								alt={acceptedBy?.name}
 							/>
@@ -159,144 +390,12 @@ const ConsultChat = () => {
 							<div className="ProfileName">{consult?.acceptedBy}</div>
 							<div className="ProfileStatus">Online</div>
 						</div>
-					</div>
+					</div> */}
 					<div className="ChatHeaderRight">
 						<SettleConsultation
 							consult={consult}
 							setIsMoreOpen={setIsMoreOpen}
 						/>
-					</div>
-				</div>
-				<div>
-					<div className="ChatMessages">
-						{loading ? (
-							<div
-								className="Loading"
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<i
-									className="fas fa-spinner fa-spin"
-									style={{ fontSize: "2rem", color: "green" }}
-								></i>
-							</div>
-						) : null}
-
-						{Object.entries(groupedMessages).map(([date, messages]) => (
-							<div key={date}>
-								<div className="GroupDateContainer">
-									<div className="GroupDate">
-										{date === new Date().toLocaleDateString()
-											? "Today"
-											: date ===
-											  new Date(Date.now() - 86400000).toLocaleDateString()
-											? "Yesterday"
-											: date}
-									</div>
-								</div>
-								{messages.map((message, index) => (
-									<div
-										className={`Message ${
-											message.senderName === userData.username
-												? "SenderMessage"
-												: "ReceiverMessage"
-										}`}
-										key={index}
-									>
-										<div
-											className="MessageContent"
-											style={{
-												backgroundColor: `${
-													message.senderName === userData.username
-														? "#e8e8e8"
-														: "#f1f0f0"
-												}`,
-
-												color: `${
-													message.senderName === userData.username
-														? "#000"
-														: "#333"
-												}`,
-
-												borderRadius: `${
-													message.senderName === userData.username
-														? "10px 0 10px 10px"
-														: "0 10px 10px 10px"
-												}`,
-
-												marginLeft: `${
-													message.senderName === userData.username
-														? "auto"
-														: "0"
-												}`,
-
-												marginRight: `${
-													message.senderName === userData.username
-														? "0"
-														: "auto"
-												}`,
-
-												marginBottom: `${
-													message.senderName === userData.username
-														? "10px"
-														: "0"
-												}`,
-
-												marginTop: `${
-													message.senderName === userData.username
-														? "10px"
-														: "0"
-												}`,
-											}}
-										>
-											{message.message}
-										</div>
-										<div className="MessageTime">
-											{new Date(message.timestamp).toLocaleTimeString([], {
-												hour: "2-digit",
-												minute: "2-digit",
-											})}
-										</div>
-									</div>
-								))}
-							</div>
-						))}
-
-						{currentMessages === null || currentMessages.length === 0 ? (
-							<div
-								className="NoMessages"
-								style={{
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								No messages yet
-							</div>
-						) : null}
-					</div>
-					<div className="ChatInput">
-						<form onSubmit={handleFormSubmit}>
-							<input
-								type="text"
-								placeholder="Type your message..."
-								value={message}
-								onChange={(e) => setMessage(e.target.value)}
-							/>
-							<div className="Media">
-								<i
-									className="fas fa-paperclip"
-									onClick={handleAttachmentClick}
-								></i>
-								<i className="fas fa-camera" onClick={handleMediaClick}></i>
-							</div>
-							<button type="submit" className="SendButton">
-								Send &nbsp; <i className="fas fa-paper-plane"></i>
-							</button>
-						</form>
 					</div>
 				</div>
 			</div>

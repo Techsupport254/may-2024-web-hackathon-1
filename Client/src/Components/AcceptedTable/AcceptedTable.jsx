@@ -12,7 +12,7 @@ import { Modal } from "antd";
 import ConsultChat from "../ConsultChat/ConsultChat";
 import axios from "axios";
 
-const AcceptedTable = ({ consults, userData }) => {
+const AcceptedTable = ({ consults, userData, handleChatClick }) => {
 	const [selectedConsult, setSelectedConsult] = useState(null);
 	const getStatusBadgeColor = (status) => {
 		return status === "Pending" ? "success" : "success";
@@ -22,10 +22,14 @@ const AcceptedTable = ({ consults, userData }) => {
 		try {
 			setSelectedConsult(consult);
 			let selectedId = consult._id;
+			let recipientId = consult.acceptedById;
+			let consultId = consult.refId;
 
 			await axios.put(`http://localhost:8000/consults/consults/${selectedId}`, {
 				newConsult: false,
 			});
+
+			window.location.href = `/consult-chats?refId=${consultId}&recipientId=${recipientId}&consultId=${selectedId}`;
 		} catch (error) {
 			console.error("Error updating consult:", error);
 		}

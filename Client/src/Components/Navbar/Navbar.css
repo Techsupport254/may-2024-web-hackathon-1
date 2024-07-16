@@ -165,6 +165,74 @@
     display: none;
 }
 
+.SearchResults {
+    position: absolute;
+    top: 8%;
+    left: 10%;
+    width: auto;
+    max-width: 80%;
+    background-color: #f1f1f1;
+    z-index: 1000;
+    box-shadow: var(--boxShadow);
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: 1rem;
+    border-radius: 5px;
+
+    & ul {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+
+        li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+            padding: .2rem .3rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all .3s ease-in-out;
+
+            &:hover {
+                background-color: #fff;
+            }
+
+            & img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+
+            .ResultsDetails {
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+            }
+        }
+    }
+
+}
+
+.NoResults {
+    width: 70%;
+    height: 30%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1rem;
+    color: var(--danger);
+
+    & p {
+        font-size: 1rem;
+        color: var(--danger);
+    }
+
+}
+
 /* media queries */
 @media screen and (max-width: 768px) {
     .Navbar {

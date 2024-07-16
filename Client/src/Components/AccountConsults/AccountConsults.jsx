@@ -45,7 +45,7 @@ const AccountConsults = ({ userData }) => {
 
 	const fetchChats = async () => {
 		try {
-			const response = await axios.get("http://localhost:8000/chats/chats");
+			const response = await axios.get("http://localhost:8000/chats");
 			const data = response.data;
 			setUnfilteredChats(data);
 
@@ -64,7 +64,7 @@ const AccountConsults = ({ userData }) => {
 				const sentMessages = messages.filter((message) => {
 					return (
 						message.status === "sent" &&
-						message.senderName !== userData.username
+						message.senderName !== userData?.username
 					);
 				});
 				accumulator.push(...sentMessages);
@@ -72,9 +72,6 @@ const AccountConsults = ({ userData }) => {
 			}, []);
 
 			setUnreadCount(unreadMessages.length);
-
-			// refresh chats every 5 seconds
-			setTimeout(fetchChats, 1000);
 		} catch (error) {
 			console.error("Error fetching chats:", error);
 		}
@@ -271,7 +268,11 @@ const AccountConsults = ({ userData }) => {
 					centered
 				>
 					<div className="SelectedConsult">
-						<ConsultMore userData={userData} consult={selectedConsult} />
+						<ConsultMore
+							userData={userData}
+							consult={selectedConsult}
+							handleChatClick={handleChatClick}
+						/>
 					</div>
 				</Modal>
 			)}
@@ -285,7 +286,11 @@ const AccountConsults = ({ userData }) => {
 					centered
 				>
 					<div className="AcceptedConsults">
-						<AcceptedTable consults={filteredConsults} userData={userData} />
+						<AcceptedTable
+							consults={filteredConsults}
+							userData={userData}
+							handleChatClick={handleChatClick}
+						/>
 					</div>
 				</Modal>
 			)}

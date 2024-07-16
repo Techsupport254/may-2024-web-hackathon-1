@@ -233,6 +233,8 @@ const Order = () => {
 		  )[0]
 		: null;
 
+	console.log(orderDetails);
+
 	return (
 		<div className="Order">
 			<div className="OrderContainer">
@@ -357,31 +359,51 @@ const Order = () => {
 								<div className="OrderSummaryRow">
 									<span className="OrderSummaryLabel">Amount:</span>
 									<span className="OrderSummaryValue">
-										KSh. {(orderDetails?.totalAmount ?? 0).toFixed(2)}
+										KSh.{" "}
+										{(orderDetails?.amounts.productsAmount ?? 0)
+											.toFixed(2)
+											.toString()
+											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 									</span>
 								</div>
 								<div className="OrderSummaryRow">
 									<span className="OrderSummaryLabel">Tax:</span>
 									<span className="OrderSummaryValue">
-										KSh. {(orderDetails?.tax?.amount ?? 0).toFixed(2)}
+										KSh.{" "}
+										{(orderDetails?.amounts.tax?.amount ?? 0)
+											.toFixed(2)
+											.toString()
+											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 									</span>
 								</div>
 								<div className="OrderSummaryRow">
 									<span className="OrderSummaryLabel">Delivery Fee:</span>
 									<span className="OrderSummaryValue">
-										KSh. {(orderDetails?.deliveryFee ?? 0).toFixed(2)}
+										KSh.{" "}
+										{(orderDetails?.amounts.deliveryFee ?? 0)
+											.toFixed(2)
+											.toString()
+											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 									</span>
 								</div>
 								<div className="OrderSummaryRow">
 									<span className="OrderSummaryLabel">Discount:</span>
 									<span className="OrderSummaryValue">
-										KSh. {(orderDetails?.discount?.amount ?? 0).toFixed(2)}
+										KSh.{" "}
+										{(orderDetails?.amounts.discount?.amount ?? 0)
+											.toFixed(2)
+											.toString()
+											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 									</span>
 								</div>
 								<div className="OrderSummaryRow OrderTotalAmount">
 									<span className="OrderSummaryLabel">Total:</span>
 									<span className="OrderSummaryValue">
-										KSh. {(orderDetails?.totalAmount ?? 0).toFixed(2)}
+										KSh.{" "}
+										{(orderDetails?.amounts.totalAmount ?? 0)
+											.toFixed(2)
+											.toString()
+											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 									</span>
 								</div>
 							</div>

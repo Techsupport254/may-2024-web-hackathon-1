@@ -1,19 +1,27 @@
 .SettleConsultation {
     width: 100%;
     height: 100%;
-    background-color: #F5F5F5;
-    padding: 0 20px;
+    padding: .5rem;
     box-sizing: border-box;
     overflow: auto;
+    gap: 1rem;
 }
 
 .SettleHeader {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+
+
     & h3 {
         font-size: 1rem;
         font-weight: 600;
         color: #000;
-        margin: 0;
-        padding: 0;
+    }
+
+    p {
+        font-size: .8rem;
+        font-weight: 500;
     }
 }
 
@@ -22,25 +30,26 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    gap: 1rem;
-    margin: 0;
+    gap: .5rem;
+    margin: .5rem 0;
     padding: 0;
 
+
     & span {
-        font-size: .8rem;
         font-weight: 600;
-        color: #000;
-        margin: 0;
-        padding: 0;
     }
 
     & p {
-        font-size: .8rem;
+        font-size: 1rem;
         font-weight: 400;
-        color: #000;
-        margin: 0;
-        padding: 0;
     }
+}
+
+.AmountCharged {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .SettleFooter {
@@ -85,5 +94,70 @@
         background-color: #fff;
         color: #000;
         border: 1px solid #000;
+    }
+}
+
+
+
+.SettleHeader,
+.SettleBody,
+.AmountCharged,
+.SettleFooter {
+    margin-bottom: 20px;
+}
+
+.SettleHeader h3 {
+    margin: 0 0 10px;
+}
+
+.SettleBody span,
+.AmountCharged span {
+    font-weight: bold;
+}
+
+.SettleFooter {
+    text-align: center;
+}
+
+.SettleButton {
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.SettleButton i {
+    margin-left: 5px;
+}
+
+.ant-timeline-item-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0;
+
+    & span {
+        font-weight: 500;
+    }
+
+    & p {
+        font-size: .8rem;
+        color: #666;
+    }
+
+}
+
+.ant-timeline-item-head,
+.ant-timeline-item-head-custom {
+    & span {
+        font-size: 1.5rem;
+        position: relative;
+        top: 5px;
     }
 }

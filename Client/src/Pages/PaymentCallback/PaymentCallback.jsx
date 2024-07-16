@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { Button, CircularProgress } from "@mui/material";
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/logo.png";
 import "./PaymentCallback.css";
 
 const PaymentCallback = ({ userData }) => {

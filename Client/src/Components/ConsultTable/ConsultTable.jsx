@@ -18,6 +18,8 @@ const ConsultTable = ({ userData, consults, handleConsultClick }) => {
 				return "warning";
 			case "solved":
 				return "success";
+			case "quoted":
+				return "info";
 			default:
 				return "default";
 		}
@@ -123,7 +125,7 @@ const ConsultTable = ({ userData, consults, handleConsultClick }) => {
 								>
 									<Badge
 										color={getStatusBadgeColor(consult.status)}
-										badgeContent={consult.status}
+										badgeContent={consult?.status}
 									/>
 								</TableCell>
 								<TableCell>
@@ -158,7 +160,7 @@ const ConsultTable = ({ userData, consults, handleConsultClick }) => {
 									>
 										{consult.settledAt
 											? getTimeLabel(new Date(consult.settledAt))
-											: ""}{" "}
+											: "Not Settled Yet"}
 									</span>
 									<p
 										style={{
@@ -172,8 +174,12 @@ const ConsultTable = ({ userData, consults, handleConsultClick }) => {
 											: ""}
 									</p>
 								</TableCell>
-								<TableCell>{consult.professionalName}</TableCell>
-								<TableCell>{consult.amountCharged}</TableCell>
+								<TableCell>
+									{consult?.acceptedBy ? consult?.acceptedBy : "N/A"}
+								</TableCell>
+								<TableCell>
+									{consult.amountCharged ? consult.amountCharged : "N/A"}
+								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>

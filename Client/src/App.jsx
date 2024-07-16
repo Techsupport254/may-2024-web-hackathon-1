@@ -57,7 +57,9 @@ const App = () => {
 
 	const shouldRenderNavbarFooter =
 		isUserDataLoaded &&
-		!["/login", "/register", "/forgot"].includes(location.pathname);
+		!["/login", "/register", "/forgot", "/consult-chats"].includes(
+			location.pathname
+		);
 
 	return (
 		<div className="App">
@@ -101,10 +103,7 @@ const App = () => {
 								/>
 								<Route path="/orders" element={<Orders />} />
 								<Route path="/order/:id" element={<Order />} />
-								<Route
-									path="/consult-chats"
-									element={<ConsultChat />}
-								/>
+								<Route path="/consult-chats" element={<ConsultChat />} />
 								<Route path="/login" element={<Login />} />
 							</>
 						) : (

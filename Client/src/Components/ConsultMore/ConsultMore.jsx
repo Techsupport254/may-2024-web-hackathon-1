@@ -1,8 +1,8 @@
 import React from "react";
 import "./ConsultMore.css";
-import { Badge, Step, StepLabel, Stepper } from "@mui/material";
+import { Badge, Button, Step, StepLabel, Stepper } from "@mui/material";
 
-const ConsultMore = ({ userData, consult }) => {
+const ConsultMore = ({ userData, consult, handleChatClick }) => {
 	const getStatusBadgeColor = (status) => {
 		switch (status) {
 			case "pending":
@@ -40,23 +40,28 @@ const ConsultMore = ({ userData, consult }) => {
 		}
 	};
 
+	const handleRedirect = () => {
+		const refId = consult?.refId;
+		const recipientId = consult?.acceptedById;
+		const consultId = consult?._id;
+		window.location.href = `/consult-chats?refId=${refId}&recipientId=${recipientId}&consultId=${consultId}`;
+	};
+
 	return (
 		<div className="ConsultMore">
 			<div className="MoreLeft">
 				<span>
-					{consult.subject}
+					{consult?.subject}
 					<Badge
 						color={getStatusBadgeColor(consult.status)}
 						badgeContent={consult.status}
 						style={{
 							fontSize: "5px",
 							fontWeight: "bold",
-							marginLeft: "5px",
-							right: "-15%",
+							marginLeft: "35px",
 						}}
 					/>
 				</span>
-				{/* image */}
 				<div className="MoreImage">
 					<img
 						src={
@@ -67,6 +72,19 @@ const ConsultMore = ({ userData, consult }) => {
 						alt="profile"
 					/>
 				</div>
+				{consult?.status !== "pending" && (
+					<Button
+						className="MoreChats"
+						variant="contained"
+						color="primary"
+						onClick={() => {
+							handleRedirect();
+						}}
+					>
+						<i className="fas fa-comments"></i> &nbsp;
+						<span>Chats</span>
+					</Button>
+				)}
 			</div>
 			<div className="MoreRight">
 				<div className="MoreDescription">

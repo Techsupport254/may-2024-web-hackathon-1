@@ -3,8 +3,9 @@ import "./Navbar.css";
 import { NavbarData } from "../../Data";
 import Badge from "@mui/material/Badge";
 import { Menu, Dropdown } from "antd";
-import { InputAdornment, TextField } from "@mui/material";
+import { InputAdornment, Modal, TextField } from "@mui/material";
 import { ApiContext } from "../../Context/ApiProvider";
+import axios from "axios"; // Import axios to make HTTP requests
 
 const Navbar = () => {
 	const { userData, handleLogout, cartItems, pendingOrders } =
@@ -13,14 +14,30 @@ const Navbar = () => {
 	const [searching, setSearching] = useState(false);
 	const [searchInput, setSearchInput] = useState("");
 	const [menuVisible, setMenuVisible] = useState(false);
+	const [searchResults, setSearchResults] = useState([]); // State to hold search results
 
 	const handleMenuToggle = () => {
 		setMenuVisible((prevVisible) => !prevVisible);
 	};
 
-	const handleSearchToggle = (e) => {
+	const handleSearchToggle = async (e) => {
 		e.preventDefault();
 		setSearching((prevVisible) => !prevVisible);
+
+		if (searchInput) {
+			try {
+				// Make a GET request to the search endpoint with the search query
+				const response = await axios.get(
+					`http://localhost:8000/search/products?query=${searchInput}`
+				);
+				// Update the search results state with the response data
+				setSearchResults(response.data);
+			} catch (error) {
+				console.error("Error searching for products:", error);
+			}
+		}
+
+		setSearchInput("");
 	};
 
 	const personalItems = NavbarData?.filter((item) => item.type === "personal");
@@ -64,43 +81,45 @@ const Navbar = () => {
 				<div className={`NavLeft ${menuVisible ? "active" : ""}`}>
 					<div className="Searchbar">
 						{window.innerWidth > 768 && (
-							<TextField
-								placeholder="Search for products ..."
-								size="small"
-								color="success"
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											{searching ? (
-												<i
-													className="fas fa-circle-notch fa-spin"
-													style={{
-														color: "var(--success-darker)",
-														fontSize: "1.2rem",
-														cursor: "pointer",
-													}}
-												></i>
-											) : (
-												<i
-													className="fa fa-search"
-													style={{
-														color: "var(--success-darker)",
-														fontSize: "1.2rem",
-														cursor: "pointer",
-													}}
-												></i>
-											)}
-										</InputAdornment>
-									),
-								}}
-								value={searchInput}
-								onChange={(e) => setSearchInput(e.target.value)}
-								style={{
-									cursor: "pointer",
-									padding: "0",
-									margin: "0",
-								}}
-							/>
+							<form onSubmit={handleSearchToggle}>
+								<TextField
+									placeholder="Search for products ..."
+									size="small"
+									color="success"
+									InputProps={{
+										endAdornment: (
+											<InputAdornment position="end">
+												{searching ? (
+													<i
+														className="fas fa-circle-notch fa-spin"
+														style={{
+															color: "var(--success-darker)",
+															fontSize: "1.2rem",
+															cursor: "pointer",
+														}}
+													></i>
+												) : (
+													<i
+														className="fa fa-search"
+														style={{
+															color: "var(--success-darker)",
+															fontSize: "1.2rem",
+															cursor: "pointer",
+														}}
+													></i>
+												)}
+											</InputAdornment>
+										),
+									}}
+									value={searchInput}
+									onChange={(e) => setSearchInput(e.target.value)}
+									style={{
+										cursor: "pointer",
+										padding: "0",
+										margin: "0",
+									}}
+								/>
+							</form>
 						)}
 					</div>
 					<div className="NavbarLinks NavMobile">
@@ -310,6 +329,48 @@ const Navbar = () => {
 					</div>
 				</div>
 			</div>
+			{/* Display search results */}
+			{searchResults.length > 0 ? (
+				<Modal
+					open={searching}
+					onClose={() => setSearching(false)}
+					aria-labelledby="search-results"
+					aria-describedby="search-results"
+				>
+					<div className="SearchResults">
+						<ul>
+							{searchResults.map((product) => (
+								<li
+									key={product._id}
+									onClick={() => {
+										navigateTo(`/product/${product._id}`);
+										setSearching(false);
+									}}
+								>
+									<img src={product?.images[0]} alt="" />
+									<div className="ResultsDetails">
+										<h4>{product?.productName}</h4>
+										<p>{product?.productDescription}</p>
+										<p>Category: {product?.productCategory}</p>
+									</div>
+								</li>
+							))}
+						</ul>
+					</div>
+				</Modal>
+			) : (
+				<Modal
+					open={searching}
+					onClose={() => setSearching(false)}
+					aria-labelledby="search-results"
+					aria-describedby="search-results"
+				>
+					<div className="SearchResults NoResults">
+						<p>No results found</p>
+					</div>
+				</Modal>
+			)
+			}
 		</div>
 	);
 };

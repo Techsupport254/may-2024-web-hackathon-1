@@ -8,12 +8,210 @@
 
 .ChatContainer {
     width: 100%;
-    height: 100%;
+    height: auto;
     background-color: #f4f4f4;
     border-radius: 8px;
     overflow: hidden;
     display: grid;
-    grid-template-columns: 25% auto;
+    grid-template-columns: 25% auto 20%;
+
+}
+
+.ChatsMessages {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    overflow-y: scroll;
+    background-color: #fff;
+}
+
+.ChatMessagesTop {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 1rem;
+    color: #000;
+
+
+    & .UserProfile {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        padding: 1rem 0;
+        border-bottom: 1px solid #ccc;
+
+        i {
+            font-size: 1.5rem;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+
+            &:hover {
+                color: green;
+            }
+        }
+
+        & img {
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        & .UserDetails {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: .3rem;
+            margin: 0;
+            padding: 0;
+
+            & span {
+                font-weight: 600;
+            }
+
+            & p {
+                font-size: .8rem;
+            }
+
+        }
+
+    }
+
+}
+
+.ChatMessagesTopSearch {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    color: #000;
+    margin-bottom: 1rem;
+
+    & input {
+        width: 90%;
+        height: 2rem;
+        padding: 0.5rem;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    & i {
+        font-size: 1.5rem;
+        color: #000;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+
+    & i:hover {
+        background-color: green;
+    }
+
+}
+
+.ChatMessagesBottom {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: .5rem;
+
+    & .ChatMessage {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.5rem;
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        background: #f5f5f5;
+        border-radius: 5px;
+        cursor: pointer;
+
+        & img {
+            width: 3rem;
+            height: 3rem;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        & .ChatMessageDetails {
+            width: 100%;
+
+            .ChatMessageDetailsTop {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+                height: auto;
+                overflow: hidden;
+
+                & span {
+                    font-weight: 600;
+                    font-size: .8rem;
+                }
+
+                & small {
+                    font-size: .7rem;
+                    color: #888;
+                }
+            }
+
+            & .ChatMessageDetailsBottom {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 1rem;
+                width: 100%;
+                height: auto;
+                overflow: hidden;
+
+                & p {
+                    font-size: .8rem;
+                    font-weight: 400;
+                }
+            }
+
+        }
+
+        & i {
+            font-size: 1.5rem;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        & i:hover {
+            background-color: green;
+        }
+
+        &:hover {
+            background: #f9f9f9f9;
+        }
+
+    }
+
+    .ChatMessage.Active {
+        background: #f9f9f9f9;
+    }
+
 }
 
 .ChatHeader {
@@ -22,7 +220,6 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
     background-color: #fff;
     color: #000;
     padding: 0.5rem;
@@ -35,10 +232,11 @@
     align-items: center;
     gap: 1rem;
     padding: 0.5rem;
+    border-bottom: 1px solid #ccc;
 
     & .ProfilePicture {
-        width: 5rem;
-        height: 5rem;
+        width: 3rem;
+        height: 3rem;
         border-radius: 50%;
         overflow: hidden;
 
@@ -79,96 +277,6 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
-    padding: 0.5rem;
-    width: auto;
-    margin-left: auto;
-    margin-right: 1%;
-
-    & .HeaderInfo {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 0;
-        margin: 0;
-        padding: 0;
-
-        & span {
-            font-size: .8rem;
-            font-weight: 600;
-            margin: 0;
-            padding: 0;
-        }
-
-        & p {
-            font-size: .7rem;
-            font-weight: 600;
-            margin: 0;
-            padding: 0;
-        }
-
-    }
-
-    & .HeaderMore {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 0;
-        margin: 0;
-        padding: 0;
-
-        & .Pending {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0;
-            padding: 0;
-            border-radius: 4px;
-            background-color: #fff;
-            color: #000;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        & .Settled {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin: 0;
-            padding: 0;
-            border-radius: 4px;
-            background-color: #fff;
-            color: #000;
-            padding: 0.2rem 0.5rem;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        & p {
-            font-size: 0.7rem;
-            font-weight: 600;
-            margin: 0;
-            padding: 0;
-
-            & span {
-                font-size: 0.8rem;
-                font-weight: 600;
-                margin: 0;
-                padding: 0;
-            }
-        }
-    }
-}
-
-.ChatHeader h2 {
-    margin: 0;
-    font-size: 1rem;
-    font-weight: 600;
 }
 
 .NoMessages {
@@ -189,6 +297,7 @@
     gap: 1rem;
 
 
+
     .GroupDate {
         display: flex;
         justify-content: center;
@@ -207,19 +316,20 @@
 
 .ChatMessages {
     width: 100%;
+    height: 85vh;
     padding: 5px;
     overflow-y: scroll;
-    max-height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     padding: 1rem;
+
+
 }
 
 .Message {
     width: 80%;
     margin-bottom: 2px;
-
 }
 
 .SenderMessage {
@@ -228,6 +338,14 @@
     align-items: flex-end;
     width: 50%;
     margin-left: auto;
+
+    & p {
+        background: rgb(200, 250, 214);
+        border: 1px solid rgb(200, 250, 214);
+        color: #000;
+        border-radius: 10px 0 10px 10px;
+        margin-left: 10px 0 10px auto;
+    }
 }
 
 .ReceiverMessage {
@@ -235,6 +353,13 @@
     flex-direction: column;
     align-items: flex-start;
     width: 50%;
+
+    & p {
+        background: #f1f0f0;
+        color: #333;
+        border-radius: 0 10px 10px 10px;
+        margin-right: 10px 0 10px 10px;
+    }
 }
 
 .MessageContent {
@@ -256,6 +381,10 @@
 }
 
 .MessageTime {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.3rem;
     width: auto;
     font-size: .6rem;
     color: #888;
@@ -263,35 +392,36 @@
 }
 
 .ChatInput {
+    height: 15vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
+    justify-content: center;
     padding: 16px;
 
 
     & form {
         display: flex;
         align-items: center;
+        justify-content: center;
         width: 100%;
+        height: 100%;
+
     }
 }
 
 .ChatInput input {
-    display: flex;
-    flex-wrap: wrap;
-    flex-grow: 1;
+    width: 75%;
     padding: 8px;
-    border-radius: 4px;
     border: 1px solid #ccc;
-    transition: all 0.2s ease-in-out;
-    height: fit-content !important;
-    overflow: hidden;
-    resize: calc(100% - 16px);
-
+    border-radius: 4px;
+    resize: none;
+    font-size: 1rem;
 
     &:focus {
         outline: 1px solid green;
     }
 }
+
 
 .ChatInput button {
     margin-left: 8px;
@@ -311,11 +441,13 @@
 .Media {
     display: flex;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     width: 10%;
     height: 100%;
     margin-left: auto;
     margin-right: 1%;
+
 
     & i {
         font-size: 1.5rem;
