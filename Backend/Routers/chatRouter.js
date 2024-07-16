@@ -1,6 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const Chat = require("../models/chatModel"); // Adjust the path as needed
+const Chat = require("../models/chatModel");
+
+// get all chats
+router.get("/", async (req, res) => {
+	try {
+		const chats = await Chat.find();
+		res.status(200).json(chats);
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching chats data",
+			error: err,
+		});
+	}
+});
 
 // Handler for GET request to /api/chats
 // Fetches chats data based on query parameters
@@ -30,6 +43,26 @@ router.get("/chats", async (req, res) => {
 		}
 
 		res.status(200).json(conversations);
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching chats data",
+			error: err,
+		});
+	}
+});
+
+// Handler for GET request to /api/chats/user/:userId
+// Fetches chats data by userId
+router.get("/chats/user/:userId", async (req, res) => {
+	try {
+		// Fetch the chats data from the database
+		const chats = await Chat.find({
+			$or: [
+				{ "conversations.messages.sender": req.params.userId },
+				{ "conversations.messages.recipient": req.params.userId },
+			],
+		});
+		res.status(200).json(chats);
 	} catch (err) {
 		res.status(400).json({
 			message: "Error fetching chats data",
@@ -162,6 +195,35 @@ router.get("/search/:word", async (req, res) => {
 	} catch (err) {
 		res.status(400).json({
 			message: "Error fetching chats data",
+			error: err,
+		});
+	}
+});
+
+// get the unread messages count of the user
+router.get("/unread/:userId", async (req, res) => {
+	try {
+		const chats = await Chat.find({
+			"conversations.messages.recipient": req.params.userId,
+			"conversations.messages.status": "sent",
+		});
+
+		let unreadCount = 0;
+
+		chats.forEach((chat) => {
+			chat.conversations.forEach((conv) => {
+				conv.messages.forEach((msg) => {
+					if (msg.recipient === req.params.userId && msg.status === "sent") {
+						unreadCount++;
+					}
+				});
+			});
+		});
+
+		res.status(200).send(String(unreadCount));
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching unread messages count",
 			error: err,
 		});
 	}

@@ -65,6 +65,22 @@ const ProductSchema = mongoose.Schema(
 			type: Number,
 			required: true,
 		},
+		ratings: [
+			{
+				rating: {
+					type: Number,
+					default: 0,
+				},
+				comment: {
+					type: String,
+					default: "No comment",
+				},
+				user: {
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "User",
+				},
+			},
+		],
 		productStatus: {
 			type: String,
 			required: true,
@@ -82,5 +98,17 @@ const ProductSchema = mongoose.Schema(
 		},
 	}
 );
+
+// Creating text indexes for search functionality
+ProductSchema.index({
+	productName: "text",
+	productCategory: "text",
+	subCategory: "text",
+	productDescription: "text",
+	brandName: "text",
+	labels: "text",
+	tags: "text",
+	instructions: "text",
+});
 
 module.exports = mongoose.model("agrisolveProduct", ProductSchema);

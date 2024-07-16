@@ -33,8 +33,6 @@ router.get("/consults/:id", async (req, res) => {
 	}
 });
 
-
-
 // Handler for GET request to /api/consults/user/:username
 // Fetches consults data by username
 router.get("/consults/user/:username", async (req, res) => {
@@ -148,6 +146,25 @@ router.put("/consults/:id", async (req, res) => {
 	} catch (err) {
 		res.status(400).json({
 			message: "Error updating consult",
+			error: err,
+		});
+	}
+});
+
+// count unread consults by id
+router.get("/consults/unread/:id", async (req, res) => {
+	try {
+		const userId = req.params.id;
+		// Fetch the consults data from the database
+		const consults = await Consult.find({
+			newConsult: true,
+			refId: { $ne: userId },
+		});
+		const unreadCount = consults.length;
+		res.status(200).send(String(unreadCount));
+	} catch (err) {
+		res.status(400).json({
+			message: "Error fetching consults data",
 			error: err,
 		});
 	}
