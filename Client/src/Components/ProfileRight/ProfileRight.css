@@ -2,7 +2,7 @@
     width: 100%;
     height: 100%;
     background-color: #fff;
-    padding: .5rem 1rem;
+    padding: 1rem;
     border-radius: 10px;
     overflow: hidden;
 }
@@ -10,9 +10,13 @@
 .ProfileRightContainer {
     width: 100%;
     height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 70% auto;
     overflow-x: auto;
+
+    & .ProfileAccount {
+        width: 100%;
+        height: 100%;
+
+    }
 }

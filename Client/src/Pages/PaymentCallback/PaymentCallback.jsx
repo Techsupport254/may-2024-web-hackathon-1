@@ -5,11 +5,10 @@ import { Button, CircularProgress } from "@mui/material";
 import Logo from "../../assets/logo.png";
 import "./PaymentCallback.css";
 
-const PaymentCallback = ({ userData }) => {
+const PaymentCallback = () => {
 	const location = useLocation();
 	const queryParams = new URLSearchParams(location.search);
-	const trxref = queryParams.get("trxref");
-	const reference = queryParams.get("reference");
+	const trxref = queryParams.get("trxref") || queryParams.get("reference"); // Handle both cases
 	const [paymentData, setPaymentData] = useState(null);
 	const [verificationStatus, setVerificationStatus] = useState("verifying");
 
@@ -23,14 +22,20 @@ const PaymentCallback = ({ userData }) => {
 				`http://localhost:8000/payment/status/${trxref}`
 			);
 			if (response.status === 200) {
-				setPaymentData(response.data);
-				const paymentStatus = response.data.status;
-				console.log(paymentStatus);
+				const data = response.data;
+				setPaymentData(data);
+				const paymentStatus = data?.order?.payment?.status || data.status;
+
+				console.log("Payment Status:", paymentStatus);
+
 				switch (paymentStatus) {
+					case "Paid":
 					case "success":
 						setVerificationStatus("success");
 						break;
+					case "Pending":
 					case "pending":
+					case "failed":
 					case "error":
 					default:
 						setVerificationStatus("error");
@@ -43,6 +48,13 @@ const PaymentCallback = ({ userData }) => {
 			console.error("Verification error:", error);
 			setVerificationStatus("error");
 		}
+	};
+
+	const getCurrencyFormattedAmount = (amount) => {
+		return new Intl.NumberFormat("en-NG", {
+			style: "currency",
+			currency: "KES",
+		}).format(amount);
 	};
 
 	return (
@@ -71,31 +83,78 @@ const PaymentCallback = ({ userData }) => {
 							</div>
 							<div className="ReceiptItem FlexDisplay">
 								<span>Transaction Status</span>
-								<p>{paymentData?.status}</p>
+								<p>
+									{paymentData?.order?.payment?.status || paymentData?.status}
+								</p>
 							</div>
 							<div className="ReceiptItem FlexDisplay">
 								<span>Receipt Number</span>
-								<p>{paymentData?.receipt_number}</p>
+								<p>{paymentData?.order?.orderId}</p>
 							</div>
 							<div className="ReceiptItem FlexDisplay">
 								<span>Transaction Channel</span>
-								<p>{paymentData?.channel}</p>
-							</div>
-							<div className="ReceiptItem FlexDisplay">
-								<span>Gateway Response</span>
-								<p>{paymentData?.gateway_response}</p>
+								<p>{paymentData?.order?.payment?.method}</p>
 							</div>
 							<div className="ReceiptItem FlexDisplay">
 								<span>Transaction Date</span>
-								<p>{new Date(paymentData?.paid_at).toLocaleString("en-NG")}</p>
+								<p>
+									{new Date(paymentData?.order?.payment?.date).toLocaleString(
+										"en-NG"
+									)}
+								</p>
+							</div>
+							<div className="ReceiptItem FlexDisplay">
+								<span>Customer Name</span>
+								<p>{paymentData?.order?.customer?.name}</p>
+							</div>
+							<div className="ReceiptItem FlexDisplay">
+								<span>Customer Email</span>
+								<p>{paymentData?.order?.customer?.email}</p>
+							</div>
+							<div className="ReceiptItem FlexDisplay">
+								<span>Customer Phone</span>
+								<p>{paymentData?.order?.customer?.phone}</p>
+							</div>
+							<div className="ReceiptItem FlexDisplay">
+								<span>Products Purchased</span>
+								<table>
+									<thead>
+										<tr>
+											<th>Product Name</th>
+											<th>Quantity</th>
+											<th>Price (kes)</th>
+											<th>Total (kes)</th>
+										</tr>
+									</thead>
+									<tbody>
+										{paymentData?.order?.products.map((product, index) => (
+											<tr key={index}>
+												<td>{product.productName}</td>
+												<td>{product.quantity}</td>
+												<td>
+													{getCurrencyFormattedAmount(
+														product.price,
+														paymentData?.order?.currency
+													)}
+												</td>
+												<td>
+													{getCurrencyFormattedAmount(
+														product.price * product.quantity,
+														paymentData?.order?.currency
+													)}
+												</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
 							</div>
 							<div className="ReceiptItem AmountPaid FlexDisplay">
 								<span>Amount Paid</span>
 								<p>
-									{new Intl.NumberFormat("en-NG", {
-										style: "currency",
-										currency: paymentData?.currency,
-									}).format(paymentData?.amount / 100)}
+									{getCurrencyFormattedAmount(
+										paymentData?.order?.amounts?.totalAmount,
+										paymentData?.order?.currency
+									)}
 								</p>
 							</div>
 						</div>

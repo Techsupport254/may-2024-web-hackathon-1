@@ -31,6 +31,7 @@
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "leaflet-geosearch": "^4.0.0",
+    "lodash.debounce": "^4.0.8",
     "mongodb": "^6.7.0",
     "react": "^18.3.1",
     "react-credit-cards-2": "^1.0.2",

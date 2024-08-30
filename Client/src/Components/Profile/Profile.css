@@ -3,24 +3,5 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    height: 90vh;
-}
-
-.LeftProfile {
-    width: 20%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    border-radius: .5rem;
-}
-
-.RightProfile {
-    width: 80%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    border-radius: .5rem;
-    box-shadow: var(--boxShadow);
+    height: 96vh;
 }

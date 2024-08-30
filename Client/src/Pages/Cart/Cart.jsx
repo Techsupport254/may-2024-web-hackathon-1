@@ -28,6 +28,7 @@ const Cart = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 	const [totalPrice, setTotalPrice] = useState(0);
+	const [discounts, setDiscounts] = useState([]);
 
 	useEffect(() => {
 		const fetchCartItems = async () => {
@@ -165,6 +166,17 @@ const Cart = () => {
 		handleNext();
 	};
 
+	const isCartEmpty = cartItems?.length === 0;
+	const formattedPrice = totalPrice
+		.toFixed(2)
+		.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	const totalDisplay = `KSh. ${formattedPrice}`;
+
+	// get the total amount of the cart
+	const totalAmount = cartItems.reduce(
+		(acc, item) => acc + item.price * item.quantity,
+		0
+	);
 	const renderStepContent = () => {
 		switch (activeStep) {
 			case 0:
@@ -173,6 +185,8 @@ const Cart = () => {
 						handleNext={handleNext}
 						handleBack={handleBack}
 						isLastStep={isLastStep()}
+						totalAmount={totalPrice}
+						discounts={discounts}
 					/>
 				);
 			case 1:
@@ -185,6 +199,9 @@ const Cart = () => {
 						deliveryFee={deliveryFee}
 						setSelectedLocation={setSelectedLocation}
 						selectedLocation={selectedLocation}
+						totalAmount={totalPrice}
+						discounts={discounts}
+						setDiscounts={setDiscounts}
 					/>
 				);
 			case 2:
@@ -195,19 +212,15 @@ const Cart = () => {
 						deliveryMethod={deliveryMethod}
 						deliveryFee={deliveryFee}
 						selectedLocation={selectedLocation}
-						products={cartItems} // Pass cart items to Pay component
+						products={cartItems}
+						totalAmount={totalPrice}
+						discounts={discounts}
 					/>
 				);
 			default:
 				return null;
 		}
 	};
-
-	const isCartEmpty = cartItems?.length === 0;
-	const formattedPrice = totalPrice
-		.toFixed(2)
-		.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	const totalDisplay = `KSh. ${formattedPrice}`;
 
 	return (
 		<div className="Cart">

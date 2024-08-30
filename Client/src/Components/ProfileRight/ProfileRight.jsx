@@ -1,49 +1,37 @@
 import React from "react";
 import "./ProfileRight.css";
-import Orders from "../../Pages/Orders/Orders";
 import ProfileAccount from "../ProfileAccount/ProfileAccount";
-import Notifications from "../Notifications/Notifications";
-import AccountConsults from "../AccountConsults/AccountConsults";
-import AccountCart from "../AccountCart/AccountCart";
 import AccountSettings from "../AccountSettings/AccountSettings";
+import PropTypes from "prop-types";
 
-const ProfileRight = ({
-	activeMenu,
-	userData,
-	isLoggedin,
-	paymentData,
-	shippingData,
-}) => {
-	const components = {
-		"My Account": (
-			<ProfileAccount
-				userData={userData}
-				isLoggedin={isLoggedin}
-				paymentData={paymentData}
-				shippingData={shippingData}
-			/>
-		),
-		Notifications: (
-			<Notifications userData={userData} isLoggedin={isLoggedin} />
-		),
-		"My Orders": <Orders userData={userData} isLoggedin={isLoggedin} />,
-		Consults: <AccountConsults userData={userData} isLoggedin={isLoggedin} />,
-		"My Cart": <AccountCart userData={userData} isLoggedin={isLoggedin} />,
-		Settings: <AccountSettings userData={userData} isLoggedin={isLoggedin} />,
-	};
-
-	const getContent = () => {
-		return components[activeMenu] || components["My Account"];
-	};
-
+const ProfileRight = ({ userData, isLoggedin, paymentData, shippingData }) => {
 	return (
 		<div className="ProfileRight">
-			<h3>
-				Account Overview {">"} {activeMenu}
-			</h3>
-			<div className="ProfileRightContainer">{getContent()}</div>
+			<div className="ProfileRightContainer">
+				<ProfileAccount
+					userData={userData}
+					isLoggedin={isLoggedin}
+					paymentData={paymentData}
+					shippingData={shippingData}
+					className="ProfileAccount"
+				/>
+				<AccountSettings
+					userData={userData}
+					isLoggedin={isLoggedin}
+					className="AccountSettings"
+				/>
+			</div>
 		</div>
 	);
 };
 
 export default ProfileRight;
+
+// props validation
+ProfileRight.propTypes = {
+	activeMenu: PropTypes.string.isRequired,
+	userData: PropTypes.object.isRequired,
+	isLoggedin: PropTypes.bool.isRequired,
+	paymentData: PropTypes.object.isRequired,
+	shippingData: PropTypes.object.isRequired,
+};

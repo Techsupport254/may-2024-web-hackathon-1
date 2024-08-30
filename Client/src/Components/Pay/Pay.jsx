@@ -12,15 +12,16 @@ const Pay = ({
 	deliveryFee,
 	deliveryMethod,
 	selectedLocation,
+	discounts,
 }) => {
-	const { userData } = useContext(ApiContext);
+	const { userData, clearCart } = useContext(ApiContext); // clearCart is used to clear the cart after payment
 	const [loading, setLoading] = useState(false);
 	const [paying, setPaying] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const [pendingPayment, setPendingPayment] = useState(false);
 	const [paymentMethod, setPaymentMethod] = useState("");
 	const [tax, setTax] = useState(0);
-	const [isPaid, setIsPaid] = useState(false); // Add isPaid state
+	const [isPaid, setIsPaid] = useState(false);
 
 	console.log(products);
 
@@ -65,30 +66,40 @@ const Pay = ({
 			const uid = Date.now();
 			const orderId = `${username}-${uid}`;
 
+			const holder = userData?.name || "John Doe";
+			const number = userData?.phone || "0700000000";
+
+			const discountsAmount = calculateDiscounts();
+
 			const paymentData = {
-				amount: parseFloat((totalPrice + deliveryFee + tax).toFixed(2)),
+				amount: parseFloat(
+					(totalPrice + deliveryFee + tax - discountsAmount).toFixed(2)
+				),
 				email: userData?.email,
 				orderId: orderId,
 				userId: userData._id,
 				paymentMethod: paymentMethod,
 				deliveryMethod: deliveryMethod,
+				location: selectedLocation?.display_name,
+				reason: "Payment for products",
+				number: number,
+				holder: holder,
+				billingAddress: defaultBillingAddress,
+				shippingAddress: defaultShippingAddress,
+				totalAmount: parseFloat(
+					(totalPrice + deliveryFee + tax - discountsAmount).toFixed(2)
+				),
+				tax: parseFloat(tax.toFixed(2)),
+				deliveryFee: parseFloat(deliveryFee.toFixed(2)), // Ensure deliveryFee is included here
+				discounts: discounts,
 				products: products.map((product) => ({
 					productId: product.productId,
 					productName: product.productName,
 					quantity: product.quantity,
 					price: product.price,
+					refId: product.refId || "default-ref-id",
 					status: product.status || "Pending",
 				})),
-				location: selectedLocation?.display_name,
-				reason: "Payment for products",
-				number: userData?.phone || "",
-				holder: userData?.name || "",
-				billingAddress: defaultBillingAddress,
-				shippingAddress: defaultShippingAddress,
-				totalAmount: parseFloat((totalPrice + deliveryFee + tax).toFixed(2)),
-				tax: parseFloat(tax.toFixed(2)),
-				deliveryFee: parseFloat(deliveryFee.toFixed(2)),
-				discounts: [],
 			};
 
 			console.log("Payment Data:", paymentData);
@@ -116,7 +127,18 @@ const Pay = ({
 		}
 	};
 
-	const totalAmount = totalPrice + tax + deliveryFee;
+	const calculateDiscounts = () => {
+		return discounts.reduce((total, discount) => total + discount.amount, 0);
+	};
+
+	const totalAmount = totalPrice + tax + deliveryFee - calculateDiscounts();
+
+	const formattedAmount = (amount) => {
+		return amount
+			.toFixed(2)
+			.toString()
+			.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	};
 
 	return (
 		<div className="Pay">
@@ -135,9 +157,20 @@ const Pay = ({
 						<span>Delivery Fee:</span>
 						<span>KSh.{deliveryFee}</span>
 					</div>
+					<div className="SummaryRow">
+						<span>Discount:</span>
+						<span>
+							KSh.
+							{calculateDiscounts()
+								.toFixed(2)
+								.toString()
+								.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+						</span>
+					</div>
+
 					<div className="SummaryRow TotalRow">
 						<span>Grand Total:</span>
-						<span>KSh.{totalAmount.toFixed(2)}</span>
+						<span>KSh.{formattedAmount(totalAmount)}</span>
 					</div>
 				</div>
 			)}
@@ -147,11 +180,7 @@ const Pay = ({
 					<div className="PaymentSummary">
 						<div className="SummaryRow">
 							<span>Delivery Method:</span>
-							<p
-								style={{
-									textTransform: "capitalize",
-								}}
-							>
+							<p style={{ textTransform: "capitalize" }}>
 								{deliveryMethod && deliveryMethod}
 							</p>
 						</div>
@@ -177,7 +206,7 @@ const Pay = ({
 							}}
 						>
 							<span>Total Amount:</span>
-							<p>KSh.{totalPrice.toFixed(2)}</p>
+							<p>KSh.{formattedAmount(totalPrice)}</p>
 						</div>
 						<div className="SummaryRow">
 							<span>Tax:</span>
@@ -185,7 +214,11 @@ const Pay = ({
 						</div>
 						<div className="SummaryRow">
 							<span>Delivery Fee:</span>
-							<p>KSh.{deliveryFee}</p>
+							<p>KSh.{formattedAmount(deliveryFee)}</p>
+						</div>
+						<div className="SummaryRow">
+							<span>Discount:</span>
+							<p>KSh.{formattedAmount(calculateDiscounts())}</p>
 						</div>
 						<div
 							className="SummaryRow TotalRow"
@@ -196,7 +229,7 @@ const Pay = ({
 							}}
 						>
 							<span>Grand Total:</span>
-							<p>KSh.{totalAmount.toFixed(2)}</p>
+							<p>KSh.{formattedAmount(totalAmount)}</p>
 						</div>
 					</div>
 				</div>
@@ -211,7 +244,7 @@ const Pay = ({
 						) : (
 							<>
 								<i className="fas fa-money-bill-wave"></i>&nbsp; Pay{" "}
-								{totalAmount.toFixed(2)} Now
+								{formattedAmount(totalAmount)} Now
 							</>
 						)}
 					</button>
@@ -240,18 +273,12 @@ const Pay = ({
 					{paying ? (
 						<i
 							className="fas fa-spinner fa-spin"
-							style={{
-								fontSize: "30px",
-								marginBottom: "20px",
-							}}
+							style={{ fontSize: "30px", marginBottom: "20px" }}
 						></i>
 					) : (
 						<i
 							className="fas fa-check"
-							style={{
-								fontSize: "30px",
-								marginBottom: "20px",
-							}}
+							style={{ fontSize: "30px", marginBottom: "20px" }}
 						></i>
 					)}
 					<h3>Payment in progress...</h3>
@@ -268,6 +295,7 @@ Pay.propTypes = {
 	deliveryFee: PropTypes.number.isRequired,
 	deliveryMethod: PropTypes.string.isRequired,
 	selectedLocation: PropTypes.object,
+	discounts: PropTypes.array,
 };
 
 export default Pay;

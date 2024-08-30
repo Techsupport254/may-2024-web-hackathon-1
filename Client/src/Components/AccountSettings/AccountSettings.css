@@ -1,133 +1,62 @@
 .AccountSettings {
     width: 100%;
-    max-width: 800px;
-    padding: 1rem;
-    background-color: #f7f7f7;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    padding: .5rem;
     overflow: auto;
-}
+    gap: 1rem;
 
-.AccountSettings h3 {
-    margin-top: 0;
-    margin-top: 1rem;
+    h3 {
+        font-size: 1rem;
+        font-weight: bold;
+    }
+
+    & p {
+        color: #666;
+    }
 }
 
 .AccSetting {
     width: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: .5rem;
+    box-shadow: var(--boxShadow);
+    border-radius: 5px;
+    padding: .5rem;
+
+    h3 {
+        font-weight: bold;
+    }
+
+    & p {
+        font-size: 1rem;
+        color: #666;
+    }
+
+    .SettingsItemRight {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        & span {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        & p {
+            font-size: .9rem;
+            color: #666;
+        }
+    }
+
 }
 
 .SettingsItem {
     display: flex;
     flex-direction: row;
-    align-items: center;
-
-}
-
-.SettingsItem label {
-    font-size: 1rem;
-    margin: 0;
-    margin-right: 10px;
-}
-
-.SettingsItem input[type='checkbox'],
-.SettingsItem select {
-    margin-left: 10px;
-}
-
-.SettingsItem select {
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    font-size: 1rem;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.SettingsItem input[type='checkbox'] {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
-    position: relative;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    outline: none;
-}
-
-.SettingsItem input[type='checkbox']:checked {
-    background-color: #4caf50;
-    border: 1px solid #4caf50;
-}
-
-.SettingsItem input[type='checkbox']:checked::before {
-    content: '\2714';
-    display: inline-block;
-    font-size: 16px;
-    color: white;
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    text-align: center;
-    border-radius: 4px;
-    background-color: #4caf50;
-}
-
-.SettingsItem input[type='checkbox']:focus {
-    outline: none;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-}
-
-.SettingsItem select:focus {
-    outline: none;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
-}
-
-.DeleteAccount {
-    display: flex;
-    flex-direction: column;
     align-items: flex-start;
-    justify-content: flex-start;
-}
-
-.DeleteAccount .AccountInfo {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin-right: 50px;
-}
-
-.DeleteAccount .AccountInfo span {
-    font-size: 1rem;
-    font-weight: 500;
-    font-weight: bold;
-}
-
-.DeleteAccount .AccountInfo p {
-    font-size: .9rem;
-    margin: 0;
-    font-weight: 400;
-    color: #666;
-}
-
-.DeleteAccountBtn {
-    background-color: #f44336;
-    color: #fff;
-    border: none;
-    padding: .5rem 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
     gap: .5rem;
-    margin: .5rem;
 }

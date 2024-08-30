@@ -31,11 +31,6 @@ const Loading = () => (
 			<div className="inner two"></div>
 			<div className="inner three"></div>
 		</div>
-		<div className="loader">
-			<div className="inner one"></div>
-			<div className="inner two"></div>
-			<div className="inner three"></div>
-		</div>
 	</div>
 );
 
@@ -55,11 +50,44 @@ const App = () => {
 
 	const location = useLocation();
 
+	// Determine whether to render Navbar and Footer based on the current path
 	const shouldRenderNavbarFooter =
 		isUserDataLoaded &&
 		!["/login", "/register", "/forgot", "/consult-chats"].includes(
 			location.pathname
 		);
+
+	const renderProtectedRoutes = () => (
+		<>
+			<Route path="/consult" element={<Consult />} />
+			<Route
+				path="/cart"
+				element={<Cart cartItemsData={cartItems} products={products} />}
+			/>
+			<Route
+				path="/profile"
+				element={
+					<Profile
+						handleLogout={handleLogout}
+						shippingData={shippingData}
+						paymentData={paymentData}
+					/>
+				}
+			/>
+			<Route path="/orders" element={<Orders />} />
+			<Route path="/order/:id" element={<Order />} />
+			<Route path="/consult-chats" element={<ConsultChat />} />
+		</>
+	);
+
+	const renderUnprotectedRoutes = () => (
+		<>
+			<Route path="/login" element={<Login onLogin={handleLogin} />} />
+			<Route path="/register" element={<Register />} />
+			<Route path="/forgot" element={<Forgot />} />
+			<Route path="*" element={<Navigate to="/login" replace />} />
+		</>
+	);
 
 	return (
 		<div className="App">
@@ -80,62 +108,9 @@ const App = () => {
 						/>
 						<Route path="/events" element={<Events events={events} />} />
 						<Route path="/event/:id" element={<Events events={events} />} />
+						<Route path="/payment" element={<PaymentCallback />} />
+						{isLoggedIn ? renderProtectedRoutes() : renderUnprotectedRoutes()}
 						<Route path="*" element={<NotFound />} />
-						<Route path="payment" element={<PaymentCallback />} />
-						{userData ? (
-							<>
-								<Route path="/consult" element={<Consult />} />
-								<Route
-									path="/cart"
-									element={
-										<Cart cartItemsData={cartItems} products={products} />
-									}
-								/>
-								<Route
-									path="/profile"
-									element={
-										<Profile
-											handleLogout={handleLogout}
-											shippingData={shippingData}
-											paymentData={paymentData}
-										/>
-									}
-								/>
-								<Route path="/orders" element={<Orders />} />
-								<Route path="/order/:id" element={<Order />} />
-								<Route path="/consult-chats" element={<ConsultChat />} />
-								<Route path="/login" element={<Login />} />
-							</>
-						) : (
-							<>
-								<Route
-									path="/account"
-									element={<Navigate to="/login" replace />}
-								/>
-								<Route
-									path="/consult"
-									element={<Navigate to="/login" replace />}
-								/>
-								<Route
-									path="/cart"
-									element={<Navigate to="/login" replace />}
-								/>
-								<Route
-									path="/profile"
-									element={<Navigate to="/login" replace />}
-								/>
-								<Route
-									path="/orders"
-									element={<Navigate to="/login" replace />}
-								/>
-								<Route
-									path="/login"
-									element={<Login onLogin={handleLogin} />}
-								/>
-							</>
-						)}
-						<Route path="/register" element={<Register />} />
-						{!isLoggedIn && <Route path="/forgot" element={<Forgot />} />}
 					</Routes>
 				) : (
 					<Loading />

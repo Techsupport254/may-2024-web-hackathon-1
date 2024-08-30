@@ -15,6 +15,7 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 	const handleToCart = async (e) => {
 		e.stopPropagation(); // Prevent link navigation when clicking the button
 		setAdding(true);
+		console.log(product);
 		try {
 			const response = await axios.post(
 				"http://localhost:8000/cart",
@@ -26,6 +27,7 @@ const ProductCard = ({ product, isLoading, onProductClick }) => {
 							productName: product?.productName,
 							price: product?.price,
 							quantity: 1,
+							refId: product?.refId || "default-ref-id",
 						},
 					],
 				},

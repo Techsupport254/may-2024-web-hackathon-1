@@ -217,10 +217,10 @@ const Order = () => {
 				</Box>
 				<Box className="timeline-item-text">
 					<Typography variant="h6" className="timeline-item-title">
-						{displayText}
+						{displayText === "Pending" ? "Order Placed" : displayText}
 					</Typography>
 					<Typography variant="body2" className="timeline-item-subtitle">
-						{state.type === "Pending" ? state.displayText : state.date}
+						{state.date}
 					</Typography>
 				</Box>
 			</Box>
@@ -390,7 +390,7 @@ const Order = () => {
 									<span className="OrderSummaryLabel">Discount:</span>
 									<span className="OrderSummaryValue">
 										KSh.{" "}
-										{(orderDetails?.amounts.discount?.amount ?? 0)
+										{(orderDetails?.amounts?.discounts ?? 0)
 											.toFixed(2)
 											.toString()
 											.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}

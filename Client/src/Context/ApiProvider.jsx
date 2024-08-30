@@ -19,6 +19,7 @@ const ApiProvider = ({ children }) => {
 	const [orderData, setOrderData] = useState([]);
 	const [consults, setConsults] = useState([]);
 	const [chats, setChats] = useState([]);
+	const [settingsData, setSettingsData] = useState({});
 
 	useEffect(() => {
 		const fetchUserData = async () => {
@@ -43,7 +44,7 @@ const ApiProvider = ({ children }) => {
 						setIsLoggedIn(true);
 					}
 				} catch (err) {
-					console.log(err);
+					console.error("Error fetching user data:", err);
 				}
 			}
 
@@ -88,7 +89,7 @@ const ApiProvider = ({ children }) => {
 				);
 				setEvents(filteredEvents);
 			} catch (err) {
-				console.log(err);
+				console.error("Error fetching events:", err);
 			}
 		};
 
@@ -104,7 +105,7 @@ const ApiProvider = ({ children }) => {
 				);
 				setProducts(filteredProducts);
 			} catch (err) {
-				console.log(err);
+				console.error("Error fetching products:", err);
 			}
 		};
 
@@ -158,11 +159,11 @@ const ApiProvider = ({ children }) => {
 				window.location.replace("/");
 			}
 		} catch (err) {
-			console.log(err);
+			console.error("Error logging out:", err);
 		}
 	};
 
-	const handleLogin = async (data) => {
+	const handleLogin = (data) => {
 		localStorage.setItem("agrisolveData", JSON.stringify(data));
 		setUserData(data);
 		setToken(data.token);
@@ -202,7 +203,7 @@ const ApiProvider = ({ children }) => {
 		}
 	};
 
-	const fetchChats = async (userId) => {
+	const fetchChats = async () => {
 		try {
 			const response = await axios.get(`http://localhost:8000/chats/chats`);
 			setChats(response.data);
@@ -210,6 +211,25 @@ const ApiProvider = ({ children }) => {
 			console.error("Error fetching chats:", error);
 		}
 	};
+
+	const fetchSettings = async (userId) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:8000/settings/${userId}`
+			);
+			setSettingsData(response.data);
+		} catch (error) {
+			console.error("Error fetching settings:", error);
+		}
+	};
+
+	useEffect(() => {
+		if (userData?.id) {
+			fetchConsults(userData.id);
+			fetchChats();
+			fetchSettings(userData.id);
+		}
+	}, [userData]);
 
 	return (
 		<ApiContext.Provider
@@ -234,6 +254,7 @@ const ApiProvider = ({ children }) => {
 				fetchOrderItems,
 				consults,
 				fetchConsults,
+				settingsData,
 			}}
 		>
 			{children}

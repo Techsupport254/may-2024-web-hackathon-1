@@ -5,6 +5,7 @@ import "react-credit-cards-2/dist/es/styles-compiled.css";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import AvailableLocations from "../AvailableLocations/AvailableLocations";
 import DiscountCoupon from "../DiscountCoupon/DiscountCoupon";
+import PropTypes from "prop-types";
 
 const Payment = ({
 	handleNext,
@@ -14,6 +15,9 @@ const Payment = ({
 	deliveryFee,
 	setSelectedLocation,
 	selectedLocation,
+	totalAmount,
+	discounts,
+	setDiscounts,
 }) => {
 	const [defaultLocation, setDefaultLocation] = useState(null);
 	const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState(null);
@@ -76,7 +80,12 @@ const Payment = ({
 				/>
 				{/* Discount code if there */}
 				<div className="SummaryRow">
-					<DiscountCoupon />
+					<DiscountCoupon
+						discounts={discounts}
+						setDiscounts={setDiscounts}
+						setError={setError}
+						totalAmount={totalAmount}
+					/>
 				</div>
 				<div
 					className="Buttons"
@@ -103,3 +112,14 @@ const Payment = ({
 };
 
 export default Payment;
+
+// props
+Payment.propTypes = {
+	handleNext: PropTypes.func.isRequired,
+	handleBack: PropTypes.func.isRequired,
+	deliveryMethod: PropTypes.string.isRequired,
+	setDeliveryFee: PropTypes.func.isRequired,
+	deliveryFee: PropTypes.number.isRequired,
+	setSelectedLocation: PropTypes.func.isRequired,
+	selectedLocation: PropTypes.object.isRequired,
+};

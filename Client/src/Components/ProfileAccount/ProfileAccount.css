@@ -3,34 +3,33 @@
     justify-content: flex-start;
     align-items: flex-start;
     width: 100%;
-    height: 75vh;
+    height: 100%;
     overflow-y: auto;
 
+    & h4 {
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: center;
+    }
 }
 
-.ProfileAccount h4 {
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    margin: 0 .5rem;
 
-}
-
-.AccountInfoContainer {
-    display: flex;
+.AccountInfo {
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    display: flex;
+    gap: 1rem;
+    padding: .5rem;
 }
 
 .AccountInfoLeft {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 30%;
-    height: 90%;
-    margin: .5rem;
+    height: 100%;
+    padding: 1rem;
     box-shadow: var(--boxShadow);
     border-radius: 4px;
     gap: 0.5rem;
@@ -47,9 +46,13 @@
         object-fit: cover;
         overflow: hidden;
         border-radius: 50%;
+        position: relative;
+        transition: all .3s ease-in-out;
 
         &:hover {
             cursor: pointer;
+            transition: all .3s ease-in-out;
+
 
             & .UpdatePhoto {
                 display: flex;
@@ -81,7 +84,6 @@
         font-size: .8rem;
         font-weight: 400;
         text-align: center;
-        margin: 0 .5rem;
         color: #777;
     }
 
@@ -92,7 +94,7 @@
 
     }
 
-    & p>span {
+    & span {
         font-size: .8rem;
         font-weight: normal;
         color: #777;
@@ -178,18 +180,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     width: 100%;
     gap: .5rem;
     margin-top: 1rem;
 
     & button {
         width: 100%;
-        height: 2rem;
-        border-radius: 4px;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        font-size: .8rem;
         font-weight: 600;
         transition: all .3s ease-in-out;
         background: var(--error-light);
@@ -199,6 +196,14 @@
             background: var(--error-lighter);
             color: var(--error-darker);
         }
+    }
+
+    & small {
+        font-size: .8rem;
+        background: var(--warning-lighter);
+        padding: .5rem;
+        border-radius: 5px;
+        color: var(--warning-darker);
     }
 }
 
@@ -254,7 +259,6 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background-color: #007bff;
     box-shadow: var(--boxShadow);
 
     & i {
@@ -263,26 +267,17 @@
     }
 }
 
-.AccountInfo {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    width: 100%;
-    height: 90%;
-    overflow-y: auto;
-}
-
 .AccountInfoRight {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 60%;
-    height: 90%;
+    width: 70%;
+    height: 100%;
     gap: 1rem;
     padding: 1rem;
     box-shadow: var(--boxShadow);
+    overflow: auto;
 }
 
 .AccountInfoItem {
@@ -296,21 +291,24 @@
 
 .ChangeBtn {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     height: 2rem;
     gap: .5rem;
     margin-top: 1rem;
 
-    & .SaveChanges {
-        background: var(--success-light);
-        color: var(--success-darker);
+    & button {
         padding: .5rem;
         border-radius: 4px;
         border: none;
         cursor: pointer;
         transition: all .3s ease-in-out;
+    }
+
+    & .SaveChanges {
+        background: var(--success-light);
+        color: var(--success-darker);
 
         &:hover {
             background: var(--success-lighter);
@@ -321,11 +319,6 @@
     & .CancelChanges {
         background: var(--error-light);
         color: var(--error-darker);
-        padding: .5rem;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        transition: all .3s ease-in-out;
 
         &:hover {
             background: var(--error-lighter);
@@ -336,16 +329,11 @@
     & .EditProfile {
         background: var(--bg-color);
         color: var(--white);
-        padding: .5rem;
-        border-radius: 4px;
-        border: none;
-        cursor: pointer;
-        transition: all .3s ease-in-out;
 
         &:hover {
-            background: var(--warning-lighter);
-            border: var(--bg-color) 2px solid;
+            border: 2px solid var(--bg-color);
             color: var(--bg-color);
+            background: transparent;
         }
     }
 }

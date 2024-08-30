@@ -24,9 +24,10 @@ const Orders = () => {
 		if (selectedCategory === "All") {
 			return orderData;
 		} else {
-			return orderData?.filter(
-				(order) => order.timeline[0].type === selectedCategory
-			);
+			return orderData?.filter((order) => {
+				const latestTimeline = order?.timeline[order.timeline.length - 1];
+				return latestTimeline?.type === selectedCategory;
+			});
 		}
 	}, [orderData, selectedCategory]);
 
@@ -58,8 +59,6 @@ const Orders = () => {
 			});
 		}
 	}, [filteredOrders, fetchProductDetails]);
-
-	console.log("Orders", orderData);
 
 	const handleRowClick = (record) => {
 		const newExpandedKeys = [...expandedKeys];
@@ -125,7 +124,9 @@ const Orders = () => {
 								? "var(--success-dark)"
 								: latestTimeline.type === "Out for Delivery"
 								? "var(--primary-dark)"
-								: "red"
+								: latestTimeline.type === "Pending"
+								? "var(--warning-dark)"
+								: "var(--gray)"
 						}
 					>
 						{latestTimeline.type}
@@ -167,24 +168,6 @@ const Orders = () => {
 					.toString()
 					.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`,
 		},
-		{
-			key: "expand",
-			render: (text, record) => (
-				<Button
-					type="link"
-					onClick={(e) => {
-						e.stopPropagation();
-						handleRowClick(record);
-					}}
-				>
-					{expandedKeys.includes(record._id) ? (
-						<DownOutlined />
-					) : (
-						<RightOutlined />
-					)}
-				</Button>
-			),
-		},
 	];
 
 	const expandedRowRender = (order) => {
@@ -208,7 +191,7 @@ const Orders = () => {
 						<img
 							src={productDetails?.images?.[0] || "https://picsum.photos/200"}
 							alt={productDetails?.productName || product.title}
-							style={{ width: 50, height: 50 }}
+							style={{ width: 50, height: 50, borderRadius: "5px" }}
 						/>
 					);
 				},

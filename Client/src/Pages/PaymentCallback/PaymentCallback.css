@@ -1,6 +1,6 @@
 .PaymentCallback {
     width: 100vw;
-    height: 90vh;
+    min-height: 90vh;
     justify-content: flex-start;
     padding: 1rem;
 }
@@ -15,12 +15,19 @@
     padding: .5rem;
 
     & .Verifying {
-        gap: 1rem;
+        gap: 2rem;
+        color: var(--primary-dark);
 
         & h3 {
             font-size: .8rem;
             font-weight: 600;
             color: var(--primary-dark);
+        }
+
+        i {
+            font-size: 2rem;
+            color: var(--primary-dark);
+            animation: spin 2s linear infinite;
         }
     }
 
@@ -82,9 +89,11 @@
     & .ReceiptItem {
         width: 100%;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 30% auto;
         gap: 1rem;
         border-radius: 5px;
+        align-items: flex-start;
+        justify-content: flex-start;
 
         & span {
             font-weight: 500;
