@@ -6,18 +6,21 @@ const router = express.Router();
 const { EMAIL, EMAIL_PASSWORD, FRONTEND_URL } = process.env;
 
 const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-        user: EMAIL,
-        pass: EMAIL_PASSWORD,
-    },
+	service: "gmail",
+	auth: {
+		user: EMAIL,
+		pass: EMAIL_PASSWORD,
+	},
 });
 
 const sendVerificationEmail = async (email, verificationCode, codeExpiry) => {
-    const verificationLink = `${FRONTEND_URL}/verify?code=${verificationCode}`;
-    const emailSubject = "Verify Your Email Address";
+	// Ensure codeExpiry is a valid ISO string
+	const expiryDate = new Date(codeExpiry);
 
-    const htmlTemplate = `
+	const verificationLink = `${FRONTEND_URL}/verify?code=${verificationCode}`;
+	const emailSubject = "Verify Your Email Address";
+
+	const htmlTemplate = `
     <html lang="en">
         <head>
             <meta charset="UTF-8" />
@@ -103,10 +106,6 @@ const sendVerificationEmail = async (email, verificationCode, codeExpiry) => {
                     border-radius: 5px;
                     color: #fff;
                 }
-                #expiryCounter {
-                    font-weight: 600;
-                    color: #e74c3c;
-                }
             </style>
         </head>
         <body>
@@ -135,38 +134,17 @@ const sendVerificationEmail = async (email, verificationCode, codeExpiry) => {
                         <a
                             href="${verificationLink}"
                             style="color: white; text-decoration: none"
-                            >Verify Email</a>
+                            >Verify Email</a
+                        >
                     </button>
                     <p>
                         Or copy and paste the link below in your browser:
                         <br />
                         ${verificationLink}
                     </p>
-                    <!-- expiry counter animation -->
                     <p>
-                        Your verification code will expire in 
-                        <span id="expiryCounter"></span>
+                        Your verification code will expire on ${expiryDate.toLocaleString()}.
                     </p>
-                    <script>
-                        const expiryDate = new Date("${codeExpiry}").getTime();
-                        const expiryCounter = document.getElementById("expiryCounter");
-                        const x = setInterval(() => {
-                            const now = new Date().getTime();
-                            const distance = expiryDate - now;
-                            const hours = Math.floor(
-                                (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-                            );
-                            const minutes = Math.floor(
-                                (distance % (1000 * 60 * 60)) / (1000 * 60)
-                            );
-                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                            expiryCounter.innerHTML = hours + "h " + minutes + "m " + seconds + "s";
-                            if (distance < 0) {
-                                clearInterval(x);
-                                expiryCounter.innerHTML = "EXPIRED";
-                            }
-                        }, 1000);
-                    </script>
                     <p>
                         Please note that this link will expire in 1 hour.<br />
                         If you did not request this verification, please ignore this email.
@@ -194,19 +172,19 @@ const sendVerificationEmail = async (email, verificationCode, codeExpiry) => {
     </html>
     `;
 
-    let mailOptions = {
-        from: EMAIL,
-        to: email,
-        subject: emailSubject,
-        html: htmlTemplate,
-    };
+	let mailOptions = {
+		from: EMAIL,
+		to: email,
+		subject: emailSubject,
+		html: htmlTemplate,
+	};
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log("Verification email sent successfully");
-    } catch (error) {
-        console.error("Error sending verification email", error);
-    }
+	try {
+		await transporter.sendMail(mailOptions);
+		console.log("Verification email sent successfully");
+	} catch (error) {
+		console.error("Error sending verification email", error);
+	}
 };
 
 module.exports = { sendVerificationEmail };

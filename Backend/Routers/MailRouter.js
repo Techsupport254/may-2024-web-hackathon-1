@@ -17,6 +17,41 @@ const sendOrderConfirmationEmail = async (email, order) => {
 		amounts,
 	} = order;
 
+	// Get the latest status from the timeline
+	const latestStatus = timeline[timeline.length - 1]?.type;
+	const latestDate = new Date(
+		timeline[timeline.length - 1]?.date || payment.date
+	).toLocaleString();
+
+	// Define email subject and message based on the status
+	let emailSubject;
+	let emailMessage;
+
+	switch (latestStatus) {
+		case "Pending":
+			emailSubject = "Order Placed Successfully!";
+			emailMessage = "Your order has been received and is being processed.";
+			break;
+		case "Confirmed":
+			emailSubject = "Your Order has been Confirmed!";
+			emailMessage =
+				"Thank you for your order. Your order has been confirmed and is being prepared.";
+			break;
+		case "Out for Delivery":
+			emailSubject = "Your Order is Out for Delivery!";
+			emailMessage =
+				"Great news! Your order is out for delivery and will arrive soon.";
+			break;
+		case "Delivered":
+			emailSubject = "Your Order has been Delivered!";
+			emailMessage =
+				"We hope you enjoy your purchase. Your order has been successfully delivered.";
+			break;
+		default:
+			emailSubject = "Order Status Update";
+			emailMessage = `Your order status has been updated to ${latestStatus}.`;
+	}
+
 	let transporter = nodemailer.createTransport({
 		service: "gmail",
 		auth: {
@@ -51,7 +86,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
           border-radius: 5px;
           box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
           border: 1px solid #007867;
-		  padding: .2rem;
+          padding: .2rem;
         }
         .header {
           text-align: center;
@@ -116,8 +151,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
           border: 1px solid #ccc;
           padding: 0.5rem;
           font-size: 0.8rem;
-		    vertical-align: top;
-
+          vertical-align: top;
         }
         .OrderTotal {
           display: flex;
@@ -129,7 +163,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
         .OrderTotal h3 {
           font-size: 0.8rem;
         }
-		.OrderTotal span {
+        .OrderTotal span {
           font-size: 0.8rem !important;
         }
         .OrderSummary {
@@ -141,7 +175,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
         .OrderRightTop table td,
         .OrderTotal table td {
           border: none;
-		  font-size: 0.8rem !important;
+          font-size: 0.8rem !important;
         }
         .OrderSummaryRow {
           display: flex;
@@ -194,17 +228,17 @@ const sendOrderConfirmationEmail = async (email, order) => {
           color: white;
           margin-right: 10px;
         }
-		.timeline-item-text p{
-			color: #666;
-		}
+        .timeline-item-text p {
+          color: #666;
+        }
         .timeline-item-title {
           font-weight: 600;
           margin-bottom: 0.2rem;
-		  font-size: .9rem;
+          font-size: .9rem;
         }
         .timeline-item-subtitle {
           color: #ccc;
-		  font-size: 0.8rem;
+          font-size: 0.8rem;
         }
         .Footer {
           width: 100%;
@@ -244,17 +278,14 @@ const sendOrderConfirmationEmail = async (email, order) => {
             src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
             alt="Agrisolve Logo"
           />
-          <h1>Agri<span
-		  style="font-size: 32px;"
-		  >solve</span></h1>
+          <h1>Agri<span style="font-size: 32px;">solve</span></h1>
         </div>
         <div class="Greetings">
-          <span> Dear Customer, </span>
+          <span>Dear Customer,</span>
           <p>
-            Your order has been successfully placed. Below are the details of your
-            order. In case of any inquiries please contact us on
-            <a href="tel:0712345678">0712345678</a>.
+            ${emailMessage} You can view your order details below or by clicking the link below. Thank you for shopping with us.
           </p>
+          <a href="https://agrisolve-admin.vercel.app">View Order</a>
         </div>
         <div class="OrderContainer">
           <div class="OrderRight">
@@ -263,10 +294,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                 <td>
                   <div>
                     <p>Your Order is</p>
-                    <h3>
-						${timeline[timeline.length - 1].type}
-					</h3>
-                    <span>as of 11 June 2024</span>
+                    <h3>${latestStatus}</h3>
+                    <span>as of ${latestDate}</span>
                   </div>
                 </td>
                 <td style="text-align: right">
@@ -411,16 +440,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
               <div class="SectionItem">
                 <table style="width: 100%; border-collapse: collapse;">
                   <tr>
-                    <td style="width: 30%; padding: 0.5rem; font-size: 0.8rem;">
-                      <p>Method</p>
-                    </td>
-                    <td style="width: 70%; text-align: right; padding: 0.5rem; font-size: 0.8rem;">
-                      <p>${payment.method}</p>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="width: 30%; padding: 0.5rem; font-size: 0.8rem;">
-                      <p>Date</p>
+                    <td style="width: 30%; paddDate</p>
                     </td>
                     <td style="width: 70%; text-align: right; padding: 0.5rem; font-size: 0.8rem;">
                       <p>${new Date(payment.date).toLocaleString()}</p>
@@ -455,66 +475,50 @@ const sendOrderConfirmationEmail = async (email, order) => {
             </div>
             <div class="Section">
               <h3>Order Timeline</h3>
-              <div class="timeline-item">
-                <span class="timeline-dot" style="background-color: green; color: white">
-                  <i class="fas fa-check"></i>
-                </span>
-                <div class="timeline-item-text">
-                  <h6 class="timeline-item-title">Delivered</h6>
-                  <p class="timeline-item-subtitle">N/A</p>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <span class="timeline-dot" style="background-color: rgba(17, 141, 87, 1); color: white">
-                  <i class="fas fa-truck"></i>
-                </span>
-                <div class="timeline-item-text">
-                  <h6 class="timeline-item-title">Out for Delivery</h6>
-                  <p class="timeline-item-subtitle">N/A</p>
-                </div>
-              </div>
-              ${timeline
-								.map(
-									(event) => `
-                <div class="timeline-item">
-                  <span class="timeline-dot" style="background-color: ${
-										event.type === "Delivered"
+              ${[
+								{
+									type: "Pending",
+									label: "Order Placed",
+									defaultDate: payment.date,
+								},
+								{ type: "Confirmed", label: "Order Confirmed" },
+								{ type: "Out for Delivery", label: "Out for Delivery" },
+								{ type: "Delivered", label: "Delivered" },
+							]
+								.map((status) => {
+									const event = timeline.find((e) => e.type === status.type);
+									const date = event
+										? new Date(event.date).toLocaleString()
+										: status.defaultDate
+										? new Date(status.defaultDate).toLocaleString()
+										: "N/A";
+									const icon =
+										status.type === "Delivered" || status.type === "Confirmed"
+											? "check"
+											: status.type === "Out for Delivery"
+											? "truck"
+											: "clock";
+									const color =
+										status.type === "Delivered"
 											? "green"
-											: event.type === "Out for Delivery"
+											: status.type === "Out for Delivery"
+											? "rgba(0, 108, 156, 1)"
+											: status.type === "Confirmed"
 											? "rgba(17, 141, 87, 1)"
-											: event.type === "Confirmed"
-											? "purple"
-											: "orange"
-									}; color: white">
-                    <i class="fas fa-${
-											event.type === "Delivered" || event.type === "Confirmed"
-												? "check"
-												: event.type === "Out for Delivery"
-												? "truck"
-												: "clock"
-										}"></i>
-                  </span>
-                  <div class="timeline-item-text">
-                    <h6 class="timeline-item-title">${event.type}</h6>
-                    <p class="timeline-item-subtitle">${
-											event.type === "Pending"
-												? "Default before payment"
-												: new Date(event.date).toLocaleString()
-										}</p>
-                  </div>
-                </div>
-              `
-								)
+											: "orange";
+									return `
+                    <div class="timeline-item">
+                      <span class="timeline-dot" style="background-color: ${color}; color: white">
+                        <i class="fas fa-${icon}"></i>
+                      </span>
+                      <div class="timeline-item-text">
+                        <h6 class="timeline-item-title">${status.label}</h6>
+                        <p class="timeline-item-subtitle">${date}</p>
+                      </div>
+                    </div>
+                  `;
+								})
 								.join("")}
-				<div class="timeline-item">
-                <span class="timeline-dot" style="background-color: orange; color: white">
-				  <i class="fas fa-clock"></i>
-                </span>
-                <div class="timeline-item-text">
-                  <h6 class="timeline-item-title">Pending</h6>
-                  <p class="timeline-item-subtitle">Default before Payment</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -522,7 +526,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
           <div class="FooterTop">
             <p>
               For any inquiries, please contact us on
-              <a href="tel:0712345678">0712345678</a>
+              <a href="tel:0716404137">0716404137</a>
             </p>
             <p>Thank you for shopping with us. We hope to see you again soon.</p>
             <p>
@@ -543,7 +547,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
 	let mailOptions = {
 		from: EMAIL,
 		to: email,
-		subject: "Order Confirmation",
+		subject: emailSubject,
 		html: htmlTemplate,
 	};
 

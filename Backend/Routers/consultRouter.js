@@ -5,7 +5,7 @@ const User = require("../Models/UserModel");
 
 // Handler for GET request to /api/consults
 // Fetches consults data
-router.get("/consults", async (req, res) => {
+router.get("/", async (req, res) => {
 	try {
 		// Fetch the consults data from the database
 		const consults = await Consult.find();
@@ -20,7 +20,7 @@ router.get("/consults", async (req, res) => {
 
 // Handler for GET request to /api/consults/:id
 // Fetches consults data by id
-router.get("/consults/:id", async (req, res) => {
+router.get(":id", async (req, res) => {
 	try {
 		// Fetch the consults data from the database
 		const consult = await Consult.findById(req.params.id);

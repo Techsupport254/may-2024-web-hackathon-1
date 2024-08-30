@@ -27,8 +27,13 @@ const CartSchema = new mongoose.Schema({
 				type: Date,
 				default: Date.now,
 			},
+			refId: {
+				type: String,
+				required: true,
+			},
 		},
 	],
 });
 
-module.exports = mongoose.model("Cart", CartSchema);
+// Use existing model if it exists, otherwise create a new one
+module.exports = mongoose.models.Cart || mongoose.model("Cart", CartSchema);

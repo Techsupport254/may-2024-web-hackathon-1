@@ -6,30 +6,57 @@ const router = express.Router();
 const { EMAIL, EMAIL_PASSWORD } = process.env;
 
 const sendOrderConfirmationEmail = async (email, order) => {
-  const {
-    orderId,
-    timeline,
-    products,
-    shipping,
-    shippingAddress,
-    billingAddress,
-    payment,
-    amounts,
-  } = order;
+	const {
+		orderId,
+		timeline,
+		products,
+		shipping,
+		shippingAddress,
+		billingAddress,
+		payment,
+		amounts,
+	} = order;
 
-  // Get the latest status from the timeline
-  const latestStatus = timeline[timeline.length - 1]?.type || 'Pending';
-  const latestDate = new Date(timeline[timeline.length - 1]?.date || payment.date).toLocaleString();
+	// Get the latest status from the timeline
+	const latestStatus = timeline[timeline.length - 1]?.type || "Pending";
+	const latestDate = new Date(
+		timeline[timeline.length - 1]?.date || payment.date
+	).toLocaleString();
 
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: EMAIL,
-      pass: EMAIL_PASSWORD,
-    },
-  });
+	// Define email subject and message based on the status
+	let emailSubject;
+	let emailMessage;
 
-  const htmlTemplate = `
+	switch (latestStatus) {
+		case "Confirmed":
+			emailSubject = "Your Order has been Confirmed!";
+			emailMessage =
+				"Thank you for your order. Your order has been confirmed and is being prepared.";
+			break;
+		case "Out for Delivery":
+			emailSubject = "Your Order is Out for Delivery!";
+			emailMessage =
+				"Great news! Your order is out for delivery and will arrive soon.";
+			break;
+		case "Delivered":
+			emailSubject = "Your Order has been Delivered!";
+			emailMessage =
+				"We hope you enjoy your purchase. Your order has been successfully delivered.";
+			break;
+		default:
+			emailSubject = "Order Status Update";
+			emailMessage = `Your order status has been updated to ${latestStatus}.`;
+	}
+
+	let transporter = nodemailer.createTransport({
+		service: "gmail",
+		auth: {
+			user: EMAIL,
+			pass: EMAIL_PASSWORD,
+		},
+	});
+
+	const htmlTemplate = `
   <html lang="en">
     <head>
       <meta charset="UTF-8" />
@@ -251,7 +278,9 @@ const sendOrderConfirmationEmail = async (email, order) => {
         </div>
         <div class="Greetings">
           <span>Dear Customer,</span>
-          <p>Your order has been successfully placed. Below are the details of your order. In case of any inquiries, please contact us on <a href="tel:0712345678">0712345678</a>.</p>
+          <p>
+            ${emailMessage} You can view your order details below or by clicking the link below. Thank you for shopping with us.
+          </p>
         </div>
         <div class="OrderContainer">
           <div class="OrderRight">
@@ -281,8 +310,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                 </thead>
                 <tbody>
                   ${products
-                    .map(
-                      (product, index) => `
+										.map(
+											(product, index) => `
                       <tr>
                         <td>${index + 1}</td>
                         <td>${product.productName}</td>
@@ -290,8 +319,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                         <td>KSh. ${product.price.toLocaleString()}</td>
                       </tr>
                     `
-                    )
-                    .join("")}
+										)
+										.join("")}
                 </tbody>
               </table>
               <div class="OrderTotal">
@@ -361,8 +390,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                     </td>
                     <td style="width: 70%; text-align: right; padding: 0.5rem; font-size: 0.8rem;">
                       <p>${shippingAddress.street}, ${shippingAddress.city}, ${
-    shippingAddress.state
-  }, ${shippingAddress.zipCode}, ${shippingAddress.country}</p>
+		shippingAddress.state
+	}, ${shippingAddress.zipCode}, ${shippingAddress.country}</p>
                     </td>
                   </tr>
                   <tr>
@@ -394,8 +423,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                     </td>
                     <td style="width: 70%; text-align: right; padding: 0.5rem; font-size: 0.8rem;">
                       <p>${billingAddress.street}, ${billingAddress.city}, ${
-    billingAddress.state
-  }, ${billingAddress.zipCode}, ${billingAddress.country}</p>
+		billingAddress.state
+	}, ${billingAddress.zipCode}, ${billingAddress.country}</p>
                     </td>
                   </tr>
                 </table>
@@ -451,17 +480,37 @@ const sendOrderConfirmationEmail = async (email, order) => {
             <div class="Section">
               <h3>Order Timeline</h3>
               ${[
-                { type: 'Pending', label: 'Order Placed', defaultDate: payment.date },
-                { type: 'Confirmed', label: 'Order Confirmed' },
-                { type: 'Out for Delivery', label: 'Out for Delivery' },
-                { type: 'Delivered', label: 'Delivered' }
-              ]
-                .map((status) => {
-                  const event = timeline.find(e => e.type === status.type);
-                  const date = event ? new Date(event.date).toLocaleString() : (status.defaultDate ? new Date(status.defaultDate).toLocaleString() : 'N/A');
-                  const icon = status.type === "Delivered" || status.type === "Confirmed" ? "check" : status.type === "Out for Delivery" ? "truck" : "clock";
-                  const color = status.type === "Delivered" ? "green" : status.type === "Out for Delivery" ? "rgba(17, 141, 87, 1)" : status.type === "Confirmed" ? "purple" : "orange";
-                  return `
+								{
+									type: "Pending",
+									label: "Order Placed",
+									defaultDate: payment.date,
+								},
+								{ type: "Confirmed", label: "Order Confirmed" },
+								{ type: "Out for Delivery", label: "Out for Delivery" },
+								{ type: "Delivered", label: "Delivered" },
+							]
+								.map((status) => {
+									const event = timeline.find((e) => e.type === status.type);
+									const date = event
+										? new Date(event.date).toLocaleString()
+										: status.defaultDate
+										? new Date(status.defaultDate).toLocaleString()
+										: "N/A";
+									const icon =
+										status.type === "Delivered" || status.type === "Confirmed"
+											? "check"
+											: status.type === "Out for Delivery"
+											? "truck"
+											: "clock";
+									const color =
+										status.type === "Delivered"
+											? "green"
+											: status.type === "Out for Delivery"
+											? "rgba(0, 108, 156, 1)"
+											: status.type === "Confirmed"
+											? "rgba(17, 141, 87, 1)"
+											: "orange";
+									return `
                     <div class="timeline-item">
                       <span class="timeline-dot" style="background-color: ${color}; color: white">
                         <i class="fas fa-${icon}"></i>
@@ -472,8 +521,8 @@ const sendOrderConfirmationEmail = async (email, order) => {
                       </div>
                     </div>
                   `;
-                })
-                .join("")}
+								})
+								.join("")}
             </div>
           </div>
         </div>
@@ -481,7 +530,7 @@ const sendOrderConfirmationEmail = async (email, order) => {
           <div class="FooterTop">
             <p>
               For any inquiries, please contact us on
-              <a href="tel:0712345678">0712345678</a>
+              <a href="tel:0716404137">0716404137</a>
             </p>
             <p>Thank you for shopping with us. We hope to see you again soon.</p>
             <p>
@@ -499,19 +548,19 @@ const sendOrderConfirmationEmail = async (email, order) => {
   </html>
   `;
 
-  let mailOptions = {
-    from: EMAIL,
-    to: email,
-    subject: "Order Confirmation",
-    html: htmlTemplate,
-  };
+	let mailOptions = {
+		from: EMAIL,
+		to: email,
+		subject: emailSubject,
+		html: htmlTemplate,
+	};
 
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("Order confirmation email sent successfully");
-  } catch (error) {
-    console.error("Error sending order confirmation email", error);
-  }
+	try {
+		await transporter.sendMail(mailOptions);
+		console.log("Order confirmation email sent successfully");
+	} catch (error) {
+		console.error("Error sending order confirmation email", error);
+	}
 };
 
 module.exports = { sendOrderConfirmationEmail };

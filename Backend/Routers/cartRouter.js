@@ -89,6 +89,18 @@ router.post("/", async (req, res) => {
 	}
 });
 
+// get all
+router.get("/", async (req, res) => {
+	try {
+		const carts = await Cart.find();
+		res.json(carts);
+	} catch (err) {
+		res
+			.status(500)
+			.json({ error: "Internal Server Error", details: err.message });
+	}
+});
+
 // Get cart by userId
 router.get("/:userId", async (req, res) => {
 	try {

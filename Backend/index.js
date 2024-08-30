@@ -14,6 +14,8 @@ const cartRouter = require("./Routers/cartRouter");
 const orderRouter = require("./Routers/OrderRouter");
 const earningsRouter = require("./Routers/EarningsRouter");
 const searchRouter = require("./Routers/SearchRouter");
+const discountRouter = require("./Routers/DiscountRouter");
+const Analytics = require("./Routers/Analytics");
 
 // Set up server
 const app = express();
@@ -34,7 +36,7 @@ const allowedOrigins = [
 app.use(
 	cors({
 		origin: function (origin, callback) {
-			// Allow requests with no origin (like mobile apps or curl requests)
+			// Allow requests with no origin
 			if (!origin) return callback(null, true);
 			if (allowedOrigins.indexOf(origin) === -1) {
 				const msg =
@@ -69,7 +71,10 @@ mongoose
 		app.use("/cart", cartRouter);
 		app.use("/order", orderRouter);
 		app.use("/earnings", earningsRouter);
-		app.use("/search", searchRouter); // Add search router
+		app.use("/search", searchRouter);
+		app.use("/discounts", discountRouter);
+		app.use("/settings", require("./Routers/SettingsRouter"));
+		app.use("/analytics", Analytics);
 
 		// Start the server
 		app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

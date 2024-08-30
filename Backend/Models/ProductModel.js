@@ -1,5 +1,37 @@
 const mongoose = require("mongoose");
 
+const DiscountSchema = mongoose.Schema(
+	{
+		discountName: {
+			type: String,
+			required: true,
+		},
+		discountCode: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		discountPercentage: {
+			type: Number,
+			required: true,
+		},
+		discountAmount: {
+			type: Number,
+			required: true,
+		},
+		discountExpiry: {
+			type: Date,
+			required: true,
+		},
+		discountDescription: {
+			type: String,
+		},
+	},
+	{
+		timestamps: true,
+	}
+);
+
 const ProductSchema = mongoose.Schema(
 	{
 		productName: {
@@ -86,20 +118,18 @@ const ProductSchema = mongoose.Schema(
 			required: true,
 		},
 		refId: {
-			type: String,
+			type: mongoose.Schema.Types.ObjectId,
 			required: true,
+			ref: "User",
 		},
+
+		discounts: [DiscountSchema],
 	},
 	{
 		timestamps: true,
-		refId: {
-			type: String,
-			required: true,
-		},
 	}
 );
 
-// Creating text indexes for search functionality
 ProductSchema.index({
 	productName: "text",
 	productCategory: "text",

@@ -1,102 +1,195 @@
-<!DOCTYPE html>
+const express = require("express"); const nodemailer = require("nodemailer");
+require("dotenv").config(); const router = express.Router(); const { EMAIL,
+EMAIL_PASSWORD } = process.env; const sendPaymentNotificationEmail = async
+(email, paymentDetails) => { const { paymentId, amount, date, status,
+transactionId, holder, phone } = paymentDetails; let emailSubject; let
+emailMessage; switch (status) { case "Pending": emailSubject = "Payment
+Pending"; emailMessage = "Your payment is pending. Please check back later for
+updates."; break; case "Completed": emailSubject = "Payment Completed";
+emailMessage = "Your payment has been successfully completed. Thank you!";
+break; case "Failed": emailSubject = "Payment Failed"; emailMessage =
+"Unfortunately, your payment has failed. Please try again."; break; case
+"Reversed": emailSubject = "Payment Reversed"; emailMessage = "Your payment has
+been reversed. Please check your account for details."; break; case "Cancelled":
+emailSubject = "Payment Cancelled"; emailMessage = "Your payment request has
+been cancelled. If you believe this is a mistake, please contact support.";
+break; case "Split": emailSubject = "Payment Split"; emailMessage = "Your
+payment has been split into multiple transactions. Please review the details.";
+break; case "Escalated": emailSubject = "Payment Escalated"; emailMessage =
+"Your payment request has been escalated for further review."; break; case
+"Notified": emailSubject = "Payment Notification"; emailMessage = "You have been
+notified about the payment status."; break; default: emailSubject = "Payment
+Status Update"; emailMessage = `Your payment status has been updated to
+${status}.`; } let transporter = nodemailer.createTransport({ service: "gmail",
+auth: { user: EMAIL, pass: EMAIL_PASSWORD, }, }); const htmlTemplate = `
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Welcome to Agrisolve</title>
+		<title>Payment Notification</title>
 		<style>
-			body {
-				background-color: #f9f9f9;
-				font-family: Arial, sans-serif;
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
 			}
-			.container {
-				width: 100%;
+			.Notification {
 				max-width: 600px;
-				margin: 0 auto;
-				background-color: #ffffff;
-				padding: 20px;
-				border-radius: 8px;
-				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				margin: auto;
+				background: #fff;
+				border-radius: 5px;
+				box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.1);
+				border: 1px solid #007867;
+				padding: 0.2rem;
 			}
 			.header {
-				display: flex;
-				justify-content: center;
-				align-items: center;
 				text-align: center;
-				gap: 10px;
-				padding-bottom: 20px;
-				border-bottom: 1px solid #e0e0e0;
+				margin-bottom: 1rem;
 			}
-			.logo img {
+			.header img {
 				width: 80px;
 				height: 80px;
 			}
-			.title {
+			.header h1 {
 				font-size: 32px;
-				margin-top: 10px;
-				font-weight: bold;
-			}
-			.title span {
-				color: #007867;
-			}
-			.content {
-				padding: 20px 0;
-			}
-			.content h3 {
-				font-size: 15px;
-				color: #333333;
-			}
-			.content p {
-				font-size: 16px;
-				color: #555555;
-				line-height: 1.5;
 				margin: 10px 0;
 			}
-			.footer {
-				padding-top: 8px;
-				border-top: 1px solid #e0e0e0;
-			}
-			.footer p {
-				font-size: 16px;
-				color: #555555;
-			}
-			.footer span {
+			.header span {
 				color: #007867;
-				font-weight: bold;
+			}
+			.Message {
+				margin-bottom: 2rem;
+			}
+			.Message span {
+				font-weight: 600;
+			}
+			.Message p {
+				color: #666;
+			}
+			.Message a {
+				color: #4caf50;
+				text-decoration: none;
+				font-weight: 600;
+			}
+			.DetailsContainer {
+				width: 100%;
+				background: #f5f5f5;
+				border-radius: 5px;
+				margin-bottom: 1rem;
+			}
+			.DetailsRight {
+				background: #fff;
+				border-radius: 5px;
+				overflow: auto;
+			}
+			table {
+				width: 100%;
+				border-collapse: collapse;
+			}
+			th,
+			td {
+				border: 1px solid #ccc;
+				padding: 0.5rem;
+				font-size: 0.8rem;
+				vertical-align: top;
+			}
+			.Footer {
+				width: 100%;
+				background: #fff;
+				border-radius: 5px;
+				margin-top: 1rem;
+			}
+			.FooterTop {
+				margin-bottom: 1rem;
+			}
+			.FooterTop p {
+				color: #666;
+			}
+			.FooterTop span {
+				color: #333;
+				font-weight: 600;
+			}
+			.FooterTop a {
+				color: #4caf50;
+				text-decoration: none;
+				font-weight: 600;
+			}
+			.FooterBottom {
+				width: 100%;
+				text-align: center;
+				background: rgba(6, 94, 73, 1);
+				padding: 1rem 0.5rem;
+				border-radius: 5px;
+				color: #fff;
 			}
 		</style>
 	</head>
 	<body>
-		<div class="container">
+		<div class="Notification">
 			<div class="header">
-				<div class="logo">
-					<img
-						src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
-						alt="Agrisolve Logo"
-					/>
+				<img
+					src="https://agrisolve-admin.vercel.app/assets/logo-1d4fc32d.png"
+					alt="Agrisolve Logo"
+				/>
+				<h1>Agri<span style="font-size: 32px">solve</span></h1>
+			</div>
+			<div class="Message">
+				<span>Dear Customer,</span>
+				<p>${emailMessage}</p>
+			</div>
+			<div class="DetailsContainer">
+				<div class="DetailsRight">
+					<table>
+						<tr>
+							<th>Payment ID</th>
+							<td>${paymentId}</td>
+						</tr>
+						<tr>
+							<th>Amount</th>
+							<td>KSh. ${amount.toLocaleString()}</td>
+						</tr>
+						<tr>
+							<th>Date</th>
+							<td>${new Date(date).toLocaleString()}</td>
+						</tr>
+						<tr>
+							<th>Status</th>
+							<td>${status}</td>
+						</tr>
+						<tr>
+							<th>Transaction ID</th>
+							<td>${transactionId || "N/A"}</td>
+						</tr>
+						<tr>
+							<th>Holder</th>
+							<td>${holder || "N/A"}</td>
+						</tr>
+						<tr>
+							<th>Phone</th>
+							<td>${phone || "N/A"}</td>
+						</tr>
+					</table>
 				</div>
-				<div class="title">Agri<span>solve</span></div>
 			</div>
-			<div class="content">
-				<h3>Welcome to Agrisolve!</h3>
-				<h3>Hi there, Victor Kirui</h3>
-				<p>
-					We are thrilled to have you with us. At Agrisolve, we provide a wide
-					range of services designed to support and enhance agricultural
-					practices.
-				</p>
-				<p>
-					Our services include agrovet e-commerce for all your agricultural
-					supplies, expert consultation services for tailored advice, and the
-					ability to request specialists for on-site support. We are dedicated
-					to helping you achieve success in your agricultural endeavors.
-				</p>
-			</div>
-			<div class="footer">
-				<p>Best Regards,</p>
-				<p>Agrisolve Team</p>
-				<span>Victor Kirui</span>
+			<div class="Footer">
+				<div class="FooterTop">
+					<p>
+						For any inquiries, please contact us on
+						<a href="tel:0716404137">0716404137</a>
+					</p>
+					<p>Thank you for using our service!</p>
+					<p>Best Regards</p>
+					<span>Victor Kirui</span>
+				</div>
+				<div class="FooterBottom">
+					<p>&copy; 2024 Agrisolve. All rights reserved.</p>
+				</div>
 			</div>
 		</div>
 	</body>
 </html>
+`; let mailOptions = { from: EMAIL, to: email, subject: emailSubject, html:
+htmlTemplate, }; try { await transporter.sendMail(mailOptions);
+console.log("Payment notification email sent successfully"); } catch (error) {
+console.error("Error sending payment notification email", error); } };
+module.exports = { sendPaymentNotificationEmail };

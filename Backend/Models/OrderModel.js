@@ -10,11 +10,16 @@ const addressSchema = new mongoose.Schema({
 });
 
 const productSchema = new mongoose.Schema({
-	productId: { type: String, required: true },
+	productId: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: "Product",
+	},
 	productName: { type: String, required: true },
 	quantity: { type: Number, default: 1 },
 	status: { type: String, default: "Pending" },
-	price: { type: Number, required: true }, // Add price to the schema
+	price: { type: Number, required: true },
+	refId: { type: String, required: true },
 });
 
 const timelineSchema = new mongoose.Schema({
@@ -23,7 +28,7 @@ const timelineSchema = new mongoose.Schema({
 });
 
 const orderSchema = new mongoose.Schema({
-	userId: { type: String, required: true },
+	userId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 	orderId: { type: String, required: true },
 	timeline: [timelineSchema],
 	payment: {
@@ -43,6 +48,11 @@ const orderSchema = new mongoose.Schema({
 	},
 	billingAddress: addressSchema,
 	shippingAddress: addressSchema,
+	customer: {
+		name: { type: String, required: true },
+		email: { type: String, required: true },
+		phone: { type: String, required: true },
+	},
 	createdAt: { type: Date, default: Date.now },
 	updatedAt: { type: Date, default: Date.now },
 	notes: { type: String },
@@ -50,6 +60,7 @@ const orderSchema = new mongoose.Schema({
 		{
 			code: { type: String },
 			amount: { type: Number },
+			percentage: { type: Number },
 		},
 	],
 	tax: {
@@ -64,6 +75,7 @@ const orderSchema = new mongoose.Schema({
 		productsAmount: { type: Number, default: 0 },
 		totalAmount: { type: Number, default: 0 },
 	},
+	status: { type: String, default: "Pending" },
 });
 
 module.exports = mongoose.model("Order", orderSchema);

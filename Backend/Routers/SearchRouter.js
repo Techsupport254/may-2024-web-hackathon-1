@@ -5,16 +5,18 @@ const Product = require("../Models/ProductModel");
 // Search Products
 router.get("/products", async (req, res) => {
 	try {
-		const { query } = req.query;
-		if (!query) {
-			return res.status(400).json({ message: "Query parameter is required" });
-		}
+		const { query, category, status, ownerId } = req.query;
 
-		// Create a regular expression for partial matching
-		const regex = new RegExp(query, "i"); // 'i' for case-insensitive
+		// Ensure ownerId is included in the search criteria
+		let searchCriteria = { refId: ownerId };
 
-		const products = await Product.find({
-			$or: [
+		// Add query-related conditions
+		if (query) {
+			// Create a regular expression for partial matching
+			const regex = new RegExp(query, "i"); // 'i' for case-insensitive
+
+			// Prepare the $or condition
+			searchCriteria.$or = [
 				{ productName: regex },
 				{ productCategory: regex },
 				{ subCategory: regex },
@@ -23,9 +25,20 @@ router.get("/products", async (req, res) => {
 				{ labels: { $in: [regex] } },
 				{ tags: { $in: [regex] } },
 				{ instructions: regex },
-			],
-		});
+			];
+		}
 
+		// Add category filter
+		if (category && category !== "all") {
+			searchCriteria.productCategory = category;
+		}
+
+		// Add status filter
+		if (status && status !== "all") {
+			searchCriteria.productStatus = status;
+		}
+
+		const products = await Product.find(searchCriteria);
 		res.json(products);
 	} catch (err) {
 		res.status(500).json({ message: err.message });
