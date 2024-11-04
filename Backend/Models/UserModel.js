@@ -55,6 +55,10 @@ if (!mongoose.models.User) {
 			type: String,
 			default: "unpaid",
 		},
+		status: {
+			type: String,
+			default: "active",
+		},
 		loginStatus: {
 			type: String,
 			default: "loggedIn",

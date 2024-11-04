@@ -64,7 +64,8 @@ router.get("/:userId", authenticateToken, async (req, res) => {
 router.post("/:userId/request", authenticateToken, async (req, res) => {
 	const { userId } = req.params;
 
-	if (!userId || userId !== req.user._id.toString()) {
+	// Safely checking for req.user and req.user.id before accessing it
+	if (!userId || !req.user || !req.user.id || userId !== req.user.id) {
 		return res.status(400).json({ message: "Invalid User ID." });
 	}
 
