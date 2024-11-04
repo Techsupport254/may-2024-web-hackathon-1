@@ -19,7 +19,7 @@ const NotFound = ({ userData }) => {
 				<div className="NotFoundContent FlexDisplay">
 					<p>
 						Hello,
-						{/* <span>{userData ? userData?.name?.split(" ")[0] : "User"}</span>, */}
+						<span>{userData ? userData?.name?.split(" ")[0] : "User"}</span>,
 						The page you're looking for doesn't exist.
 					</p>
 					<Button
